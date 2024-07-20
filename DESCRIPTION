@@ -1,9 +1,9 @@
 Package: pcjtools
-Title: What the Package Does (One Line, Title Case)
+Title: A set of tools developed for wrangling and analyzing data from jsPsych.
 Version: 0.0.0.9000
 Authors@R: 
     person("Pierce", "Johnson", , "johnsonpierce.c@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "https://orcid.org/0009-0002-8517-2452"))
 Description: Convenience functions to make some common data wrangling and
     analysis of experimental data from jsPsych and Congition.run a bit easier.
 License: MIT + file LICENSE

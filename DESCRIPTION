@@ -1,5 +1,5 @@
 Package: pcjtools
-Title: A set of tools developed for wrangling and analyzing data from jsPsych.
+Title: A set of tools developed for wrangling and analyzing data from jsPsych
 Version: 0.0.0.9000
 Authors@R: 
     person("Pierce", "Johnson", , "johnsonpierce.c@gmail.com", role = c("aut", "cre"),
@@ -10,3 +10,10 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Imports: 
+    data.table,
+    purrr,
+    tidyselect

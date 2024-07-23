@@ -208,6 +208,7 @@ memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
       show.legend = F
     ) +
     theme_minimal() +
+    scale_x_continuous(limits = c(0, n.trials)) +
     geom_text(
       data =
         filter(df.summary, Time == max(Time)),
@@ -240,6 +241,7 @@ memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
       lwd = .8
     ) +
     theme_minimal() +
+    scale_x_continuous(limits = c(0, n.trials)) +
     facet_wrap(
       facets = df.activations$Cue
     ) +

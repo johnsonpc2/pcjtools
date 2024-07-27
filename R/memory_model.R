@@ -13,11 +13,11 @@
 #' @importFrom stats rnorm
 #' @importFrom reshape2 melt
 #' @importFrom dplyr filter group_by summarise ungroup
-#' @import ggplot2
+#' @importFrom ggplot2 aes facet_wrap geom_line geom_point geom_text ggplot labs scale_size_continuous scale_x_continuous theme theme_minimal
 #' @importFrom kableExtra kable
 #'
 #' @examples
-#' memory_model(500)
+#' memory_model(seed = 1234, n.letters = 12, n.trials = 200)
 
 memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
                         updated.probs.sd = .1, max.forgetting = .6,

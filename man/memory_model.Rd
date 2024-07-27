@@ -36,5 +36,5 @@ a matrix of learned memory strengths between letters, a matrix of the randomly g
 Run a memory model simulation
 }
 \examples{
-memory_model(500)
+memory_model(seed = 1234, n.letters = 12, n.trials = 200)
 }

@@ -11,10 +11,16 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
+    spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports:
     dplyr (>= 1.1.4),
+    extrafont,
     ggplot2 (>= 3.5.0),
     kableExtra (>= 1.4.0),
-    reshape2 (>= 1.4.0)
+    monochromeR,
+    ragg,
+    reshape2 (>= 1.4.0),
+    usethis
+Language: en-US

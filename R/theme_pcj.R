@@ -106,31 +106,21 @@ pcj_graph_palettes <- function(palette = "default",
   }
 }
 
-# Create a custom theme for your graphs, including a custom font color set
-#' A theme made to maximize legibility of text on graphs printed for academic posters
+#' A function to download and import the Atkinson Hyperlegible font required for the theme_pcj function
 #'
-#' @param base_size an integer, the size the font in a plot should default to.
-#' @param dark_text a quoted hex string, sets the color of the darkest text in a plot.
+#' @param overwrite if font files are downloaded to the system folder, should existing files be overwritten?
 #' @param os_fonts a string, including "all", "pdf", "postscript" and "win", indicating which fonts should be loaded into RStudio
 #'
-#' @return a plot configured with aesthetic settings specified by options set by this function
+#' @return NULL
 #' @export
 #' @importFrom usethis use_zip
 #' @importFrom extrafont font_import loadfonts
 #' @import ragg
-#' @importFrom monochromeR generate_palette
-#' @importFrom ggplot2 ggplot element_blank element_line element_text labs margin rel theme theme_minimal %+replace%
 #'
 #' @examples
-#' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-#' ggplot2::geom_point() +
-#' theme_pcj()
+#' load_atkinson(overwrite = FALSE, os_fonts = "win")
 
-theme_pcj <- function(base_size = 12,
-                      dark_text = "#000000",
-                      os_fonts = "win"
-                      ){
-
+load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
   # Check if Atkinson Hyperlegible font files already exist in Windows Font directory
   atkinson_files <- c("AtkinsonHyperlegible-Bold.ttf",
                       "AtkinsonHyperlegible-BoldItalic.ttf",
@@ -148,12 +138,33 @@ theme_pcj <- function(base_size = 12,
                        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Italic.ttf")),
                        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Regular.ttf"))),
               to = file.path(paste0("C:\\Windows\\Fonts")),
-              overwrite = TRUE)
+              overwrite = overwrite)
 
     font_import(prompt = FALSE)
   }
 
   loadfonts(device = os_fonts, quiet = T)
+}
+
+
+#' A theme made to maximize legibility of text on graphs printed for academic posters
+#'
+#' @param base_size an integer, the size the font in a plot should default to.
+#' @param dark_text a quoted hex string, sets the color of the darkest text in a plot.
+#'
+#' @return a plot configured with aesthetic settings specified by options set by this function
+#' @export
+#' @importFrom monochromeR generate_palette
+#' @importFrom ggplot2 ggplot element_blank element_line element_text labs margin rel theme theme_minimal %+replace%
+#'
+#' @examples
+#' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
+#' ggplot2::geom_point() +
+#' theme_pcj()
+
+theme_pcj <- function(base_size = 12,
+                      dark_text = "#000000"
+                      ){
 
   mid_text <- generate_palette(colour = dark_text,
                                             modification = "go_lighter",

@@ -1,10 +1,10 @@
 #' A suite of functions to customize plot aesthetics
 #'
-#' @param palette a string, the name of
+#' @param palette a string, including: "default", "neg_to_pos", "mono_printing",
+#' "mono_blue", "mono_red", "mono_yellow", or "ualbany".
 #' @param continuous logical. Whether the scale of the data is discrete or continuous.
 #' @param .colors loads colors defined in pcj_colors.
 #' @param .palettes loads palettes defined in pcj_palettes.
-#' @param ... options to be passed to discrete_scale and scale_color_gradientn.
 #'
 #' @return a plot object with the specified aesthetics rendered.
 #' @export
@@ -16,10 +16,9 @@
 #' pcj_graph_palettes(palette = "mono_printing")
 
 pcj_graph_palettes <- function(palette = "default",
-                             continuous = FALSE,
-                             .colors = pcj_colors,
-                             .palettes = pcj_palettes,
-                             ...) {
+                               continuous = FALSE,
+                               .colors = pcj_colors,
+                               .palettes = pcj_palettes) {
   # define colors
   pcj_colors <- list(
     black = "#000000",
@@ -94,22 +93,23 @@ pcj_graph_palettes <- function(palette = "default",
   )
 
   if (continuous == FALSE) {
-    discrete_scale(palette = colorRampPalette(.palettes[[palette]]),
-                            aesthetics = c("color", "fill"),
-                            scale_name = .palettes[[palette]],
-                            na.value = .colors$na_value,
-                            ...)
+      discrete_scale(palette = colorRampPalette(.palettes[[palette]]),
+                     aesthetics = c("color", "fill"),
+                     na.value = .colors$na_value)
   } else {
-    scale_color_gradientn(colors = .palettes[[palette]],
-                                   na.value = .colors$na_value,
-                                   ...)
+      scale_color_gradientn(colors = .palettes[[palette]],
+                            na.value = .colors$na_value)
   }
 }
 
-#' A function to download and import the Atkinson Hyperlegible font required for the theme_pcj function
+
+#' A function to download and import the Atkinson Hyperlegible font required for
+#' the theme_pcj function
 #'
-#' @param overwrite if font files are downloaded to the system folder, should existing files be overwritten?
-#' @param os_fonts a string, including "all", "pdf", "postscript" and "win", indicating which fonts should be loaded into RStudio
+#' @param overwrite if font files are downloaded to the system folder, should
+#' existing files be overwritten?
+#' @param os_fonts a string, including "all", "pdf", "postscript" and "win",
+#' indicating which fonts should be loaded into RStudio
 #'
 #' @return NULL
 #' @export
@@ -147,7 +147,7 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
 }
 
 
-#' A theme made to maximize legibility of text on graphs printed for academic posters
+#' Graph aesthetics to maximize legibility of text on graphs printed for academic posters
 #'
 #' @param base_size an integer, the size the font in a plot should default to.
 #' @param dark_text a quoted hex string, sets the color of the darkest text in a plot.
@@ -156,27 +156,27 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
 #' @return a plot configured with aesthetic settings specified by options set by this function
 #' @export
 #' @importFrom monochromeR generate_palette
-#' @importFrom ggplot2 ggplot element_blank element_line element_text labs margin rel theme theme_minimal %+replace%
+#' @importFrom ggplot2 ggplot element_blank element_line element_text labs margin
+#' rel theme theme_minimal %+replace%
 #'
 #' @examples
 #' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
 #' ggplot2::geom_point() +
-#' theme_pcj()
+#' pcj_aesthetics()
 
-theme_pcj <- function(base_size = 12,
-                      dark_text = "#000000",
-                      ...
-                      ){
+pcj_aesthetics <- function(base_size = 12,
+                           dark_text = "#000000",
+                           ...) {
 
   mid_text <- generate_palette(colour = dark_text,
                                             modification = "go_lighter",
                                             n_colours = 9)[4]
 
-  # light_text <- generate_palette(colour = dark_text,
-  #                                             modification = "go_lighter",
-  #                                             n_colours = 9)[7]
+  light_text <- generate_palette(colour = dark_text,
+                                              modification = "go_lighter",
+                                              n_colours = 9)[7]
 
-  theme_minimal(base_size = base_size) %+replace%
+  theme_minimal() %+replace%
     theme(
       text = element_text(
         # family = "Atkinson Hyperlegible",
@@ -191,10 +191,10 @@ theme_pcj <- function(base_size = 12,
       ),
       plot.subtitle = element_text(
         size = rel(1.5),
-        color = dark_text,
+        color = mid_text,
       ),
       axis.text = element_text(
-        color = dark_text
+        color = mid_text
       ),
       axis.title = element_text(
         size = rel(1.5),
@@ -206,7 +206,7 @@ theme_pcj <- function(base_size = 12,
         linetype = "dashed"
       ),
       plot.caption = element_text(
-        color = mid_text,
+        color = light_text,
         hjust = 1
       ),
       axis.ticks = element_blank(),
@@ -216,11 +216,86 @@ theme_pcj <- function(base_size = 12,
       legend.title = element_blank(),
       legend.position = "top",
       legend.text = element_text(
-        size = rel(1.8),
+        size = rel(1.5),
         lineheight = 1,
         color = mid_text
       ),
       legend.direction = "horizontal",
       ...
       )
+}
+
+#' A theme developed to build consistent ggplot graphs
+#'
+#' @param ggplot.object a ggplot object stored in a vector
+#' @param palette a string defining the palette to use, including: "default",
+#' "neg_to_pos", "mono_printing", "mono_blue", "mono_red", "mono_yellow", or "ualbany".
+#' @param continuous logical. Whether the scale of the data is discrete or continuous.
+#' @param base.size an integer, the size the font in a plot should default to.
+#' @param dark.text a quoted hex string, sets the color of the darkest text in a plot.
+#' @param theme.options options to be passed to the theme() function.
+#' @param graph.text a named list of plot labels.
+#'
+#' @return a ggplot object following the specified settings
+#' @export
+#'
+#' @examples
+#' g1 <- ggplot2::ggplot(data = mtcars,
+#' ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
+#' ggplot2::geom_point()
+#' theme_pcj(ggplot.object = g1,
+#'   graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab"))
+
+theme_pcj <- function(ggplot.object,
+                       palette = "default",
+                       continuous = FALSE,
+                       base.size = 12,
+                       dark.text = "#000000",
+                       theme.options = NULL,
+                       graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab")) {
+
+  # Subroutine to add a custom palette to a ggplot object
+  color_sub <- function(ggplot.object, palette = palette, continuous = continuous) {
+    ggplot.object +
+      pcj_graph_palettes(
+        palette = palette,
+        continuous = continuous
+      )
+  }
+
+  ggplot.object <- color_sub(ggplot.object, palette, continuous)
+  # You should add an if statement so the above code will only if "continuous = F"
+  # if the variable has been factorized, and if it hasn't, then to factorize it
+  # in the function
+
+  # Subroutine to add custom aesthetics to a ggplot object
+  aesthetics_sub <- function(ggplot.object, base_size = base.size, dark_text = dark.text, ... = theme.options) {
+    ggplot.object +
+      pcj_aesthetics(
+        base_size = base.size,
+        dark_text = dark.text,
+        ... = theme.options
+      )
+  }
+
+  ggplot.object <- aesthetics_sub(ggplot.object)
+
+
+  # Subroutine to add text labels for plot elements to a ggplot object
+  text_sub <- function(ggplot.object, graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab")) {
+    graph.text <- as.list(graph.text)
+    ggplot.object +
+      labs(
+        title = graph.text$title,
+        subtitle = graph.text$subtitle,
+        x = graph.text$xlab,
+        y = graph.text$ylab,
+        caption = paste("Revised", Sys.time())
+      )
+  }
+
+  ggplot.object <- text_sub(ggplot.object, graph.text)
+
+  print(ggplot.object)
+
 }

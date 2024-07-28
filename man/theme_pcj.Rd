@@ -2,25 +2,44 @@
 % Please edit documentation in R/theme_pcj.R
 \name{theme_pcj}
 \alias{theme_pcj}
-\title{A theme made to maximize legibility of text on graphs printed for academic posters}
+\title{A theme developed to build consistent ggplot graphs}
 \usage{
-theme_pcj(base_size = 12, dark_text = "#000000", ...)
+theme_pcj(
+  ggplot.object,
+  palette = "default",
+  continuous = FALSE,
+  base.size = 12,
+  dark.text = "#000000",
+  theme.options = NULL,
+  graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab")
+)
 }
 \arguments{
-\item{base_size}{an integer, the size the font in a plot should default to.}
+\item{ggplot.object}{a ggplot object stored in a vector}
 
-\item{dark_text}{a quoted hex string, sets the color of the darkest text in a plot.}
+\item{palette}{a string defining the palette to use, including: "default",
+"neg_to_pos", "mono_printing", "mono_blue", "mono_red", "mono_yellow", or "ualbany".}
 
-\item{...}{options to be passed to function theme().}
+\item{continuous}{logical. Whether the scale of the data is discrete or continuous.}
+
+\item{base.size}{an integer, the size the font in a plot should default to.}
+
+\item{dark.text}{a quoted hex string, sets the color of the darkest text in a plot.}
+
+\item{theme.options}{options to be passed to the theme() function.}
+
+\item{graph.text}{a named list of plot labels.}
 }
 \value{
-a plot configured with aesthetic settings specified by options set by this function
+a ggplot object following the specified settings
 }
 \description{
-A theme made to maximize legibility of text on graphs printed for academic posters
+A theme developed to build consistent ggplot graphs
 }
 \examples{
-ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-ggplot2::geom_point() +
-theme_pcj()
+g1 <- ggplot2::ggplot(data = mtcars,
+ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
+ggplot2::geom_point()
+theme_pcj(ggplot.object = g1,
+  graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab"))
 }

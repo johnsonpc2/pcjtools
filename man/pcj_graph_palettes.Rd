@@ -8,20 +8,18 @@ pcj_graph_palettes(
   palette = "default",
   continuous = FALSE,
   .colors = pcj_colors,
-  .palettes = pcj_palettes,
-  ...
+  .palettes = pcj_palettes
 )
 }
 \arguments{
-\item{palette}{a string, the name of}
+\item{palette}{a string, including: "default", "neg_to_pos", "mono_printing",
+"mono_blue", "mono_red", "mono_yellow", or "ualbany".}
 
 \item{continuous}{logical. Whether the scale of the data is discrete or continuous.}
 
 \item{.colors}{loads colors defined in pcj_colors.}
 
 \item{.palettes}{loads palettes defined in pcj_palettes.}
-
-\item{...}{options to be passed to discrete_scale and scale_color_gradientn.}
 }
 \value{
 a plot object with the specified aesthetics rendered.

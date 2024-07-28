@@ -2,17 +2,21 @@
 % Please edit documentation in R/theme_pcj.R
 \name{load_atkinson}
 \alias{load_atkinson}
-\title{A function to download and import the Atkinson Hyperlegible font required for the theme_pcj function}
+\title{A function to download and import the Atkinson Hyperlegible font required for
+the theme_pcj function}
 \usage{
 load_atkinson(overwrite = FALSE, os_fonts = "win")
 }
 \arguments{
-\item{overwrite}{if font files are downloaded to the system folder, should existing files be overwritten?}
+\item{overwrite}{if font files are downloaded to the system folder, should
+existing files be overwritten?}
 
-\item{os_fonts}{a string, including "all", "pdf", "postscript" and "win", indicating which fonts should be loaded into RStudio}
+\item{os_fonts}{a string, including "all", "pdf", "postscript" and "win",
+indicating which fonts should be loaded into RStudio}
 }
 \description{
-A function to download and import the Atkinson Hyperlegible font required for the theme_pcj function
+A function to download and import the Atkinson Hyperlegible font required for
+the theme_pcj function
 }
 \examples{
 load_atkinson(overwrite = FALSE, os_fonts = "win")

@@ -2,6 +2,7 @@
 
 export(load_atkinson)
 export(memory_model)
+export(pcj_aesthetics)
 export(pcj_graph_palettes)
 export(theme_pcj)
 import(ragg)

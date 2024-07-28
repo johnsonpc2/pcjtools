@@ -244,7 +244,8 @@ pcj_aesthetics <- function(base_size = 12,
 #' ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
 #' ggplot2::geom_point()
 #' theme_pcj(ggplot.object = g1,
-#'   graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab"))
+#'   graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab",
+#'   ylab = "ylab", caption = paste("Revised", Sys.time())))
 
 theme_pcj <- function(ggplot.object,
                        palette = "default",
@@ -252,7 +253,7 @@ theme_pcj <- function(ggplot.object,
                        base.size = 12,
                        dark.text = "#000000",
                        theme.options = NULL,
-                       graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab")) {
+                       graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab", caption = paste("Revised", Sys.time()))) {
 
   # Subroutine to add a custom palette to a ggplot object
   color_sub <- function(ggplot.object, palette = palette, continuous = continuous) {
@@ -269,7 +270,8 @@ theme_pcj <- function(ggplot.object,
   # in the function
 
   # Subroutine to add custom aesthetics to a ggplot object
-  aesthetics_sub <- function(ggplot.object, base_size = base.size, dark_text = dark.text, ... = theme.options) {
+  aesthetics_sub <- function(ggplot.object, base_size = base.size, dark_text = dark.text, options = theme.options) {
+    theme.options <- list(options)
     ggplot.object +
       pcj_aesthetics(
         base_size = base.size,
@@ -282,7 +284,7 @@ theme_pcj <- function(ggplot.object,
 
 
   # Subroutine to add text labels for plot elements to a ggplot object
-  text_sub <- function(ggplot.object, graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab")) {
+  text_sub <- function(ggplot.object, graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab", caption = paste("Revised", Sys.time()))) {
     graph.text <- as.list(graph.text)
     ggplot.object +
       labs(
@@ -290,7 +292,7 @@ theme_pcj <- function(ggplot.object,
         subtitle = graph.text$subtitle,
         x = graph.text$xlab,
         y = graph.text$ylab,
-        caption = paste("Revised", Sys.time())
+        caption = graph.text$caption
       )
   }
 

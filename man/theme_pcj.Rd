@@ -11,7 +11,8 @@ theme_pcj(
   base.size = 12,
   dark.text = "#000000",
   theme.options = NULL,
-  graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab")
+  graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab",
+    caption = paste("Revised", Sys.time()))
 )
 }
 \arguments{
@@ -41,5 +42,6 @@ g1 <- ggplot2::ggplot(data = mtcars,
 ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
 ggplot2::geom_point()
 theme_pcj(ggplot.object = g1,
-  graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab"))
+  graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab",
+  ylab = "ylab", caption = paste("Revised", Sys.time())))
 }

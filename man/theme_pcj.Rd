@@ -4,12 +4,14 @@
 \alias{theme_pcj}
 \title{A theme made to maximize legibility of text on graphs printed for academic posters}
 \usage{
-theme_pcj(base_size = 12, dark_text = "#000000")
+theme_pcj(base_size = 12, dark_text = "#000000", ...)
 }
 \arguments{
 \item{base_size}{an integer, the size the font in a plot should default to.}
 
 \item{dark_text}{a quoted hex string, sets the color of the darkest text in a plot.}
+
+\item{...}{options to be passed to function theme().}
 }
 \value{
 a plot configured with aesthetic settings specified by options set by this function

@@ -151,6 +151,7 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
 #'
 #' @param base_size an integer, the size the font in a plot should default to.
 #' @param dark_text a quoted hex string, sets the color of the darkest text in a plot.
+#' @param ... options to be passed to function theme().
 #'
 #' @return a plot configured with aesthetic settings specified by options set by this function
 #' @export
@@ -163,7 +164,8 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
 #' theme_pcj()
 
 theme_pcj <- function(base_size = 12,
-                      dark_text = "#000000"
+                      dark_text = "#000000",
+                      ...
                       ){
 
   mid_text <- generate_palette(colour = dark_text,
@@ -218,6 +220,7 @@ theme_pcj <- function(base_size = 12,
         lineheight = 1,
         color = mid_text
       ),
-      legend.direction = "horizontal"
-    )
+      legend.direction = "horizontal",
+      ...
+      )
 }

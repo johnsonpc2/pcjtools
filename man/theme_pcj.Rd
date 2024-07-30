@@ -10,7 +10,6 @@ theme_pcj(
   continuous = FALSE,
   base.size = 12,
   dark.text = "#000000",
-  theme.options = NULL,
   graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab",
     caption = paste("Revised", Sys.time()))
 )
@@ -27,9 +26,7 @@ theme_pcj(
 
 \item{dark.text}{a quoted hex string, sets the color of the darkest text in a plot.}
 
-\item{theme.options}{options to be passed to the theme() function.}
-
-\item{graph.text}{a named list of plot labels.}
+\item{graph.text}{a named list of plot labels and the text to fill them.}
 }
 \value{
 a ggplot object following the specified settings
@@ -41,7 +38,5 @@ A theme developed to build consistent ggplot graphs
 g1 <- ggplot2::ggplot(data = mtcars,
 ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
 ggplot2::geom_point()
-theme_pcj(ggplot.object = g1,
-  graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab",
-  ylab = "ylab", caption = paste("Revised", Sys.time())))
+theme_pcj(ggplot.object = g1)
 }

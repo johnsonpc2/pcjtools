@@ -143,6 +143,8 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
     font_import(prompt = FALSE)
   }
 
+
+
   loadfonts(device = os_fonts, quiet = T)
 }
 
@@ -151,7 +153,6 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
 #'
 #' @param base_size an integer, the size the font in a plot should default to.
 #' @param dark_text a quoted hex string, sets the color of the darkest text in a plot.
-#' @param ... options to be passed to function theme().
 #'
 #' @return a plot configured with aesthetic settings specified by options set by this function
 #' @export
@@ -165,8 +166,7 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
 #' pcj_aesthetics()
 
 pcj_aesthetics <- function(base_size = 12,
-                           dark_text = "#000000",
-                           ...) {
+                           dark_text = "#000000") {
 
   mid_text <- generate_palette(colour = dark_text,
                                             modification = "go_lighter",
@@ -220,8 +220,7 @@ pcj_aesthetics <- function(base_size = 12,
         lineheight = 1,
         color = mid_text
       ),
-      legend.direction = "horizontal",
-      ...
+      legend.direction = "horizontal"
       )
 }
 
@@ -233,8 +232,7 @@ pcj_aesthetics <- function(base_size = 12,
 #' @param continuous logical. Whether the scale of the data is discrete or continuous.
 #' @param base.size an integer, the size the font in a plot should default to.
 #' @param dark.text a quoted hex string, sets the color of the darkest text in a plot.
-#' @param theme.options options to be passed to the theme() function.
-#' @param graph.text a named list of plot labels.
+#' @param graph.text a named list of plot labels and the text to fill them.
 #'
 #' @return a ggplot object following the specified settings
 #' @export
@@ -243,16 +241,13 @@ pcj_aesthetics <- function(base_size = 12,
 #' g1 <- ggplot2::ggplot(data = mtcars,
 #' ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
 #' ggplot2::geom_point()
-#' theme_pcj(ggplot.object = g1,
-#'   graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab",
-#'   ylab = "ylab", caption = paste("Revised", Sys.time())))
+#' theme_pcj(ggplot.object = g1)
 
 theme_pcj <- function(ggplot.object,
                        palette = "default",
                        continuous = FALSE,
                        base.size = 12,
                        dark.text = "#000000",
-                       theme.options = NULL,
                        graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab", caption = paste("Revised", Sys.time()))) {
 
   # Subroutine to add a custom palette to a ggplot object
@@ -270,13 +265,12 @@ theme_pcj <- function(ggplot.object,
   # in the function
 
   # Subroutine to add custom aesthetics to a ggplot object
-  aesthetics_sub <- function(ggplot.object, base_size = base.size, dark_text = dark.text, options = theme.options) {
+  aesthetics_sub <- function(ggplot.object, base_size = base.size, dark_text = dark.text) {
     theme.options <- list(options)
     ggplot.object +
       pcj_aesthetics(
         base_size = base.size,
-        dark_text = dark.text,
-        ... = theme.options
+        dark_text = dark.text
       )
   }
 
@@ -284,7 +278,7 @@ theme_pcj <- function(ggplot.object,
 
 
   # Subroutine to add text labels for plot elements to a ggplot object
-  text_sub <- function(ggplot.object, graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab", caption = paste("Revised", Sys.time()))) {
+  text_sub <- function(ggplot.object, graph.text = list(title = "", subtitle = "", xlab = "", ylab = "", caption = "")) {
     graph.text <- as.list(graph.text)
     ggplot.object +
       labs(

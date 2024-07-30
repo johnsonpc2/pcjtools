@@ -13,7 +13,7 @@
 #' @importFrom stats rnorm
 #' @importFrom reshape2 melt
 #' @importFrom dplyr filter group_by summarise ungroup
-#' @importFrom ggplot2 aes facet_wrap geom_line geom_point geom_text ggplot labs scale_size_continuous scale_x_continuous theme theme_minimal
+#' @importFrom ggplot2 aes facet_wrap geom_line geom_point geom_text ggplot guides guide_legend scale_x_continuous theme theme_minimal
 #' @importFrom kableExtra kable
 #'
 #' @examples
@@ -173,20 +173,17 @@ memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
                  aes(
                    x = Target,
                    y = Cue,
-                   size = Strength,
-                   color = Strength)
+                   color = factor(Strength))
   ) +
     geom_point() +
-    theme_minimal() +
-    scale_size_continuous(range = c(min(learned.strengths),
-                                    max(learned.strengths))) +
-    labs(
-      title = "Learned Strengths Between Cue and Target Letters",
-      caption = paste("Revised:", Sys.time())
-    ) +
-    theme(...)
+    guides(color = guide_legend(nrow = 1))
 
-  print(g1)
+  g1 <- theme_pcj(ggplot.object = g1,
+                  graph.text =
+                    list(title = "Learned Strengths Between Cue and Target Letters",
+                         xlab = "Target",
+                         ylab = "Cue",
+                         caption = paste("Revised:", Sys.time())))
 
   df.summary <- df.activations |>
     group_by(Time, Target) |>
@@ -207,7 +204,6 @@ memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
       lwd = 1.2,
       show.legend = F
     ) +
-    theme_minimal() +
     scale_x_continuous(limits = c(0, n.trials)) +
     geom_text(
       data =
@@ -215,16 +211,13 @@ memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
       mapping =
         aes(label = paste0(Target, ": ", round(MeanStrength, 2))),
       hjust = -0.1,
-      show.legend = F) +
-    labs(
-      title = "Average Target Letter Strength Over Time",
-      y = "Average Strength",
-      x = "Trial",
-      caption = paste("Revised:", Sys.time())
-    ) +
-    theme(...)
+      show.legend = F)
 
-  print(g2)
+  g2 <- theme_pcj(ggplot.object = g2, graph.text =
+                    list(title = "Average Learned Target Strength",
+                         xlab = "Trial",
+                         ylab = "Average Target Strength",
+                         caption = paste("Revised:", Sys.time())))
 
   g3 <- ggplot(
     data = df.activations,
@@ -237,22 +230,25 @@ memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
         alpha = .8
       )
   ) +
-    geom_line(
-      lwd = .8
-    ) +
-    theme_minimal() +
+    geom_line(lwd = .8) +
     scale_x_continuous(limits = c(0, n.trials)) +
-    facet_wrap(
-      facets = df.activations$Cue
-    ) +
-    labs(
-      title = "Cue and Target Strength Over Time",
-      caption = paste("Revised:", Sys.time())
-    ) +
-    theme(...)
+    facet_wrap(facets = df.activations$Cue) +
+    guides(alpha = "none", color = guide_legend(nrow = 1))
 
-  print(g3)
+  g3 <- theme_pcj(ggplot.object = g3, graph.text =
+                    list(title = "Cue and Target Strength Over Time",
+                         xlab = "Trial",
+                         ylab = "Learned Strength",
+                         caption = paste("Revised:", Sys.time())))
 
-  print(learned.strengths)
-  kable(probability.record, digits = 3)
+  model_output <- list(
+    ct_graph = g1,
+    avgt_graph = g2,
+    facet_graph = g3,
+    strengths = learned.strengths,
+    prob_record = kable(probability.record, digits = 3)
+  )
+
+  return(model_output)
+
 }

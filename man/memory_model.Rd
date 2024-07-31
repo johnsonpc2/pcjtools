@@ -11,7 +11,7 @@ memory_model(
   updated.probs.sd = 0.1,
   max.forgetting = 0.6,
   forgetting.slope = 3,
-  ...
+  initial.exposure.matrix = NULL
 )
 }
 \arguments{
@@ -27,7 +27,7 @@ memory_model(
 
 \item{forgetting.slope}{a single integer, the rate you need to see an item to decrease the probability it will be forgotten.}
 
-\item{...}{optional. Settings to pass to the theme() function.}
+\item{initial.exposure.matrix}{optional. A matrix of initial letter exposures to be used to start the model running.}
 }
 \value{
 a matrix of learned memory strengths between letters, a matrix of the randomly generated probabilities used when drawing random samples of letters, and three graphs of the strengths between letters in memory the model's memory representation.

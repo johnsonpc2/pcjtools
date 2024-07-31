@@ -6,7 +6,7 @@
 #' @param updated.probs.sd a single integer, the standard deviation value to be used.
 #' @param max.forgetting a single integer, the probability of forgetting any one item after you've learned it.
 #' @param forgetting.slope a single integer, the rate you need to see an item to decrease the probability it will be forgotten.
-#' @param ... optional. Settings to pass to the theme() function.
+#' @param initial.exposure.matrix optional. A matrix of initial letter exposures to be used to start the model running.
 #'
 #' @return a matrix of learned memory strengths between letters, a matrix of the randomly generated probabilities used when drawing random samples of letters, and three graphs of the strengths between letters in memory the model's memory representation.
 #' @export
@@ -21,7 +21,9 @@
 
 memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
                         updated.probs.sd = .1, max.forgetting = .6,
-                        forgetting.slope = 3, ...) {
+                        forgetting.slope = 3, initial.exposure.matrix = NULL) {
+
+  ### UPDATE: Fully implement the initial.exposure.matrix option by using if statements to either use the input given, or start from scratch
 
   Target = Cue = Strength = Time = MeanStrength = NULL # due to NSE notes in R CMD check
 
@@ -54,14 +56,18 @@ memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
 
   learned.strengths <- 0 * init.mem.rep # makes a matrix to store the strengths of the learned transition probabilities between each letter
 
-  init.exposure <- matrix(data = sample(x = LETTERS[1:n.letters],
-                                        size = n.letters * (n.trials * .05), # initial exposure will only be 5% of total trials
-                                        replace = TRUE,
-                                        prob = prop.table(letter.probs)
-  ),
-  ncol = n.letters,
-  byrow = TRUE
-  )
+  if (is.null(initial.exposure.matrix)) {
+    init.exposure <- matrix(data = sample(x = LETTERS[1:n.letters],
+                                          size = n.letters * (n.trials * .05), # initial exposure will only be 5% of total trials
+                                          replace = TRUE,
+                                          prob = prop.table(letter.probs)
+                                          ),
+                            ncol = n.letters,
+                            byrow = TRUE
+                            )
+    } else {
+      init.exposure <- initial.exposure.matrix
+      }
 
   mem.rep.dev <- array(data = 0,
                        dim = c(n.trials, nrow(learned.strengths), ncol(learned.strengths)),
@@ -246,7 +252,8 @@ memory_model <- function(seed = 20240709, n.letters = 12, n.trials = 500,
     avgt_graph = g2,
     facet_graph = g3,
     strengths = learned.strengths,
-    prob_record = kable(probability.record, digits = 3)
+    prob_record = kable(probability.record, digits = 3),
+    initial_exposure = init.exposure
   )
 
   return(model_output)

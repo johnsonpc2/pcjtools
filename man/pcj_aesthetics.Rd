@@ -2,20 +2,20 @@
 % Please edit documentation in R/theme_pcj.R
 \name{pcj_aesthetics}
 \alias{pcj_aesthetics}
-\title{Graph aesthetics to maximize legibility of text on graphs printed for academic posters}
+\title{Aesthetics to maximize legibility of text on graphs printed for academic posters. This function is wrapped in theme_pcj and cannot be used directly.}
 \usage{
 pcj_aesthetics(base_size = 12, dark_text = "#000000")
 }
 \arguments{
-\item{base_size}{an integer, the size the font in a plot should default to.}
+\item{base_size}{an integer. The graph's default font size.}
 
-\item{dark_text}{a quoted hex string, sets the color of the darkest text in a plot.}
+\item{dark_text}{a quoted hex string, sets the color of the darkest text in a plot. All text is based on various shades of the specified hex code.}
 }
 \value{
 a plot configured with aesthetic settings specified by options set by this function
 }
 \description{
-Graph aesthetics to maximize legibility of text on graphs printed for academic posters
+Aesthetics to maximize legibility of text on graphs printed for academic posters. This function is wrapped in theme_pcj and cannot be used directly.
 }
 \examples{
 ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +

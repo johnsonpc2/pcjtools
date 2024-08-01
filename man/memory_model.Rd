@@ -2,39 +2,39 @@
 % Please edit documentation in R/memory_model.R
 \name{memory_model}
 \alias{memory_model}
-\title{Run a memory model simulation}
+\title{A function that runs a simulation of an Evidence-Based Random Walk memory model}
 \usage{
 memory_model(
   seed = 20240709,
-  n.letters = 12,
-  n.trials = 500,
-  updated.probs.sd = 0.1,
-  max.forgetting = 0.6,
-  forgetting.slope = 3,
-  initial.exposure.matrix = NULL
+  n_letters = 12,
+  n_trials = 500,
+  updated_probs_sd = 0.1,
+  max_forgetting = 0.6,
+  forgetting_slope = 3,
+  initial_exposure_matrix = NULL
 )
 }
 \arguments{
-\item{seed}{a single integer value used to set the state of randomly generated numbers to keep consistency when random numbers are sampled.}
+\item{seed}{numeric. A single integer value used to set the state of randomly generated numbers to keep consistency when random numbers are sampled.}
 
-\item{n.letters}{a single integer, the number of letters to be used in the memory model.}
+\item{n_letters}{a single integer, the number of letters to be used in the memory model.}
 
-\item{n.trials}{a single integer, the number of iterations the model should be run for.}
+\item{n_trials}{a single integer, the number of iterations the model should run.}
 
-\item{updated.probs.sd}{a single integer, the standard deviation value to be used.}
+\item{updated_probs_sd}{a single integer, the standard deviation value to be used when randomly sampling update probabilities.}
 
-\item{max.forgetting}{a single integer, the probability of forgetting any one item after you've learned it.}
+\item{max_forgetting}{a single integer, the probability of forgetting any one item after you've learned it.}
 
-\item{forgetting.slope}{a single integer, the rate you need to see an item to decrease the probability it will be forgotten.}
+\item{forgetting_slope}{a single integer, the rate you need to see an item to decrease the probability it will be forgotten.}
 
-\item{initial.exposure.matrix}{optional. A matrix of initial letter exposures to be used to start the model running.}
+\item{initial_exposure_matrix}{optional. A matrix of initial letter exposures to be used to start the model running. if NULL an initial exposure matrix will be generated from scratch.}
 }
 \value{
 a matrix of learned memory strengths between letters, a matrix of the randomly generated probabilities used when drawing random samples of letters, and three graphs of the strengths between letters in memory the model's memory representation.
 }
 \description{
-Run a memory model simulation
+A function that runs a simulation of an Evidence-Based Random Walk memory model
 }
 \examples{
-memory_model(seed = 1234, n.letters = 12, n.trials = 200)
+memory_model(seed = 1234, n_letters = 12, n_trials = 200)
 }

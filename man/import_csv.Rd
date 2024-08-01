@@ -12,7 +12,7 @@ import_csv(file.dir = NULL, file.type = NULL)
 \item{file.type}{a string. The name of a type of file extension (e.g., "xlsx", "csv", etc.)}
 }
 \value{
-an object containing the data from the files in the specified directory.
+a data.table object containing data from files in the specified directory.
 }
 \description{
 A function to import jsPsych CSV data files downloaded from cognition.run

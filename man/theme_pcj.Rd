@@ -5,28 +5,28 @@
 \title{A theme developed to build consistent ggplot graphs}
 \usage{
 theme_pcj(
-  ggplot.object,
+  ggplot_object,
   palette = "default",
   continuous = FALSE,
-  base.size = 12,
-  dark.text = "#000000",
-  graph.text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab",
+  base_size = 12,
+  dark_text = "#000000",
+  graph_text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab",
     caption = paste("Revised", Sys.time()))
 )
 }
 \arguments{
-\item{ggplot.object}{a ggplot object stored in a vector}
+\item{ggplot_object}{a ggplot object stored in a vector.}
 
-\item{palette}{a string defining the palette to use, including: "default",
-"neg_to_pos", "mono_printing", "mono_blue", "mono_red", "mono_yellow", or "ualbany".}
+\item{palette}{a string, including: "default", "neg_to_pos", "mono_printing",
+"mono_blue", "mono_red", "mono_yellow", or "ualbany".}
 
 \item{continuous}{logical. Whether the scale of the data is discrete or continuous.}
 
-\item{base.size}{an integer, the size the font in a plot should default to.}
+\item{base_size}{an integer. The graph's default font size.}
 
-\item{dark.text}{a quoted hex string, sets the color of the darkest text in a plot.}
+\item{dark_text}{a quoted hex string, sets the color of the darkest text in a plot. All text is based on various shades of the specified hex code.}
 
-\item{graph.text}{a named list of plot labels and the text to fill them.}
+\item{graph_text}{a named list of plot labels and the text to fill them.}
 }
 \value{
 a ggplot object following the specified settings
@@ -38,5 +38,5 @@ A theme developed to build consistent ggplot graphs
 g1 <- ggplot2::ggplot(data = mtcars,
 ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
 ggplot2::geom_point()
-theme_pcj(ggplot.object = g1)
+theme_pcj(ggplot_object = g1)
 }

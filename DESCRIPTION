@@ -15,11 +15,14 @@ Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Imports:
+    data.table,
     dplyr (>= 1.1.4),
     extrafont,
+    fs,
     ggplot2 (>= 3.5.0),
     kableExtra (>= 1.4.0),
     monochromeR,
+    purrr,
     ragg,
     reshape2 (>= 1.4.0),
     usethis

@@ -3,7 +3,7 @@
 #' @param file.dir a string. The the filepath of the directory containing the files to be read in.
 #' @param file.type a string. The name of a type of file extension (e.g., "xlsx", "csv", etc.)
 #'
-#' @return an object containing the data from the files in the specified directory.
+#' @return a data.table object containing data from files in the specified directory.
 #' @export
 #' @importFrom fs path_package
 #' @importFrom purrr map

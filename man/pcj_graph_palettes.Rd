@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme_pcj.R
 \name{pcj_graph_palettes}
 \alias{pcj_graph_palettes}
-\title{A suite of functions to customize plot aesthetics}
+\title{A collection of color palettes to be used in the generation of ggplot graphs. This function is wrapped in theme_pcj and cannot be used directly.}
 \usage{
 pcj_graph_palettes(
   palette = "default",
@@ -25,7 +25,7 @@ pcj_graph_palettes(
 a plot object with the specified aesthetics rendered.
 }
 \description{
-A suite of functions to customize plot aesthetics
+A collection of color palettes to be used in the generation of ggplot graphs. This function is wrapped in theme_pcj and cannot be used directly.
 }
 \examples{
 pcj_graph_palettes(palette = "default")

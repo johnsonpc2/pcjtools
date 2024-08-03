@@ -7,13 +7,15 @@
 #' @export
 #' @importFrom fs path_package
 #' @importFrom purrr map
-#' @importFrom data.table data.table fread
+#' @importFrom data.table data.table fread `:=`
 #'
 #' @examples
 #' import_csv(file.type = "csv")
 
 
 import_csv <- function(file.dir = NULL, file.type = NULL) {
+
+# List Files from Directory -----------------------------------------------
 
   if (is.null(file.dir)) {
 
@@ -25,6 +27,8 @@ import_csv <- function(file.dir = NULL, file.type = NULL) {
     file.list <- dir(path = file.dir, pattern = file.type, full.names = T)
 
   }
+
+# Read In Files -----------------------------------------------------------
 
   read.data <- function(file.list = "example_data.csv") {
 
@@ -47,12 +51,29 @@ import_csv <- function(file.dir = NULL, file.type = NULL) {
                            "browser", "browser_version", "platform",
                            "platform_version", "referer", "accept_language",
                            "timeout", "failed_images", "failed_audio",
-                           "failed_video"))
+                           "failed_video", "view_history"))
 
-      raw.data <<- rbind(raw.data, df)
-      }
+      raw.data <- rbind(raw.data, df)
+    }
+
+    return(raw.data)
   }
 
-  read.data(file.list)
+  raw.data <- read.data(file.list)
 
+# Add Trial ID Column -----------------------------------------------------
+
+  trial_id <- numeric(0)
+
+  concatenate_columns <- function(data) {
+
+    data[, trial_id := paste0(data$sona_id, "-", data$trial_index)]
+    return(data)
+  }
+
+  clean.data <- concatenate_columns(raw.data)
+
+  rm(raw.data)
+
+  return(clean.data)
 }

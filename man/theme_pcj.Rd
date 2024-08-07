@@ -35,8 +35,10 @@ a ggplot object following the specified settings
 A theme developed to build consistent ggplot graphs
 }
 \examples{
-g1 <- ggplot2::ggplot(data = mtcars,
-ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
-ggplot2::geom_point()
+g1 <- ggplot2::ggplot(
+  data = mtcars,
+  ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
+) +
+  ggplot2::geom_point()
 theme_pcj(ggplot_object = g1)
 }

@@ -21,9 +21,11 @@ Imports:
     fs,
     ggplot2 (>= 3.5.0),
     kableExtra (>= 1.4.0),
+    magrittr,
     monochromeR,
     purrr,
     ragg,
     reshape2 (>= 1.4.0),
+    stringi,
     usethis
 Language: en-US

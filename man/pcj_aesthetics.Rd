@@ -19,6 +19,6 @@ Aesthetics to maximize legibility of text on graphs printed for academic posters
 }
 \examples{
 ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-ggplot2::geom_point() +
-pcj_aesthetics()
+  ggplot2::geom_point() +
+  pcj_aesthetics()
 }

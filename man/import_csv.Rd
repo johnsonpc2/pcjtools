@@ -4,19 +4,22 @@
 \alias{import_csv}
 \title{A function to import jsPsych CSV data files downloaded from cognition.run}
 \usage{
-import_csv(file.dir = NULL, file.type = NULL)
+import_csv(file_dir = NULL, file_type = NULL)
 }
 \arguments{
-\item{file.dir}{a string. The the filepath of the directory containing the files to be read in.}
+\item{file_dir}{a string naming a directory filepath that contains
+files to read.}
 
-\item{file.type}{a string. The name of a type of file extension (e.g., "xlsx", "csv", etc.)}
+\item{file_type}{a string that gives the name of the
+file's extension (e.g., "xlsx", "csv", etc.)}
 }
 \value{
-a data.table object containing data from files in the specified directory.
+a data.table object containing the read-in data
+from the specified directory.
 }
 \description{
 A function to import jsPsych CSV data files downloaded from cognition.run
 }
 \examples{
-import_csv(file.type = "csv")
+import_csv(file_type = "csv")
 }

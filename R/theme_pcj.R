@@ -14,7 +14,6 @@
 #' @examples
 #' pcj_graph_palettes(palette = "default")
 #' pcj_graph_palettes(palette = "mono_printing")
-
 pcj_graph_palettes <- function(palette = "default",
                                continuous = FALSE,
                                .colors = pcj_colors,
@@ -93,12 +92,16 @@ pcj_graph_palettes <- function(palette = "default",
   )
 
   if (continuous == FALSE) {
-      discrete_scale(palette = colorRampPalette(.palettes[[palette]]),
-                     aesthetics = c("color", "fill"),
-                     na.value = .colors$na_value)
+    discrete_scale(
+      palette = colorRampPalette(.palettes[[palette]]),
+      aesthetics = c("color", "fill"),
+      na.value = .colors$na_value
+    )
   } else {
-      scale_color_gradientn(colors = .palettes[[palette]],
-                            na.value = .colors$na_value)
+    scale_color_gradientn(
+      colors = .palettes[[palette]],
+      na.value = .colors$na_value
+    )
   }
 }
 
@@ -121,26 +124,33 @@ pcj_graph_palettes <- function(palette = "default",
 #' \dontrun{
 #' load_atkinson(overwrite = FALSE, os_fonts = "win")
 #' }
-
 load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
   # Check if Atkinson Hyperlegible font files already exist in Windows Font directory
-  atkinson_files <- c("AtkinsonHyperlegible-Bold.ttf",
-                      "AtkinsonHyperlegible-BoldItalic.ttf",
-                      "AtkinsonHyperlegible-Italic.ttf",
-                      "AtkinsonHyperlegible-Regular.ttf")
+  atkinson_files <- c(
+    "AtkinsonHyperlegible-Bold.ttf",
+    "AtkinsonHyperlegible-BoldItalic.ttf",
+    "AtkinsonHyperlegible-Italic.ttf",
+    "AtkinsonHyperlegible-Regular.ttf"
+  )
   atkinson_paths <- file.path("C:", "Windows", "Fonts", atkinson_files)
 
   if (!all(file.exists(atkinson_paths))) {
     # If any of the font files don't exist, download and import them
-    use_zip(url = "https://github.com/googlefonts/atkinson-hyperlegible/archive/main.zip",
-            destdir = tempdir())
+    use_zip(
+      url = "https://github.com/googlefonts/atkinson-hyperlegible/archive/main.zip",
+      destdir = tempdir()
+    )
 
-    file.copy(from = c(file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Bold.ttf")),
-                       file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-BoldItalic.ttf")),
-                       file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Italic.ttf")),
-                       file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Regular.ttf"))),
-              to = file.path(paste0("C:\\Windows\\Fonts")),
-              overwrite = overwrite)
+    file.copy(
+      from = c(
+        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Bold.ttf")),
+        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-BoldItalic.ttf")),
+        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Italic.ttf")),
+        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Regular.ttf"))
+      ),
+      to = file.path(paste0("C:\\Windows\\Fonts")),
+      overwrite = overwrite
+    )
 
     font_import(prompt = FALSE)
   }
@@ -164,19 +174,21 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
 #'
 #' @examples
 #' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-#' ggplot2::geom_point() +
-#' pcj_aesthetics()
-
+#'   ggplot2::geom_point() +
+#'   pcj_aesthetics()
 pcj_aesthetics <- function(base_size = 12,
                            dark_text = "#000000") {
+  mid_text <- generate_palette(
+    colour = dark_text,
+    modification = "go_lighter",
+    n_colours = 9
+  )[4]
 
-  mid_text <- generate_palette(colour = dark_text,
-                                            modification = "go_lighter",
-                                            n_colours = 9)[4]
-
-  light_text <- generate_palette(colour = dark_text,
-                                              modification = "go_lighter",
-                                              n_colours = 9)[7]
+  light_text <- generate_palette(
+    colour = dark_text,
+    modification = "go_lighter",
+    n_colours = 9
+  )[7]
 
   theme_minimal() %+replace%
     theme(
@@ -221,7 +233,7 @@ pcj_aesthetics <- function(base_size = 12,
         color = mid_text
       ),
       legend.direction = "horizontal"
-      )
+    )
 }
 
 #' A theme developed to build consistent ggplot graphs
@@ -235,18 +247,18 @@ pcj_aesthetics <- function(base_size = 12,
 #' @export
 #'
 #' @examples
-#' g1 <- ggplot2::ggplot(data = mtcars,
-#' ggplot2::aes(x = mpg, y = wt, color = factor(cyl))) +
-#' ggplot2::geom_point()
+#' g1 <- ggplot2::ggplot(
+#'   data = mtcars,
+#'   ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
+#' ) +
+#'   ggplot2::geom_point()
 #' theme_pcj(ggplot_object = g1)
-
 theme_pcj <- function(ggplot_object,
-                       palette = "default",
-                       continuous = FALSE,
-                       base_size = 12,
-                       dark_text = "#000000",
-                       graph_text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab", caption = paste("Revised", Sys.time()))) {
-
+                      palette = "default",
+                      continuous = FALSE,
+                      base_size = 12,
+                      dark_text = "#000000",
+                      graph_text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab", caption = paste("Revised", Sys.time()))) {
   # Subroutine to add a custom palette to a ggplot object
   color_sub <- function(ggplot_object, palette = palette, continuous = continuous) {
     ggplot_object +
@@ -289,5 +301,4 @@ theme_pcj <- function(ggplot_object,
   ggplot_object <- text_sub(ggplot_object, graph_text)
 
   print(ggplot_object)
-
 }

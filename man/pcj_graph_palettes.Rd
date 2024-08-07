@@ -2,7 +2,8 @@
 % Please edit documentation in R/theme_pcj.R
 \name{pcj_graph_palettes}
 \alias{pcj_graph_palettes}
-\title{A collection of color palettes to be used in the generation of ggplot graphs. This function is wrapped in theme_pcj and cannot be used directly.}
+\title{A collection of color palettes to be used in the generation of ggplot graphs.
+This function is wrapped in theme_pcj and cannot be used directly.}
 \usage{
 pcj_graph_palettes(
   palette = "default",
@@ -15,7 +16,8 @@ pcj_graph_palettes(
 \item{palette}{a string, including: "default", "neg_to_pos", "mono_printing",
 "mono_blue", "mono_red", "mono_yellow", or "ualbany".}
 
-\item{continuous}{logical. Whether the scale of the data is discrete or continuous.}
+\item{continuous}{logical. Whether the scale of the data is discrete or
+continuous.}
 
 \item{.colors}{loads colors defined in pcj_colors.}
 
@@ -25,7 +27,8 @@ pcj_graph_palettes(
 a plot object with the specified aesthetics rendered.
 }
 \description{
-A collection of color palettes to be used in the generation of ggplot graphs. This function is wrapped in theme_pcj and cannot be used directly.
+A collection of color palettes to be used in the generation of ggplot graphs.
+This function is wrapped in theme_pcj and cannot be used directly.
 }
 \examples{
 pcj_graph_palettes(palette = "default")

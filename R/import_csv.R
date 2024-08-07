@@ -2,8 +2,9 @@
 #'
 #' @param file_dir a string naming a directory filepath that contains
 #' files to read.
-#' @param file_type a string that gives the name of the
-#' file's extension (e.g., "xlsx", "csv", etc.)
+#' @param file_type a string that gives the name of the extension of the files
+#' you want to import (e.g., "xlsx", "csv", etc.). They must all be of the same
+#' type.
 #'
 #' @return a data.table object containing the read-in data
 #' from the specified directory.
@@ -30,12 +31,10 @@ import_csv <- function(file_dir = NULL, file_type = NULL) {
 
   # Read In Files -----------------------------------------------------------
 
-  read_data <- function(file_list = "example_data.csv") {
-    if (!inherits(file_list,
-      what = "character"
-    )) {
+  read_data <- function(file_list) {
+    if (!inherits(file_list, what = "character")) {
       stop("Error: file_list must be a character
-           vector containinga list of file paths.\n")
+           vector containing a list of file paths.\n")
     }
 
     raw_data <- data.table()
@@ -71,7 +70,8 @@ import_csv <- function(file_dir = NULL, file_type = NULL) {
   trial_id <- numeric(0)
 
   concatenate_columns <- function(data) {
-    data[, trial_id := paste0(data$sona_id, "-", data$trial_index)]
+    data[, trial_id := paste0(data$sona_id, "-", data$trial_id)]
+
     return(data)
   }
 
@@ -82,10 +82,11 @@ import_csv <- function(file_dir = NULL, file_type = NULL) {
   # Parse String Responses --------------------------------------------------
 
   distraction_data <- function(data, subject_var) {
+    refocus_events <- data.table()
+
     data.table::setkeyv(data, subject_var)
 
-    # make a temporary subset of the data which
-    # includes only recorded distraction data rows.
+    # make a temp subset of the data with non-empty distraction data rows.
     temp_text <- unique(data[!is.na(data$distraction), "distraction"])
 
     event_count <- numeric(0)
@@ -102,7 +103,7 @@ import_csv <- function(file_dir = NULL, file_type = NULL) {
     return(data)
   }
 
-  focus_data <- distraction_data(clean_data, "sona_id")
+  focus_data <- distraction_data(data = clean_data, subject_var = "sona_id")
 
   return(focus_data)
 }

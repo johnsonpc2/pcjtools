@@ -28,9 +28,14 @@
 #'
 #' @examples
 #' memory_model(seed = 1234, n_letters = 12, n_trials = 200)
-memory_model <- function(seed = 20240709, n_letters = 12, n_trials = 500,
-                         updated_probs_sd = .1, max_forgetting = .6,
-                         forgetting_slope = 3, initial_exposure_matrix = NULL) {
+
+memory_model <- function(seed = 20240709,
+                         n_letters = 12,
+                         n_trials = 500,
+                         updated_probs_sd = .1,
+                         max_forgetting = .6,
+                         forgetting_slope = 3,
+                         initial_exposure_matrix = NULL) {
   ### UPDATE: Fully implement the initial.exposure.matrix option by using if
   ### statements to either use the input given, or start from scratch
 
@@ -213,10 +218,16 @@ memory_model <- function(seed = 20240709, n_letters = 12, n_trials = 500,
       # initial probability matrix.
 
       learned_strengths[
-        full_exposure[i - 1], # To identify the row in the learned strengths matrix you want to update, identify the row of the previous index's letter in the exposure vector
+        full_exposure[i - 1], # To identify the row to be updated, identify the
+        # row of the previous index's letter in the exposure vector
         full_exposure[i]
-      ] <- # and to know what column, grab the column from the current index of the exposure vector
-        learned_strengths[full_exposure[i - 1], full_exposure[i]] + 1 # the value you assign to the row and column gathered from the previous steps will be +1 more than the value that is currently stored in that location in the learned associations matrix because of the additional presentation strengthening the memory representation
+      ] <- # and to know what column, get the column from the current index of
+        # the exposure vector
+        learned_strengths[full_exposure[i - 1], full_exposure[i]] + 1 # the
+      # value you assign to the row and column gathered from the previous steps
+      # will be +1 than the value currently stored in that location in the
+      # learned associations matrix. The additional presentation strengthens the
+      # memory representation.
     }
 
     # Memory isn't perfect though, here you implement a forgetting term to
@@ -230,7 +241,10 @@ memory_model <- function(seed = 20240709, n_letters = 12, n_trials = 500,
         if (learned_strengths[j, k] > 0) {
           # as long as the value in each cell in the matrix is greater than 0
           # (because you can't forget what you have not learned)
-          p_forget <- max_forgetting * exp(-forgetting_slope * learned_strengths[j, k]) # calculate the probability someone will forget the association they just learned using the negative exponent function
+          p_forget <- max_forgetting *
+            exp(-forgetting_slope * learned_strengths[j, k]) # calculate the
+          # probability, using the negative exponent function, someone will
+          # forget the association they just learned
           if (runif(n = 1) < p_forget) { # if that probability is > 1,
             learned_strengths[j, k] <- learned_strengths[j, k] - 1
             # subtract one from the current value of the learned strength

@@ -1,8 +1,10 @@
-#' A collection of color palettes to be used in the generation of ggplot graphs. This function is wrapped in theme_pcj and cannot be used directly.
+#' A collection of color palettes to be used in the generation of ggplot graphs.
+#' This function is wrapped in theme_pcj and cannot be used directly.
 #'
 #' @param palette a string, including: "default", "neg_to_pos", "mono_printing",
 #' "mono_blue", "mono_red", "mono_yellow", or "ualbany".
-#' @param continuous logical. Whether the scale of the data is discrete or continuous.
+#' @param continuous logical. Whether the scale of the data is discrete or
+#' continuous.
 #' @param .colors loads colors defined in pcj_colors.
 #' @param .palettes loads palettes defined in pcj_palettes.
 #'
@@ -109,8 +111,8 @@ pcj_graph_palettes <- function(palette = "default",
 #' A function to download and import the Atkinson Hyperlegible font required for
 #' the theme_pcj
 #'
-#' @param overwrite logical. If font files are downloaded to the system folder, should
-#' existing Atkinson font files be overwritten?
+#' @param overwrite logical. Should font files that are downloaded to the system
+#' folder overwrite existing Atkinson font files?
 #' @param os_fonts a string, including "all", "pdf", "postscript" and "win",
 #' indicating which fonts should be loaded into RStudio.
 #'
@@ -125,7 +127,8 @@ pcj_graph_palettes <- function(palette = "default",
 #' load_atkinson(overwrite = FALSE, os_fonts = "win")
 #' }
 load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
-  # Check if Atkinson Hyperlegible font files already exist in Windows Font directory
+  # Check if Atkinson Hyperlegible fonts are already installed in Windows Font
+  # directory
   atkinson_files <- c(
     "AtkinsonHyperlegible-Bold.ttf",
     "AtkinsonHyperlegible-BoldItalic.ttf",
@@ -137,7 +140,7 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
   if (!all(file.exists(atkinson_paths))) {
     # If any of the font files don't exist, download and import them
     use_zip(
-      url = "https://github.com/googlefonts/atkinson-hyperlegible/archive/main.zip",
+      url = "https://tinyurl.com/mwfmu6cc",
       destdir = tempdir()
     )
 
@@ -157,20 +160,23 @@ load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
 
 
 
-  loadfonts(device = os_fonts, quiet = T)
+  loadfonts(device = os_fonts, quiet = TRUE)
 }
 
 
-#' Aesthetics to maximize legibility of text on graphs printed for academic posters. This function is wrapped in theme_pcj and cannot be used directly.
+#' Aesthetics to maximize legibility of graphs printed for academic posters.
+#' This function is wrapped in theme_pcj and cannot be used directly.
 #'
 #' @param base_size an integer. The graph's default font size.
-#' @param dark_text a quoted hex string, sets the color of the darkest text in a plot. All text is based on various shades of the specified hex code.
+#' @param dark_text a quoted hex string, sets the color of the darkest text in a
+#' plot. All text is based on various shades of the specified hex code.
 #'
-#' @return a plot configured with aesthetic settings specified by options set by this function
+#' @return a plot configured with aesthetic settings specified by options set by
+#' this function
 #' @export
 #' @importFrom monochromeR generate_palette
-#' @importFrom ggplot2 ggplot element_blank element_line element_text labs margin
-#' rel theme theme_minimal %+replace%
+#' @importFrom ggplot2 ggplot element_blank element_line element_text labs
+#' margin rel theme theme_minimal %+replace%
 #'
 #' @examples
 #' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
@@ -258,9 +264,18 @@ theme_pcj <- function(ggplot_object,
                       continuous = FALSE,
                       base_size = 12,
                       dark_text = "#000000",
-                      graph_text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab", caption = paste("Revised", Sys.time()))) {
-  # Subroutine to add a custom palette to a ggplot object
-  color_sub <- function(ggplot_object, palette = palette, continuous = continuous) {
+                      graph_text =
+                        list(
+                          title = "title",
+                          subtitle = "subtitle",
+                          xlab = "xlab",
+                          ylab = "ylab",
+                          caption = paste("Revised", Sys.time())
+                        )) {
+  # Color Subroutine --------------------------------------------------------
+  color_sub <- function(ggplot_object,
+                        palette = palette,
+                        continuous = continuous) {
     ggplot_object +
       pcj_graph_palettes(
         palette = palette,
@@ -269,24 +284,34 @@ theme_pcj <- function(ggplot_object,
   }
 
   ggplot_object <- color_sub(ggplot_object, palette, continuous)
-  # You should add an if statement so the above code will only if "continuous = F"
-  # if the variable has been factorized, and if it hasn't, then to factorize it
-  # in the function
+  # You should add an if statement so the above code will only if
+  # "continuous = F" if the variable has been factorized, and if it hasn't,
+  # then to factorize it in the function
 
-  # Subroutine to add custom aesthetics to a ggplot object
-  aesthetics_sub <- function(ggplot_object, base.size = base_size, dark.text = dark_text) {
+
+  # Custom Aesthetics Subroutine --------------------------------------------
+  aesthetics_sub <- function(ggplot_object,
+                             base_text_size = base_size,
+                             text_color = dark_text) {
     ggplot_object +
       pcj_aesthetics(
-        base_size = base.size,
-        dark_text = dark.text
+        base_size = base_text_size,
+        dark_text = text_color
       )
   }
 
   ggplot_object <- aesthetics_sub(ggplot_object)
 
 
-  # Subroutine to add text labels for plot elements to a ggplot object
-  text_sub <- function(ggplot_object, graph_text = list(title = "", subtitle = "", xlab = "", ylab = "", caption = "")) {
+  # Graph Labels Subroutine -------------------------------------------------
+  text_sub <- function(ggplot_object,
+                       graph_text = list(
+                         title = "",
+                         subtitle = "",
+                         xlab = "",
+                         ylab = "",
+                         caption = ""
+                       )) {
     graph_text <- as.list(graph_text)
     ggplot_object +
       labs(

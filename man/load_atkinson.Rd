@@ -8,8 +8,8 @@ the theme_pcj}
 load_atkinson(overwrite = FALSE, os_fonts = "win")
 }
 \arguments{
-\item{overwrite}{logical. If font files are downloaded to the system folder, should
-existing Atkinson font files be overwritten?}
+\item{overwrite}{logical. Should font files that are downloaded to the system
+folder overwrite existing Atkinson font files?}
 
 \item{os_fonts}{a string, including "all", "pdf", "postscript" and "win",
 indicating which fonts should be loaded into RStudio.}

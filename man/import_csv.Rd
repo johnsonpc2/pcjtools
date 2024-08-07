@@ -10,8 +10,9 @@ import_csv(file_dir = NULL, file_type = NULL)
 \item{file_dir}{a string naming a directory filepath that contains
 files to read.}
 
-\item{file_type}{a string that gives the name of the
-file's extension (e.g., "xlsx", "csv", etc.)}
+\item{file_type}{a string that gives the name of the extension of the files
+you want to import (e.g., "xlsx", "csv", etc.). They must all be of the same
+type.}
 }
 \value{
 a data.table object containing the read-in data

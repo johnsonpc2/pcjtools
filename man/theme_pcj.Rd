@@ -20,11 +20,13 @@ theme_pcj(
 \item{palette}{a string, including: "default", "neg_to_pos", "mono_printing",
 "mono_blue", "mono_red", "mono_yellow", or "ualbany".}
 
-\item{continuous}{logical. Whether the scale of the data is discrete or continuous.}
+\item{continuous}{logical. Whether the scale of the data is discrete or
+continuous.}
 
 \item{base_size}{an integer. The graph's default font size.}
 
-\item{dark_text}{a quoted hex string, sets the color of the darkest text in a plot. All text is based on various shades of the specified hex code.}
+\item{dark_text}{a quoted hex string, sets the color of the darkest text in a
+plot. All text is based on various shades of the specified hex code.}
 
 \item{graph_text}{a named list of plot labels and the text to fill them.}
 }

@@ -16,8 +16,8 @@ pcj_graph_palettes(
 \item{palette}{a string, including: "default", "neg_to_pos", "mono_printing",
 "mono_blue", "mono_red", "mono_yellow", or "ualbany".}
 
-\item{continuous}{logical. Whether the scale of the data is discrete or
-continuous.}
+\item{continuous}{logical. Whether the palette used in the graph should use a
+discrete or continuous scale.}
 
 \item{.colors}{loads colors defined in pcj_colors.}
 

@@ -3,8 +3,8 @@
 #'
 #' @param palette a string, including: "default", "neg_to_pos", "mono_printing",
 #' "mono_blue", "mono_red", "mono_yellow", or "ualbany".
-#' @param continuous logical. Whether the scale of the data is discrete or
-#' continuous.
+#' @param continuous logical. Whether the palette used in the graph should use a
+#' discrete or continuous scale.
 #' @param .colors loads colors defined in pcj_colors.
 #' @param .palettes loads palettes defined in pcj_palettes.
 #'
@@ -276,6 +276,7 @@ theme_pcj <- function(ggplot_object,
   color_sub <- function(ggplot_object,
                         palette = palette,
                         continuous = continuous) {
+
     ggplot_object +
       pcj_graph_palettes(
         palette = palette,

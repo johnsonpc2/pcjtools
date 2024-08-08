@@ -20,8 +20,8 @@ theme_pcj(
 \item{palette}{a string, including: "default", "neg_to_pos", "mono_printing",
 "mono_blue", "mono_red", "mono_yellow", or "ualbany".}
 
-\item{continuous}{logical. Whether the scale of the data is discrete or
-continuous.}
+\item{continuous}{logical. Whether the palette used in the graph should use a
+discrete or continuous scale.}
 
 \item{base_size}{an integer. The graph's default font size.}
 

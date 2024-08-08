@@ -70,7 +70,7 @@ import_csv <- function(file_dir = NULL, file_type = NULL) {
   trial_id <- numeric(0)
 
   concatenate_columns <- function(data) {
-    data[, trial_id := paste0(data$sona_id, "-", data$trial_id)]
+    data[, trial_id := paste0(data$sona_id, "-", data$trial_index)]
 
     return(data)
   }

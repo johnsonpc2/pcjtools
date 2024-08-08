@@ -1,5 +1,5 @@
 Package: pcjtools
-Title: A set of tools developed for wrangling and analyzing data from jsPsych
+Title: A Set of Tools Developed for Wrangling and Analyzing Data from jsPsych
 Version: 0.0.0.9000
 Authors@R: 
     person("Pierce", "Johnson", , "johnsonpierce.c@gmail.com", role = c("aut", "cre"),
@@ -16,16 +16,16 @@ Suggests:
 Config/testthat/edition: 3
 Imports:
     data.table,
-    dplyr (>= 1.1.4),
+    dplyr,
     extrafont,
     fs,
-    ggplot2 (>= 3.5.0),
-    kableExtra (>= 1.4.0),
+    ggplot2,
+    kableExtra,
     magrittr,
     monochromeR,
     purrr,
     ragg,
-    reshape2 (>= 1.4.0),
+    reshape2,
     stringi,
     usethis
 Language: en-US

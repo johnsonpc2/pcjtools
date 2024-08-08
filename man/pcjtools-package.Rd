@@ -4,7 +4,7 @@
 \name{pcjtools-package}
 \alias{pcjtools}
 \alias{pcjtools-package}
-\title{pcjtools: A set of tools developed for wrangling and analyzing data from jsPsych}
+\title{A Set of Tools Developed for Wrangling and Analyzing Data from jsPsych}
 \description{
 Convenience functions to make some common data wrangling and analysis of experimental data from jsPsych and Congition.run a bit easier.
 }

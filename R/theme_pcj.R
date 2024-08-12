@@ -108,59 +108,27 @@ pcj_graph_palettes <- function(palette = "default",
 }
 
 
-#' A function to download and import the Atkinson Hyperlegible font required for
-#' the theme_pcj
+#' A function to install the Atkinson Hyperlegible font required for the
+#' theme_pcj
 #'
-#' @param overwrite logical. Should font files that are downloaded to the system
-#' folder overwrite existing Atkinson font files?
-#' @param os_fonts a string, including "all", "pdf", "postscript" and "win",
-#' indicating which fonts should be loaded into RStudio.
 #'
 #' @return NULL
 #' @export
-#' @importFrom usethis use_zip
-#' @importFrom extrafont font_import loadfonts
+#' @importFrom extrafont font_import loadfonts ttf_import
 #' @import ragg
 #'
 #' @examples
-#' \dontrun{
-#' load_atkinson(overwrite = FALSE, os_fonts = "win")
-#' }
-load_atkinson <- function(overwrite = FALSE, os_fonts = "win") {
-  # Check if Atkinson Hyperlegible fonts are already installed in Windows Font
-  # directory
-  atkinson_files <- c(
-    "AtkinsonHyperlegible-Bold.ttf",
-    "AtkinsonHyperlegible-BoldItalic.ttf",
-    "AtkinsonHyperlegible-Italic.ttf",
-    "AtkinsonHyperlegible-Regular.ttf"
-  )
-  atkinson_paths <- file.path("C:", "Windows", "Fonts", atkinson_files)
+#' install_atkinson()
 
-  if (!all(file.exists(atkinson_paths))) {
-    # If any of the font files don't exist, download and import them
-    use_zip(
-      url = "https://tinyurl.com/mwfmu6cc",
-      destdir = tempdir()
-    )
+install_atkinson <- function() {
 
-    file.copy(
-      from = c(
-        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Bold.ttf")),
-        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-BoldItalic.ttf")),
-        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Italic.ttf")),
-        file.path(paste0(tempdir(), "\\atkinson-hyperlegible-main\\fonts\\ttf\\AtkinsonHyperlegible-Regular.ttf"))
-      ),
-      to = file.path(paste0("C:\\Windows\\Fonts")),
-      overwrite = overwrite
-    )
+  path <- system.file("fonts", package = "pcjtools")
 
-    font_import(prompt = FALSE)
-  }
+  ttf_import(paths = path,
+             recursive = FALSE,
+             pattern = "Atkinson")
 
-
-
-  loadfonts(device = os_fonts, quiet = TRUE)
+  loadfonts(quiet = TRUE)
 }
 
 

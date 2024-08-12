@@ -1,6 +1,6 @@
 Package: pcjtools
-Title: A Set of Tools Developed for Wrangling and Analyzing Data from jsPsych
-Version: 0.0.0.9000
+Title: Wrangle and Analyze Data from jsPsych and Cognition.run
+Version: 1.0.0.9000
 Authors@R: 
     person("Pierce", "Johnson", , "johnsonpierce.c@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "https://orcid.org/0009-0002-8517-2452"))
@@ -26,6 +26,5 @@ Imports:
     purrr,
     ragg,
     reshape2,
-    stringi,
-    usethis
+    stringi
 Language: en-US

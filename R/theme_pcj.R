@@ -294,5 +294,5 @@ theme_pcj <- function(ggplot_object,
 
   ggplot_object <- text_sub(ggplot_object, graph_text)
 
-  print(ggplot_object) # test1
+  print(ggplot_object) # tes
 }

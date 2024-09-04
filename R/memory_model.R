@@ -72,8 +72,8 @@ memory_model <- function(seed = 20240709,
     ncol = length(letter_probs),
     byrow = TRUE,
     dimnames = list(
-      LETTERS[1:n_letters],
-      LETTERS[1:n_letters]
+      LETTERS[1:n_letters], # row names: the target
+      LETTERS[1:n_letters]  # column names : the cue
     )
   )
 
@@ -81,8 +81,7 @@ memory_model <- function(seed = 20240709,
   # following themselves
 
   learned_strengths <- 0 * init_mem_rep # makes a matrix to store the strengths
-  # of the learned transition
-  # probabilities between each letter.
+  # of the learned transition probabilities between each letter.
 
   if (is.null(initial_exposure_matrix)) {
     init_exposure <- matrix(
@@ -126,7 +125,7 @@ memory_model <- function(seed = 20240709,
   # Initialize the matrices that you need
   updated_exposure <- matrix(
     data = NaN,
-    nrow = n_trials * .95,
+    nrow = n_trials * .95, # the exposure simulation will be 95% of all trials
     ncol = n_letters,
     dimnames = list(NULL, 1:n_letters)
   ) # a matrix to store the letters drawn based on updating probabilities

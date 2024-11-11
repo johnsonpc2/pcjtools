@@ -182,10 +182,11 @@ pcj_aesthetics <- function(base_size = 12,
         color = mid_text,
       ),
       axis.text = element_text(
-        color = mid_text
+        size = rel(1.0),
+        color = dark_text
       ),
       axis.title = element_text(
-        size = rel(1.5),
+        size = rel(1.2),
         color = dark_text
       ),
       panel.grid = element_line(
@@ -202,7 +203,7 @@ pcj_aesthetics <- function(base_size = 12,
       legend.title = element_blank(),
       legend.position = "top",
       legend.text = element_text(
-        size = rel(1.5),
+        size = rel(1.2),
         lineheight = 1,
         color = mid_text
       ),

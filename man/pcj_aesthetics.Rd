@@ -5,13 +5,15 @@
 \title{Aesthetics to maximize legibility of graphs printed for academic posters.
 This function is wrapped in theme_pcj and cannot be used directly.}
 \usage{
-pcj_aesthetics(base_size = 12, dark_text = "#000000")
+pcj_aesthetics(base_size = 12, dark_text = "#000000", ...)
 }
 \arguments{
 \item{base_size}{an integer. The graph's default font size.}
 
 \item{dark_text}{a quoted hex string, sets the color of the darkest text in a
 plot. All text is based on various shades of the specified hex code.}
+
+\item{...}{additional arguments to be passed to \code{theme} or other functions.}
 }
 \value{
 a plot configured with aesthetic settings specified by options set by

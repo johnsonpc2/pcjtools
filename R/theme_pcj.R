@@ -138,6 +138,7 @@ install_atkinson <- function() {
 #' @param base_size an integer. The graph's default font size.
 #' @param dark_text a quoted hex string, sets the color of the darkest text in a
 #' plot. All text is based on various shades of the specified hex code.
+#' @param ... additional arguments to be passed to `theme` or other functions.
 #'
 #' @return a plot configured with aesthetic settings specified by options set by
 #' this function
@@ -151,7 +152,8 @@ install_atkinson <- function() {
 #'   ggplot2::geom_point() +
 #'   pcj_aesthetics()
 pcj_aesthetics <- function(base_size = 12,
-                           dark_text = "#000000") {
+                           dark_text = "#000000",
+                           ...) {
   mid_text <- generate_palette(
     colour = dark_text,
     modification = "go_lighter",
@@ -207,7 +209,8 @@ pcj_aesthetics <- function(base_size = 12,
         lineheight = 1,
         color = mid_text
       ),
-      legend.direction = "horizontal"
+      legend.direction = "horizontal",
+      ...
     )
 }
 
@@ -218,6 +221,7 @@ pcj_aesthetics <- function(base_size = 12,
 #' @inheritParams pcj_aesthetics
 #' @param graph_text a named list of plot labels and the text to fill them.
 #' @param show_caption logical, should a caption be printed with the graph?
+#' @param ... additional arguments to be passed to `pcj_aesthetics`.
 #'
 #' @return a ggplot object following the specified settings
 #' @export
@@ -241,7 +245,15 @@ theme_pcj <- function(ggplot_object,
                         ylab = "ylab",
                         caption = paste("Revised", Sys.time())
                       ),
-                      show_caption = TRUE) {
+                      show_caption = TRUE,
+                      ...) {
+
+  default_graph_text <- list(
+    title = "title",
+    xlab = "xlab",
+    ylab = "ylab",
+    caption = paste("Revised", Sys.time())
+  )
 
   # Color Subroutine --------------------------------------------------------
   color_sub <- function(ggplot_object,
@@ -260,7 +272,8 @@ theme_pcj <- function(ggplot_object,
   # Custom Aesthetics Subroutine --------------------------------------------
   aesthetics_sub <- function(ggplot_object,
                              base_text_size = base_size,
-                             text_color = dark_text) {
+                             text_color = dark_text,
+                             ...) {
     ggplot_object +
       pcj_aesthetics(
         base_size = base_text_size,
@@ -283,10 +296,14 @@ theme_pcj <- function(ggplot_object,
     graph_text <- as.list(graph_text)
     ggplot_object +
       labs(
-        title = graph_text$title,
-        subtitle = graph_text$subtitle,
-        x = graph_text$xlab,
-        y = graph_text$ylab,
+        title = if (length(graph_text$title > 1))
+          graph_text$title else default_graph_text$title,
+        subtitle = if (length(graph_text$subtitle > 1))
+          graph_text$subtitle else NULL,
+        x = if (length(graph_text$xlab > 1))
+          graph_text$xlab else default_graph_text$xlab,
+        y = if (length(graph_text$ylab > 1))
+          graph_text$ylab else default_graph_text$ylab,
         caption = if (show_caption) graph_text$caption else NULL
       )
   }

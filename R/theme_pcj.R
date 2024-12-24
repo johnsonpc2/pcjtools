@@ -217,6 +217,7 @@ pcj_aesthetics <- function(base_size = 12,
 #' @inheritParams pcj_graph_palettes
 #' @inheritParams pcj_aesthetics
 #' @param graph_text a named list of plot labels and the text to fill them.
+#' @param show_caption logical, should a caption be printed with the graph?
 #'
 #' @return a ggplot object following the specified settings
 #' @export
@@ -233,14 +234,15 @@ theme_pcj <- function(ggplot_object,
                       continuous = FALSE,
                       base_size = 12,
                       dark_text = "#000000",
-                      graph_text =
-                        list(
-                          title = "title",
-                          subtitle = "subtitle",
-                          xlab = "xlab",
-                          ylab = "ylab",
-                          caption = paste("Revised", Sys.time())
-                        )) {
+                      graph_text = list(
+                        title = "title",
+                        subtitle = "subtitle",
+                        xlab = "xlab",
+                        ylab = "ylab",
+                        caption = paste("Revised", Sys.time())
+                      ),
+                      show_caption = TRUE) {
+
   # Color Subroutine --------------------------------------------------------
   color_sub <- function(ggplot_object,
                         palette = palette,
@@ -254,10 +256,6 @@ theme_pcj <- function(ggplot_object,
   }
 
   ggplot_object <- color_sub(ggplot_object, palette, continuous)
-  # You should add an if statement so the above code will only if
-  # "continuous = F" if the variable has been factorized, and if it hasn't,
-  # then to factorize it in the function
-
 
   # Custom Aesthetics Subroutine --------------------------------------------
   aesthetics_sub <- function(ggplot_object,
@@ -272,7 +270,6 @@ theme_pcj <- function(ggplot_object,
 
   ggplot_object <- aesthetics_sub(ggplot_object)
 
-
   # Graph Labels Subroutine -------------------------------------------------
   text_sub <- function(ggplot_object,
                        graph_text = list(
@@ -281,7 +278,8 @@ theme_pcj <- function(ggplot_object,
                          xlab = "",
                          ylab = "",
                          caption = ""
-                       )) {
+                       ),
+                       show_caption = TRUE) {
     graph_text <- as.list(graph_text)
     ggplot_object +
       labs(
@@ -289,11 +287,11 @@ theme_pcj <- function(ggplot_object,
         subtitle = graph_text$subtitle,
         x = graph_text$xlab,
         y = graph_text$ylab,
-        caption = graph_text$caption
+        caption = if (show_caption) graph_text$caption else NULL
       )
   }
 
-  ggplot_object <- text_sub(ggplot_object, graph_text)
+  ggplot_object <- text_sub(ggplot_object, graph_text, show_caption)
 
-  print(ggplot_object) # tes
+  print(ggplot_object)
 }

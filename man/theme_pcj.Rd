@@ -11,7 +11,8 @@ theme_pcj(
   base_size = 12,
   dark_text = "#000000",
   graph_text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab",
-    caption = paste("Revised", Sys.time()))
+    caption = paste("Revised", Sys.time())),
+  show_caption = TRUE
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ discrete or continuous scale.}
 plot. All text is based on various shades of the specified hex code.}
 
 \item{graph_text}{a named list of plot labels and the text to fill them.}
+
+\item{show_caption}{logical, should a caption be printed with the graph?}
 }
 \value{
 a ggplot object following the specified settings

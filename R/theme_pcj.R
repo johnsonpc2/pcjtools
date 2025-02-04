@@ -277,7 +277,8 @@ theme_pcj <- function(ggplot_object,
     ggplot_object +
       pcj_aesthetics(
         base_size = base_text_size,
-        dark_text = text_color
+        dark_text = text_color,
+        ...
       )
   }
 

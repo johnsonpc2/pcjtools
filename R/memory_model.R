@@ -19,12 +19,7 @@
 #' and three graphs of the strengths between letters in memory the model's
 #' memory representation.
 #' @export
-#' @importFrom stats rnorm
-#' @importFrom reshape2 melt
 #' @importFrom dplyr filter group_by summarise ungroup
-#' @importFrom ggplot2 aes facet_wrap geom_line geom_point geom_text ggplot
-#' guides guide_legend scale_x_continuous theme theme_minimal
-#' @importFrom kableExtra kable
 #'
 #' @examples
 #' memory_model(seed = 1234, n_letters = 12, n_trials = 200)
@@ -147,7 +142,7 @@ memory_model <- function(seed = 20240709,
   ) # a matrix to store the "temp" letter probabilities for each step of the for
   # loop used later
 
-  updated_probs[1, ] <- letter_probs + rnorm(
+  updated_probs[1, ] <- letter_probs + stats::rnorm(
     n = length(letter_probs),
     mean = 0,
     sd = updated_probs_sd
@@ -180,7 +175,7 @@ memory_model <- function(seed = 20240709,
 
 
   for (j in 2:nrow(updated_exposure)) {
-    updated_probs[j, ] <- updated_probs[j - 1, ] + rnorm(
+    updated_probs[j, ] <- updated_probs[j - 1, ] + stats::rnorm(
       n = n_letters,
       mean = 0,
       sd = updated_probs_sd
@@ -256,18 +251,18 @@ memory_model <- function(seed = 20240709,
     mem_rep_dev[i, , ] <- learned_strengths # store the letter memory strengths
   }
 
-  df_activations <- melt(mem_rep_dev[, , ])
+  df_activations <- reshape2::melt(mem_rep_dev[, , ])
   names(df_activations) <- c("time", "cue", "target", "strength")
 
-  g1 <- ggplot(
+  g1 <- ggplot2::ggplot(
     data = df_activations,
-    mapping = aes(
+    mapping = ggplot2::aes(
       x = target,
       y = cue,
       color = factor(strength)
     )
   ) +
-    geom_point() +
+    ggplot2::geom_point() +
     guides(color = guide_legend(nrow = 1))
 
   g1 <- theme_pcj(
@@ -287,10 +282,10 @@ memory_model <- function(seed = 20240709,
     summarise(mean_strength = mean(strength)) |>
     ungroup()
 
-  g2 <- ggplot(
+  g2 <- ggplot2::ggplot(
     data = df_summary,
     mapping =
-      aes(
+      ggplot2::aes(
         x = time,
         y = mean_strength,
         color = target,
@@ -298,16 +293,16 @@ memory_model <- function(seed = 20240709,
         alpha = .8
       )
   ) +
-    geom_line(
+    ggplot2::geom_line(
       lwd = 1.2,
       show.legend = FALSE
     ) +
-    scale_x_continuous(limits = c(0, n_trials)) +
-    geom_text(
+    ggplot2::scale_x_continuous(limits = c(0, n_trials)) +
+    ggplot2::geom_text(
       data =
         filter(df_summary, time == max(time)),
       mapping =
-        aes(label = paste0(target, ": ", round(mean_strength, 2))),
+        ggplot2::aes(label = paste0(target, ": ", round(mean_strength, 2))),
       hjust = -0.1,
       show.legend = FALSE
     )
@@ -322,10 +317,10 @@ memory_model <- function(seed = 20240709,
       )
   )
 
-  g3 <- ggplot(
+  g3 <- ggplot2::ggplot(
     data = df_activations,
     mapping =
-      aes(
+      ggplot2::aes(
         x = time,
         y = strength,
         color = target,
@@ -333,9 +328,9 @@ memory_model <- function(seed = 20240709,
         alpha = .8
       )
   ) +
-    geom_line(lwd = .8) +
-    scale_x_continuous(limits = c(0, n_trials)) +
-    facet_wrap(facets = df_activations$cue) +
+    ggplot2::geom_line(lwd = .8) +
+    ggplot2::scale_x_continuous(limits = c(0, n_trials)) +
+    ggplot2::facet_wrap(facets = df_activations$cue) +
     guides(alpha = "none", color = guide_legend(nrow = 1))
 
   g3 <- theme_pcj(
@@ -353,7 +348,7 @@ memory_model <- function(seed = 20240709,
     avgt_graph = g2,
     facet_graph = g3,
     strengths = learned_strengths,
-    prob_record = kable(probability_record, digits = 3),
+    prob_record = knitr::kable(probability_record, digits = 3),
     initial_exposure = init_exposure
   )
 

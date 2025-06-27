@@ -11,9 +11,9 @@
 #' @export
 #'
 #' @examples
-#' import_data(extension = "csv")
+#' files_info(path = NULL, extension = "csv")
 
-file_list <- function(path = NULL, extension, ...) {
+files_info <- function(path = NULL, extension, ...) {
 
   if (is.null(path)) {
 
@@ -54,20 +54,22 @@ file_list <- function(path = NULL, extension, ...) {
 
 
 
-#' a helper function used by 'read_data_list()' to read individual data files
+#' a helper function used by 'read_file_list()' to read individual data files
 #'
-#' @param file a string or list of strings with file name paths
+#' @param x a string, or list of strings, with file name paths
 #'
 #' @returns a data.table object containing data from a file supplied to
 #' 'read_data_list()'
 #'
 #' @examples
-#' data <- read_file(file)
+#' \dontrun{
+#' read_file(x)
+#' }
 
-read_file <- function(file) {
+read_file <- function(x) {
 
   data.table::fread(
-    file = file,
+    file = x,
     na.strings = c("", "null", NA),
     nThread = data.table::getDTthreads(),
     data.table = TRUE
@@ -79,7 +81,7 @@ read_file <- function(file) {
 
 #' a function to read in data passed from the 'read_file()' helper function
 #'
-#' @param file_list a string or an object containing strings with file path(s)
+#' @param files a string or an object containing strings with file path(s)
 #'
 #' @returns a data.table object of concatenated data from all named files
 #' supplied in 'file_list'
@@ -87,11 +89,11 @@ read_file <- function(file) {
 #' @export
 #'
 #' @examples
-#' data <- read_file_list(file_list = file_list())
+#' data <- read_file_list(files = files_info())
 
-read_file_list <- function(file_list) {
+read_file_list <- function(files) {
 
-  files <- file_list[, 1]
+  files <- files[, 1]
 
   if (!inherits(x = files$file, what = "character")) {
 

@@ -4,10 +4,10 @@
 \alias{read_file_list}
 \title{a function to read in data passed from the 'read_file()' helper function}
 \usage{
-read_file_list(file_list)
+read_file_list(files)
 }
 \arguments{
-\item{file_list}{a string or an object containing strings with file path(s)}
+\item{files}{a string or an object containing strings with file path(s)}
 }
 \value{
 a data.table object of concatenated data from all named files
@@ -17,5 +17,5 @@ supplied in 'file_list'
 a function to read in data passed from the 'read_file()' helper function
 }
 \examples{
-data <- read_file_list(file_list = file_list())
+data <- read_file_list(files = files_info())
 }

@@ -4,7 +4,11 @@
 \alias{theme_pcj_text}
 \title{a function to apply text to a plot}
 \usage{
-theme_pcj_text(text, alt_text)
+theme_pcj_text(
+  text = c("title", "subtitle", "xlab", "ylab", paste0("Rendered:", format(Sys.time(),
+    "\%Y\%m\%d, \%H:\%M"))),
+  alt_text = TRUE
+)
 }
 \arguments{
 \item{text}{a named list of plot features and their text label}

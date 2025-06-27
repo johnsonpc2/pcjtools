@@ -7,9 +7,9 @@
 import_data(path = NULL, extension = NULL, ...)
 }
 \arguments{
-\item{path}{a filepath string naming a directory with files to read. All
-files of the type named in extension will be read into a single data.table
-object}
+\item{path}{a filepath string that names a directory with files to read. All
+files of the file type named in extension will be read into a single
+data.table object.}
 
 \item{extension}{a string naming a kind of file to import.}
 

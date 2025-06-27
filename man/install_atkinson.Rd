@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme_helpers.R, R/theme_pcj.R
 \name{install_atkinson}
 \alias{install_atkinson}
-\title{a helper function to install the 'Atkinson Hyperlegible' font, used by
+\title{a function to install the 'Atkinson Hyperlegible' font, used by
 'theme_pcj()'}
 \usage{
 install_atkinson()
@@ -10,7 +10,7 @@ install_atkinson()
 install_atkinson()
 }
 \description{
-a helper function to install the 'Atkinson Hyperlegible' font, used by
+a function to install the 'Atkinson Hyperlegible' font, used by
 'theme_pcj()'
 
 A function to install the Atkinson Hyperlegible font required for the

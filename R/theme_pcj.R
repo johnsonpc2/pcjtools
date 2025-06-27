@@ -221,7 +221,7 @@ pcj_aesthetics <- function(base_size = 12,
 #' @inheritParams pcj_aesthetics
 #' @param graph_text a named list of plot labels and the text to fill them.
 #' @param show_caption logical, should a caption be printed with the graph?
-#' @param ... additional arguments to be passed to `pcj_aesthetics`.
+#' @param ... additional arguments to be passed to 'pcj_aesthetics'.
 #'
 #' @return a ggplot object following the specified settings
 #' @export

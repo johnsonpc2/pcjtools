@@ -34,7 +34,7 @@ plot. All text is based on various shades of the specified hex code.}
 
 \item{show_caption}{logical, should a caption be printed with the graph?}
 
-\item{...}{additional arguments to be passed to \code{pcj_aesthetics}.}
+\item{...}{additional arguments to be passed to 'pcj_aesthetics'.}
 }
 \value{
 a ggplot object following the specified settings

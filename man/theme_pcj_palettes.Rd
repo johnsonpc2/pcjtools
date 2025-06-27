@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme_helpers.R
 \name{theme_pcj_palettes}
 \alias{theme_pcj_palettes}
-\title{a helper function defining the palettes accessible to \code{theme_pcj()}}
+\title{a helper function defining the palettes accessible to 'theme_pcj()'}
 \usage{
 theme_pcj_palettes(
   palette = "default",
@@ -24,7 +24,7 @@ theme_pcj_palettes(
 a plot object with the specified aesthetics rendered
 }
 \description{
-a helper function defining the palettes accessible to \code{theme_pcj()}
+a helper function defining the palettes accessible to 'theme_pcj()'
 }
 \examples{
 ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +

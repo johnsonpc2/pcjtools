@@ -5,7 +5,7 @@
 \title{a helper function defining theme elements to make consistent plots and graphs
 with 'theme_pcj()'}
 \usage{
-theme_pcj_aesthetics(base_size, dark_text, ...)
+theme_pcj_aesthetics(base_size = 12, dark_text = "#000000", ...)
 }
 \arguments{
 \item{base_size}{an integer. The graph's default font size.}

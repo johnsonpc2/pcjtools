@@ -1,4 +1,4 @@
-#' a helper function to install the 'Atkinson Hyperlegible' font, used by
+#' a function to install the 'Atkinson Hyperlegible' font, used by
 #' 'theme_pcj()'
 #'
 #' @import ragg
@@ -30,6 +30,7 @@ install_atkinson <- function() {
 #' @param dark_text a quoted hex string. Sets the color of the darkest text in a
 #' plot. All text is based on shades of the specified hex code.
 #' @param ... additional arguments passed to 'theme()'
+#'
 #' @import ggplot2
 #'
 #' @returns a plot configured with aesthetics reflecting the specified settings
@@ -39,8 +40,8 @@ install_atkinson <- function() {
 #' ggplot2::geom_point() +
 #' theme_pcj_aesthetics()
 
-theme_pcj_aesthetics <- function(base_size,
-                                 dark_text,
+theme_pcj_aesthetics <- function(base_size = 12,
+                                 dark_text = "#000000",
                                  ...) {
 
   mid_text <- monochromeR::generate_palette(
@@ -106,7 +107,7 @@ theme_pcj_aesthetics <- function(base_size,
 
 
 
-#' a helper function defining the palettes accessible to `theme_pcj()`
+#' a helper function defining the palettes accessible to 'theme_pcj()'
 #'
 #' @param palette a string. The name of the palette to be mapped to a variable.
 #' @param continuous logical. Is the variable continuous or discrete?
@@ -238,7 +239,10 @@ theme_pcj_palettes <- function(palette = "default",
 #'   ggplot2::geom_point() +
 #'   theme_pcj_text()
 
-theme_pcj_text <- function(text, alt_text) {
+theme_pcj_text <- function(
+    text = c("title", "subtitle", "xlab", "ylab",
+             paste0("Rendered:", format(Sys.time(), "%Y%m%d, %H:%M"))),
+    alt_text = TRUE) {
 
   if (alt_text == TRUE) {
 

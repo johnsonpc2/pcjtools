@@ -2,10 +2,9 @@
 % Please edit documentation in R/theme_helpers.R
 \name{theme_pcj_aesthetics}
 \alias{theme_pcj_aesthetics}
-\title{a helper function defining theme elements to make consistent plots and graphs
-with 'theme_pcj()'}
+\title{a helper function used by 'theme_pcj()' to make consistently themed plots}
 \usage{
-theme_pcj_aesthetics(base_size = 12, dark_text = "#000000", ...)
+theme_pcj_aesthetics(base_size, dark_text, font, ...)
 }
 \arguments{
 \item{base_size}{an integer. The graph's default font size.}
@@ -13,17 +12,22 @@ theme_pcj_aesthetics(base_size = 12, dark_text = "#000000", ...)
 \item{dark_text}{a quoted hex string. Sets the color of the darkest text in a
 plot. All text is based on shades of the specified hex code.}
 
+\item{font}{a quoted name of the font you would like the plot's text to be
+printed in}
+
 \item{...}{additional arguments passed to 'theme()'}
 }
 \value{
 a plot configured with aesthetics reflecting the specified settings
 }
 \description{
-a helper function defining theme elements to make consistent plots and graphs
-with 'theme_pcj()'
+a helper function used by 'theme_pcj()' to make consistently themed plots
 }
 \examples{
+\dontrun{
 ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
 ggplot2::geom_point() +
-theme_pcj_aesthetics()
+theme_pcj_aesthetics(base_size = 12, dark_text = '#000000')
 }
+}
+\keyword{internal}

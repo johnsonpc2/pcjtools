@@ -1,0 +1,1 @@
+{"active_set":"lintr","sets":[{"name":"lintr","base_path":"","markers":[{"type":4,"path":"C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/theme_helpers.R","line":18,"column":4,"message":"[indentation_linter] Hanging indent should be 24 spaces but is 4 spaces.","log_path":"","log_line":-1,"show_error_list":true}],"is_diagnostics":false}]}

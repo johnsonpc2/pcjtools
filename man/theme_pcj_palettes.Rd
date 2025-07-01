@@ -5,14 +5,16 @@
 \title{a helper function defining the palettes accessible to 'theme_pcj()'}
 \usage{
 theme_pcj_palettes(
-  palette = "default",
-  continuous = FALSE,
-  .colors = .colors,
-  .palettes = .palettes
+  palette,
+  continuous,
+  .colors = pcj_colors,
+  .palettes = pcj_palettes
 )
 }
 \arguments{
-\item{palette}{a string. The name of the palette to be mapped to a variable.}
+\item{palette}{a string. The name of the palette to be mapped to a variable,
+including: "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
+"mono_yellow", or "ualbany".}
 
 \item{continuous}{logical. Is the variable continuous or discrete?}
 
@@ -21,13 +23,15 @@ theme_pcj_palettes(
 \item{.palettes}{loads the palettes defined within pcj_palettes.}
 }
 \value{
-a plot object with the specified aesthetics rendered
+a plot object with the specified aesthetics rendered.
 }
 \description{
 a helper function defining the palettes accessible to 'theme_pcj()'
 }
 \examples{
-ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-ggplot2::geom_point() +
-theme_pcj_palettes()
+\dontrun{
+pcj_graph_palettes(palette = "default")
+pcj_graph_palettes(palette = "mono_printing")
 }
+}
+\keyword{internal}

@@ -1,0 +1,512 @@
+ggplot2::geom_point()
+thm <- theme_pcj(ggplot_object = g1, base_size = 10,
+graph_text = c(
+title = "MPG of Cars Based on Weight and Cylinders",
+ylab = "Weight",
+xlab = "MPG",
+caption = paste("Revised:", Sys.time())),
+show_caption = TRUE)
+expect_s3_class(thm, "ggplot")
+class(thm)
+s3()
+S3()
+typeof(thm)
+g1 <- ggplot2::ggplot(
+data = mtcars,
+ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
+) +
+ggplot2::geom_line(linewidth = 2)
+thm <- theme_pcj(ggplot_object = g1, base_size = 10,
+graph_text = c(
+title = "MPG of Cars Based on Weight and Cylinders",
+ylab = "Weight",
+xlab = "MPG",
+caption = paste("Revised:", Sys.time())),
+show_caption = TRUE)
+expect_s3_class(thm, "ggplot")
+expect_equal(thm$theme$text$size, 10)
+class(thm)
+typeof(thm)
+devtools::create(path = "./R/Helper Functions.r")
+devtools::create(path = "~/R/Helper Functions.r")
+devtools::create(path = "./R/Helper Functions.R")
+devtools::create(path = "Helper Functions")
+devtools::create(path = "helper_functions")
+devtools::create(path = "./R/helper_functions.R")
+devtools::lint()
+dir(
+system.file("extdata", package = "pcjtools")
+dir(
+system.file("extdata", package = "pcjtools"),
+full.names = TRUE
+)
+?system.file
+lintr::lint()
+library(devtools)
+load_all()
+test_that("import_csv works", {
+test <- import_csv(extension = "csv")
+expect_vector(test)
+expect_s3_class(test, c("data.table", "data.frame"))
+})
+?data.table
+devtools::lint()
+devtools::lint()
+devtools::lint()
+devtools::lint("import_csv.R")
+devtools::lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+data.ta
+devtools::lint()
+devtools::lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+library(data.table)
+?data.table
+lintr:::addin_lint()
+devtools::document()
+devtools::check()
+devtools::create("./R/import_helpers.R")
+devtools::create("./R/import_helpers")
+library(devtools)
+use_r("import_helpers")
+lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+data.table::data.table(
+file = list.files(
+path = system.file(... = "extdata", package = "pcjtools"),
+full.names = TRUE
+)
+)
+getDTthreads()
+getDTthreads() - 1
+file_list <- function(path = NULL, extension, ...) {
+if (is.null(path)) {
+files <- data.table::data.table(
+file = list.files(
+path = system.file(... = "extdata", package = "pcjtools"),
+full.names = TRUE
+)
+)
+return(files)
+} else {
+files <- data.table::data.table(
+file = list.files(
+path = path,
+pattern = extension,
+full.names = TRUE,
+...
+)
+)
+return(files)
+}
+}
+file_list()
+test <- file_list()
+View(test)
+View(test)
+read_file <- function(file){
+temp.file <- fread(
+file = file,
+na.strings = c("", "null", NA),
+nThread = data.table::getDTthreads(),
+data.table = TRUE
+)
+return(temp.file)
+}
+test <- file_list()
+View(test)
+file_list <- function(path = NULL, extension, ...) {
+if (is.null(path)) {
+files <- data.table::data.table(
+file = list.files(
+path = system.file(... = "extdata", package = "pcjtools"),
+full.names = TRUE
+)
+)
+} else {
+files <- data.table::data.table(
+file = list.files(
+path = path,
+pattern = extension,
+full.names = TRUE,
+...
+)
+)
+}
+files[
+,
+`:=`(basename = basename(file),
+last_mod = file.info(file)[, 4],
+age_days = abs(day(Sys.Date()) -
+day(file.info(file)[, 4])))
+]
+return(files)
+}
+test <- file_list()
+file_list <- function(path = NULL, extension, ...) {
+if (is.null(path)) {
+files <- data.table::data.table(
+file = list.files(
+path = system.file(... = "extdata", package = "pcjtools"),
+full.names = TRUE
+)
+)
+} else {
+files <- data.table::data.table(
+file = list.files(
+path = path,
+pattern = extension,
+full.names = TRUE,
+...
+)
+)
+}
+files[
+,
+`:=`(basename = basename(file),
+last_mod = file.info(file)[, 4],
+age_days = abs(lubridate::day(Sys.Date()) -
+lubridate::day(file.info(file)[, 4])))
+]
+return(files)
+}
+test <- file_list()
+View(test)
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+read_file <- function(file) {
+temp <- fread(
+file = file,
+na.strings = c("", "null", NA),
+nThread = data.table::getDTthreads(),
+data.table = TRUE
+)
+}
+read_data_list <- function(file_list) {
+files <- file_list$file
+if (!inherits(x = files, what = "character")) {
+stop("Error: 'files' must be an object containing file path strings.\n")
+} else {
+map(
+.x = files[1],
+.f = read_file
+)
+}
+}
+data <- read_data_list(test)
+View(data)
+read_data_list <- function(file_list) {
+files <- file_list$file
+if (!inherits(x = files, what = "character")) {
+stop("Error: 'files' must be an object containing file path strings.\n")
+} else {
+list <- purrr::map(
+.x = files[1],
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+}
+data <- read_data_list(test)
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+View(test)
+View(data)
+rm(data)
+data <- read_data_list(file_list = file_list)
+data <- read_data_list(file_list = file_list())
+View(data)
+lintr:::addin_lint()
+lintr:::addin_lint()
+import_data()
+file_list()
+import_data(path = NULL)
+import_data <- function(path, extension = NULL, ...) {
+list <- file_list(
+path = path,
+extension = extension
+)
+read_data_list(file_list = list)
+}
+import_data <- function(path, extension = NULL, ...) {
+list <- file_list(
+path = path,
+extension = extension
+)
+read_data_list(file_list = list)
+}
+list <- file_list(
+path = path,
+extension = extension
+)
+list <- file_list(
+path = NULL,
+extension = extension
+)
+import_data <- function(path, extension = NULL, ...) {
+list <- file_list(
+path = path,
+extension = extension
+)
+}
+data.1 <- import_data(path = NULL)
+View(data.1)
+#'
+#' @param file_list A string, or an object containing strings, of file paths
+#'
+#' @returns A data.table object of concatenated data from all named files
+#' supplied in `file_list`
+#'
+#' @export
+#'
+#' @examples
+#' data <- read_file_list(file_list = file_list())
+read_file_list <- function(file_list) {
+files <- file_list$file
+if (!inherits(x = files, what = "character")) {
+stop("Error: 'files' must be an object containing file path strings.\n")
+} else {
+list <- purrr::map(
+.x = files[1],
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+}
+?inherits
+class(data.1)
+class(data.1$file)
+#'
+#' @param file_list A string, or an object containing strings, of file paths
+#'
+#' @returns A data.table object of concatenated data from all named files
+#' supplied in `file_list`
+#'
+#' @export
+#'
+#' @examples
+#' data <- read_file_list(file_list = file_list())
+read_file_list <- function(file_list) {
+files <- file_list[, 1]
+if (!inherits(x = files, what = "character")) {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+}
+#'
+#' @param file_list A string, or an object containing strings, of file paths
+#'
+#' @returns A data.table object of concatenated data from all named files
+#' supplied in `file_list`
+#'
+#' @export
+#'
+#' @examples
+#' data <- read_file_list(file_list = file_list())
+read_file_list <- function(file_list) {
+files <- file_list[, 1]
+if (!inherits(x = files, what = "character")) {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+}
+import_data <- function(path, extension = NULL, ...) {
+list <- file_list(
+path = path,
+extension = extension
+)
+data <- read_file_list(file_list = list)
+}
+data.2 <- import_data()
+data.2 <- import_data(path = NULL)
+inherits(x = data.1$file, what = "character")
+file_list <- data.1
+files <- file_list[, 1]
+View(files)
+if (!inherits(x = files, what = "character")) {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+if (!inherits(x = files, what = "character")) {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+class(files)
+inherits(x = files[, 1], what = "data.table")
+if (!inherits(x = files[, 1], what = "data.table")) {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+if (!inherits(x = files[, 1], what = "character")) {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+?inherits
+typeof(list[, 1])
+typeof(files[, 1])
+if (!inherits(x = files[, 1], what = "list")) {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+class(files[, 1])
+class(files[, 1][])
+files[, 1]
+data.list <- data[, 1]
+class(data.list)
+class(list(data.list))
+View(data.list)
+str(data.list)
+View(str(data.list))
+str(data.list)[1]
+str(data.list)[1, ]
+str(data.list)[,1 ]
+str(data.list$success)
+str(data.list$success)[1]
+View(data.list)
+class(data.list$success)
+#'
+#' @param file_list A string, or an object containing strings, of file paths
+#'
+#' @returns A data.table object of concatenated data from all named files
+#' supplied in `file_list`
+#'
+#' @export
+#'
+#' @examples
+#' data <- read_file_list(file_list = file_list())
+read_file_list <- function(file_list) {
+files <- file_list[, 1]
+if (!class(x = files[, 1], what = "character")) {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+}
+import_data <- function(path, extension = NULL, ...) {
+list <- file_list(
+path = path,
+extension = extension
+)
+data <- read_file_list(file_list = list)
+}
+import_data(path = NULL)
+load_all()
+load_all()
+document()
+devtools::check_man()
+document()
+devtools::document()
+devtools::document()
+class(x = files[, 1]
+class(x = files[, 1]) == "character"
+class(x = files[, 1])
+files <- file_list[, 1]
+View(files)
+files
+class(x = files)
+class(x = files$file)
+class(x = files$file) == "character"
+if (class(x = files$file) == "character") {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+!class(x = files$file) == "character"
+if (!class(x = files$file) == "character") {
+stop("Error: file_list must be an object containing file path strings of
+class 'character'.\n")
+} else {
+list <- purrr::map(
+.x = files,
+.f = read_file
+)
+data.table::rbindlist(list)
+}
+devtools::test()
+devtools::test()
+lintr:::addin_lint()
+lintr:::addin_lint()
+source("C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/theme_pcj.R", echo = TRUE)
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()
+use_r("theme_helpers")
+lintr:::addin_lint()
+lintr:::addin_lint()
+lintr:::addin_lint()

@@ -2,51 +2,58 @@
 % Please edit documentation in R/theme_pcj.R
 \name{theme_pcj}
 \alias{theme_pcj}
-\title{A theme developed to build consistent ggplot graphs}
+\title{a function to create and save consistent plots}
 \usage{
 theme_pcj(
-  ggplot_object,
-  palette = "default",
-  continuous = FALSE,
+  plot,
   base_size = 12,
   dark_text = "#000000",
-  graph_text = list(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab",
-    caption = paste("Revised", Sys.time())),
-  show_caption = TRUE,
+  font = "Atkinson Hyperlegible",
+  palette = "default",
+  continuous = FALSE,
+  plot_text = c("title", "subtitle", "xlab", "ylab", paste0("Rendered:",
+    format(Sys.time(), "\%Y\%m\%d, \%H:\%M"))),
+  alt_text = TRUE,
+  save = FALSE,
   ...
 )
 }
 \arguments{
-\item{ggplot_object}{a ggplot object stored in a vector.}
-
-\item{palette}{a string, including: "default", "neg_to_pos", "mono_printing",
-"mono_blue", "mono_red", "mono_yellow", or "ualbany".}
-
-\item{continuous}{logical. Whether the palette used in the graph should use a
-discrete or continuous scale.}
+\item{plot}{a ggplot object to be formatted}
 
 \item{base_size}{an integer. The graph's default font size.}
 
-\item{dark_text}{a quoted hex string, sets the color of the darkest text in a
-plot. All text is based on various shades of the specified hex code.}
+\item{dark_text}{a quoted hex string. Sets the color of the darkest text in a
+plot. All text is based on shades of the specified hex code.}
 
-\item{graph_text}{a named list of plot labels and the text to fill them.}
+\item{font}{a quoted name of the font you would like the plot's text to be
+printed in}
 
-\item{show_caption}{logical, should a caption be printed with the graph?}
+\item{palette}{a string. The name of the palette to be mapped to a variable,
+including: "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
+"mono_yellow", or "ualbany".}
 
-\item{...}{additional arguments to be passed to 'pcj_aesthetics'.}
+\item{continuous}{logical. Is the variable continuous or discrete?}
+
+\item{plot_text}{a named list of plot features and their text label}
+
+\item{alt_text}{logical. Should a subtitle and caption be generated for the
+plot?}
+
+\item{save}{logical. Should the rendered plot be saved to the working
+directory}
+
+\item{...}{optional arguments to be passed to 'theme_pcj_aesthetics()',
+'theme_pcj_palettes()', or 'theme_pcj_text()'}
 }
 \value{
-a ggplot object following the specified settings
+a plot object with the specified aesthetics
 }
 \description{
-A theme developed to build consistent ggplot graphs
+a function to create and save consistent plots
 }
 \examples{
-g1 <- ggplot2::ggplot(
-  data = mtcars,
-  ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
-) +
-  ggplot2::geom_point()
-theme_pcj(ggplot_object = g1)
+\dontrun{
+theme_pcj(plot = plot)
+}
 }

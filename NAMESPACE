@@ -2,7 +2,6 @@
 
 export(files_info)
 export(import_data)
-export(read_file_list)
 export(theme_pcj)
 import(ggplot2)
 importFrom(data.table,":=")

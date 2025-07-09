@@ -2,26 +2,28 @@
 % Please edit documentation in R/import_data.R
 \name{import_data}
 \alias{import_data}
-\title{a function to import data files from a local directory}
+\title{Data Importer}
 \usage{
-import_data(path = NULL, extension = NULL, ...)
+import_data(x)
 }
 \arguments{
-\item{path}{a filepath string that names a directory with files to read. All
-files of the file type named in extension will be read into a single
-data.table object.}
-
-\item{extension}{a string naming a kind of file to import.}
-
-\item{...}{optional arguments to be passed to list.files}
+\item{x}{A string or a list of strings containing the path of file(s) to
+read in; can be the name of a column, such as \code{dt$filepaths}, from a
+\code{data.table} object containing filepaths. All files in a list will be read
+in and returned as a single \code{data.table} object.}
 }
 \value{
 a data.table object containing the read-in data from the specified
 directory.
 }
 \description{
-a function to import data files from a local directory
+A function to import data files from a local directory. Designed
+specifically to read a list of file path strings, probably stored in the
+first column of the \code{data.table} produced by the \code{file_info()} function.
 }
 \examples{
-import_data(extension = "csv")
+\dontrun{
+import_data(
+x = )
+}
 }

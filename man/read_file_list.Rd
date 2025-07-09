@@ -17,5 +17,8 @@ supplied in 'file_list'
 a function to read in data passed from the 'read_file()' helper function
 }
 \examples{
+\dontrun{
 data <- read_file_list(files = files_info())
 }
+}
+\keyword{internal}

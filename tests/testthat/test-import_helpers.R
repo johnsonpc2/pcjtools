@@ -1,19 +1,24 @@
-test_that("import_helpers-files_info", {
+test_that("read_file example", {
 
-  info <- files_info(path = NULL, extension = "csv")
+  info <- files_info()
 
-  expect_vector(info)
+  file <- read_file(x = info$filepath)
 
-  expect_s3_class(info, c("data.table", "data.frame"))
+  expect_vector(file)
 
-  expect_length(info, 4)
+  expect_s3_class(file, c("data.table", "data.frame"))
+
+  expect_length(file, 36)
 
 })
 
 
-test_that("import_helpers-read_file_list", {
 
-  data <- read_file_list(files = files_info())
+test_that("read_file_list", {
+
+  info <- files_info()
+
+  data <- read_file_list(files = info$filepath)
 
   expect_vector(data)
 

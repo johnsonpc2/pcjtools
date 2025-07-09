@@ -1,6 +1,18 @@
+test_that("files_info example", {
+
+  info <- files_info()
+
+  expect_s3_class(info, c("data.table"))
+
+  expect_length(info, 6)
+
+})
+
 test_that("import_data example", {
 
-  test <- import_data(extension = "csv")
+  info <- files_info()
+
+  test <- import_data(x = info)
 
   expect_vector(test)
 

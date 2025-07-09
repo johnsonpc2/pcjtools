@@ -7,7 +7,7 @@
 read_file(x)
 }
 \arguments{
-\item{x}{a string, or list of strings, with file name paths}
+\item{x}{a string with file name paths}
 }
 \value{
 a data.table object containing data from a file supplied to
@@ -21,3 +21,4 @@ a helper function used by 'read_file_list()' to read individual data files
 read_file(x)
 }
 }
+\keyword{internal}

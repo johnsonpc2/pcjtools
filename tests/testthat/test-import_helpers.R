@@ -1,4 +1,4 @@
-test_that("read_file example", {
+test_that("read_file reads files", {
 
   info <- files_info()
 
@@ -14,7 +14,7 @@ test_that("read_file example", {
 
 
 
-test_that("read_file_list", {
+test_that("read_file_list concatenates a list of files", {
 
   info <- files_info()
 

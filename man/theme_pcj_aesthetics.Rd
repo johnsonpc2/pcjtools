@@ -27,7 +27,7 @@ a helper function used by 'theme_pcj()' to make consistently themed plots
 \dontrun{
 ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
 ggplot2::geom_point() +
-theme_pcj_aesthetics(base_size = 12, dark_text = '#000000')
+theme_pcj_aesthetics(base_size = 12, dark_text = "#000000")
 }
 }
 \keyword{internal}

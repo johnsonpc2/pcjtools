@@ -4,10 +4,10 @@
 #' @inheritParams theme_pcj_aesthetics
 #' @inheritParams theme_pcj_palettes
 #' @inheritParams theme_pcj_text
-#' @param save logical. Should the rendered plot be saved to the working
+#' @param save_path a string. The filename path where the plot should be saved
 #' directory
-#' @param ... optional arguments to be passed to 'theme_pcj_aesthetics()',
-#' 'theme_pcj_palettes()', or 'theme_pcj_text()'
+#' @param ... additional arguments passed to `theme_pcj_aesthetics()` or
+#' `ggsave()` functions
 #'
 #' @returns a plot object with the specified aesthetics
 #' @export
@@ -20,27 +20,31 @@
 theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
                       font = "Atkinson Hyperlegible", palette = "default",
                       continuous = FALSE,
-                      plot_text = c("title", "subtitle", "xlab", "ylab",
-                                    paste0("Rendered:", format(Sys.time(),
-                                                               "%Y%m%d, %H:%M"))
-                                    ),
-                      alt_text = TRUE, save = FALSE, ...) {
-
-  dots <- list(...)
+                      plot_text = c(title = "title", subtitle = "subtitle",
+                                    xlab = "xlab", ylab = "ylab",
+                                    caption = paste0("Rendered:",
+                                                     format(Sys.time(),
+                                                            "%Y%m%d, %H:%M"))),
+                      alt_text = TRUE, save_path = NULL, ...) {
 
   modified_plot <- plot +
-    theme_pcj_aesthetics(base_size = base_size, dark_text = dark_text, font, ...) +
-    theme_pcj_palettes(palette = palette, continuous = continuous) +
-    theme_pcj_text(plot_text = plot_text, alt_text = alt_text)
+    theme_pcj_aesthetics(base_size = base_size,
+                         dark_text = dark_text,
+                         font, ...) +
+    theme_pcj_palettes(palette = palette,
+                       continuous = continuous) +
+    theme_pcj_text(plot_text = plot_text,
+                   alt_text = alt_text)
 
   print(modified_plot)
 
-  if (save == TRUE) {
+  if (!is.null(save_path)) {
 
     ggplot2::ggsave(
-      filename = paste0("~/", format(Sys.time(), "%Y%m%d_"),
-                        theme_pcj_text()$title, ".png"),
-      dpi = 600,
+      filename = paste0(save_path, format(Sys.time(), "%Y%m%d_"),
+                        plot_text["title"], ".png"),
+      dpi = 900,
+      bg = "transparent",
       ...
     )
   }

@@ -17,7 +17,7 @@
 #' \dontrun{
 #' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
 #' ggplot2::geom_point() +
-#' theme_pcj_aesthetics(base_size = 12, dark_text = '#000000')
+#' theme_pcj_aesthetics(base_size = 12, dark_text = "#000000")
 #' }
 
 theme_pcj_aesthetics <- function(base_size,
@@ -48,7 +48,7 @@ theme_pcj_aesthetics <- function(base_size,
         size = base_size,
         face = "bold",
         lineheight = 1.1,
-        margin = margin(t = 0,r = 0, b = 10, l = 0)
+        margin = margin(t = 0, r = 0, b = 10, l = 0)
       ),
       plot.title = element_text(
         color = dark_text,
@@ -228,39 +228,57 @@ theme_pcj_palettes <- function(palette, continuous,
 #'   theme_pcj_text()
 #'   }
 
-theme_pcj_text <- function(plot_text, alt_text) {
+theme_pcj_text <- function(
+    plot_text = c("title", "subtitle", "xlab", "ylab",
+      paste0("Rendered:", format(Sys.time(), "%Y%m%d, %H:%M"))
+    ),
+    alt_text = FALSE) {
 
   label_names <- plot_text
 
   if (alt_text == TRUE) {
 
     labs(
-      title = if (!is.na(label_names['title'])) {label_names['title']
-        } else {NULL},
-      subtitle = if (!is.na(label_names['subtitle'])) {label_names['subtitle']
-        } else {NULL},
-      x = if (!is.na(label_names['xlab'])) {label_names['xlab']
-        } else {NULL},
-      y = if (!is.na(label_names['ylab'])) {label_names['ylab']
-        } else {NULL},
-      caption = if (!is.na(label_names['caption'])) {label_names['caption']
-      } else {paste0("Rendered: ", format(Sys.time(),
-                                         "%Y%m%d, %H:%M"))}
+      title = if (!is.na(label_names["title"])) {
+        label_names["title"]
+      } else {
+              NULL},
+      subtitle = if (!is.na(label_names["subtitle"])) {
+        label_names["subtitle"]
+      } else {
+              NULL},
+      x = if (!is.na(label_names["xlab"])) {
+        label_names["xlab"]
+      } else {
+              NULL},
+      y = if (!is.na(label_names["ylab"])) {
+        label_names["ylab"]
+      } else {
+              NULL},
+      caption = if (!is.na(label_names["caption"])) {
+        label_names["caption"]
+      } else {
+        paste0("Rendered: ", format(Sys.time(), "%Y%m%d, %H:%M"))
+      }
     )
 
   } else {
 
     labs(
-      title = if (!is.na(label_names['title'])) {label_names['title']
-      } else {NULL},
+      title = if (!is.na(label_names["title"])) {
+        label_names["title"]
+      } else {
+              NULL},
       subtitle = NULL,
-      x = if (!is.na(label_names['xlab'])) {label_names['xlab']
-      } else {NULL},
-      y = if (!is.na(label_names['ylab'])) {label_names['ylab']
-      } else {NULL},
+      x = if (!is.na(label_names["xlab"])) {
+        label_names["xlab"]
+      } else {
+              NULL},
+      y = if (!is.na(label_names["ylab"])) {
+        label_names["ylab"]
+      } else {
+              NULL},
       caption = NULL
     )
-
   }
-
 }

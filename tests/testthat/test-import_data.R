@@ -1,4 +1,4 @@
-test_that("files_info example", {
+test_that("files_info runs", {
 
   info <- files_info()
 
@@ -8,14 +8,16 @@ test_that("files_info example", {
 
 })
 
-test_that("import_data example", {
+test_that("import_data imports", {
 
   info <- files_info()
 
-  test <- import_data(x = info)
+  file <- import_data(x = info$filepath)
 
-  expect_vector(test)
+  expect_vector(file)
 
-  expect_s3_class(test, c("data.table", "data.frame"))
+  expect_s3_class(file, c("data.table", "data.frame"))
+
+  expect_length(file, 36)
 
 })

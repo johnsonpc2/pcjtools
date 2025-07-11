@@ -7,23 +7,27 @@
 import_data(x)
 }
 \arguments{
-\item{x}{A string or a list of strings containing the path of file(s) to
-read in; can be the name of a column, such as \code{dt$filepaths}, from a
-\code{data.table} object containing filepaths. All files in a list will be read
+\item{x}{A string or list of strings containing the path of file(s) to
+read in; can be the name of a \code{data.table} column in the form
+\code{dt$filepaths}, which contains filepaths. All files in a list will be read
 in and returned as a single \code{data.table} object.}
 }
 \value{
-a data.table object containing the read-in data from the specified
-directory.
+a data.table object containing the read-in data from the paths
+specified in \code{x}.
 }
 \description{
 A function to import data files from a local directory. Designed
-specifically to read a list of file path strings, probably stored in the
-first column of the \code{data.table} produced by the \code{file_info()} function.
+to read a list of file path strings, principally, those stored in the
+first column of the \code{data.table} produced by the \code{file_info()} function from
+\code{'pcjtools'}.
 }
 \examples{
-\dontrun{
-import_data(
-x = )
-}
+info <- files_info()
+file <- import_data(x = info$filepath)
+
+# alternatively:
+
+file <- import_data(x = info[, "filepath"])
+file <- import_data(x = info[, 1]) # Where '1' is the column with filepath(s)
 }

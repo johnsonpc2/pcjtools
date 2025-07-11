@@ -11,10 +11,10 @@ theme_pcj(
   font = "Atkinson Hyperlegible",
   palette = "default",
   continuous = FALSE,
-  plot_text = c("title", "subtitle", "xlab", "ylab", paste0("Rendered:",
-    format(Sys.time(), "\%Y\%m\%d, \%H:\%M"))),
+  plot_text = c(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab",
+    caption = paste0("Rendered:", format(Sys.time(), "\%Y\%m\%d, \%H:\%M"))),
   alt_text = TRUE,
-  save = FALSE,
+  save_path = NULL,
   ...
 )
 }
@@ -40,11 +40,11 @@ including: "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
 \item{alt_text}{logical. Should a subtitle and caption be generated for the
 plot?}
 
-\item{save}{logical. Should the rendered plot be saved to the working
+\item{save_path}{a string. The filename path where the plot should be saved
 directory}
 
-\item{...}{optional arguments to be passed to 'theme_pcj_aesthetics()',
-'theme_pcj_palettes()', or 'theme_pcj_text()'}
+\item{...}{additional arguments passed to \code{theme_pcj_aesthetics()} or
+\code{ggsave()} functions}
 }
 \value{
 a plot object with the specified aesthetics

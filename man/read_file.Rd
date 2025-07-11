@@ -2,23 +2,22 @@
 % Please edit documentation in R/import_helpers.R
 \name{read_file}
 \alias{read_file}
-\title{a helper function used by 'read_file_list()' to read individual data files}
+\title{File Reader}
 \usage{
 read_file(x)
 }
 \arguments{
-\item{x}{a string with file name paths}
+\item{x}{A filepath in the form of a string.}
 }
 \value{
-a data.table object containing data from a file supplied to
+A \code{data.table} object containing data from a file supplied to
 'read_data_list()'
 }
 \description{
-a helper function used by 'read_file_list()' to read individual data files
+A helper function used by \code{'read_file_list()'} to read individual data files.
 }
 \examples{
-\dontrun{
-read_file(x)
-}
+info <- files_info()
+file <- import_data(x = info$filepath)
 }
 \keyword{internal}

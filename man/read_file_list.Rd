@@ -2,23 +2,23 @@
 % Please edit documentation in R/import_helpers.R
 \name{read_file_list}
 \alias{read_file_list}
-\title{a function to read in data passed from the 'read_file()' helper function}
+\title{A Reader for Lists of Files}
 \usage{
 read_file_list(files)
 }
 \arguments{
-\item{files}{a string or an object containing strings with file path(s)}
+\item{files}{A string or an object containing filepath string(s).}
 }
 \value{
-a data.table object of concatenated data from all named files
-supplied in 'file_list'
+A \code{data.table} object with concatenated data from all named files
+supplied in \code{'file_list'}
 }
 \description{
-a function to read in data passed from the 'read_file()' helper function
+A wrapper to read in multiple files passed from the \code{'read_file()'} helper
+function.
 }
 \examples{
-\dontrun{
-data <- read_file_list(files = files_info())
-}
+info <- files_info()
+data <- import_data(x = info$filepath)
 }
 \keyword{internal}

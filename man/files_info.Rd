@@ -11,26 +11,32 @@ files_info(
 )
 }
 \arguments{
-\item{path}{A filepath string that names a directory with files to read.}
+\item{path}{A filepath string that names a \emph{directory} with files to read.}
 
 \item{extension}{A string naming the extension of the files to import.}
 
-\item{...}{Optional arguments passed to \code{list.files()}:
-\code{all.files}, \code{recursive}, \code{ignore.case}, \code{include.dirs}, which all default
-to FALSE.}
+\item{...}{Optional logical arguments of the following to pass to
+\code{list.files()}: \code{'all.files'}, \code{'recursive'}, \code{'ignore.case'},
+\code{'include.dirs'}. All default to \code{FALSE}.}
 }
 \value{
-A list containing file information from files in the
-directory specified in \code{'path'}. Includes the full filepath, the basename,
-the extension, the last date the file was modified, and the age in days
-since the file was last modified. This information can be stored in a vector
-and is intended to be passed to \code{import_data()} to read in a list of data
-files to a single \code{data.table} object.
+A data.table containing file information from the file(s) found in
+the directory specified at \code{'path'}. Including:
+\itemize{
+\item full filepath
+\item basename
+\item extension
+\item the last date the file was modified
+\item the age in days since the file was last modified.
+}
+
+This information can be stored in a vector and is intended to be passed to
+\code{import_data()} to read in a list of data files to a single \code{data.table}
+object.
 }
 \description{
-A function to gather information about data files of the type specified in
-the \code{'extension'} argument and located in the local directory specified in
-\code{'path'}.
+A function to gather information about data files located at \code{'path'}. Only
+files of the type specified in \code{'extension'} will be returned.
 }
 \examples{
 files_info()

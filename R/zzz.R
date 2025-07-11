@@ -3,7 +3,8 @@
   # Register Atkinson Hyperlegible font with systemfonts
   font_path <- system.file("fonts", package = "pcjtools")
 
-  if (dir.exists(font_path) && length(list.files(font_path, pattern = "\\.ttf$|\\.otf$")) > 0) {
+  if (dir.exists(font_path) &&
+        length(list.files(font_path, pattern = "\\.ttf$|\\.otf$")) > 0) {
     try({
       systemfonts::register_font(
         name = "Atkinson Hyperlegible",

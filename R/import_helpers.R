@@ -1,16 +1,17 @@
-#' a helper function used by 'read_file_list()' to read individual data files
+#' File Reader
 #'
-#' @param x a string with file name paths
+#' A helper function used by `'read_file_list()'` to read individual data files.
 #'
-#' @returns a data.table object containing data from a file supplied to
+#' @param x A filepath in the form of a string.
+#'
+#' @returns A `data.table` object containing data from a file supplied to
 #' 'read_data_list()'
 #'
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
-#' read_file(x)
-#' }
+#' info <- files_info()
+#' file <- import_data(x = info$filepath)
 
 read_file <- function(x) {
 
@@ -25,27 +26,29 @@ read_file <- function(x) {
 
 
 
-#' a function to read in data passed from the 'read_file()' helper function
+#' A Reader for Lists of Files
 #'
-#' @param files a string or an object containing strings with file path(s)
+#' A wrapper to read in multiple files passed from the `'read_file()'` helper
+#' function.
 #'
-#' @returns a data.table object of concatenated data from all named files
-#' supplied in 'file_list'
+#' @param files A string or an object containing filepath string(s).
+#'
+#' @returns A `data.table` object with concatenated data from all named files
+#'  supplied in `'file_list'`
 #'
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
-#' data <- read_file_list(files = files_info())
-#' }
+#' info <- files_info()
+#' data <- import_data(x = info$filepath)
 
 read_file_list <- function(files) {
 
-    list <- purrr::map(
-      .x = files,
-      .f = read_file
-    )
+  list <- purrr::map(
+    .x = files,
+    .f = read_file
+  )
 
-    data.table::rbindlist(list)
+  data.table::rbindlist(list)
 
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme_pcj.R
 \name{theme_pcj}
 \alias{theme_pcj}
-\title{a function to create and save consistent plots}
+\title{A Custom Theme}
 \usage{
 theme_pcj(
   plot,
@@ -19,7 +19,7 @@ theme_pcj(
 )
 }
 \arguments{
-\item{plot}{a ggplot object to be formatted}
+\item{plot}{A ggplot object to be formatted.}
 
 \item{base_size}{an integer. The graph's default font size.}
 
@@ -40,20 +40,23 @@ including: "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
 \item{alt_text}{logical. Should a subtitle and caption be generated for the
 plot?}
 
-\item{save_path}{a string. The filename path where the plot should be saved
-directory}
+\item{save_path}{A string. The directory path where the plot should be saved.}
 
-\item{...}{additional arguments passed to \code{theme_pcj_aesthetics()} or
-\code{ggsave()} functions}
+\item{...}{Additional arguments passed to \code{theme()} or \code{ggsave()}.}
 }
 \value{
-a plot object with the specified aesthetics
+A plot object with the specified aesthetics.
 }
 \description{
-a function to create and save consistent plots
+A function to create and save consistent plots with aesthetics chosen to
+enhance accessibility
 }
 \examples{
-\dontrun{
-theme_pcj(plot = plot)
-}
+g1 <- ggplot2::ggplot(
+data = mtcars,
+ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
+) +
+ggplot2::geom_line(linewidth = 2)
+
+thm <- theme_pcj(plot = g1, font = "sans")
 }

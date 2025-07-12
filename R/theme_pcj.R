@@ -1,21 +1,27 @@
-#' a function to create and save consistent plots
+#' A Custom Theme
 #'
-#' @param plot a ggplot object to be formatted
+#' A function to create and save consistent plots with aesthetics chosen to
+#' enhance accessibility
+#'
+#' @param plot A ggplot object to be formatted.
 #' @inheritParams theme_pcj_aesthetics
 #' @inheritParams theme_pcj_palettes
 #' @inheritParams theme_pcj_text
-#' @param save_path a string. The filename path where the plot should be saved
-#' directory
-#' @param ... additional arguments passed to `theme_pcj_aesthetics()` or
-#' `ggsave()` functions
+#' @param save_path A string. The directory path where the plot should be saved.
+#' @param ... Additional arguments passed to `theme()` or `ggsave()`.
 #'
-#' @returns a plot object with the specified aesthetics
+#' @returns A plot object with the specified aesthetics.
+#'
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' theme_pcj(plot = plot)
-#' }
+#' g1 <- ggplot2::ggplot(
+#' data = mtcars,
+#' ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
+#' ) +
+#' ggplot2::geom_line(linewidth = 2)
+#'
+#' thm <- theme_pcj(plot = g1, font = "sans")
 
 theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
                       font = "Atkinson Hyperlegible", palette = "default",
@@ -26,6 +32,11 @@ theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
                                                      format(Sys.time(),
                                                             "%Y%m%d, %H:%M"))),
                       alt_text = TRUE, save_path = NULL, ...) {
+
+  filename <- paste0(save_path, format(Sys.time(), "%Y%m%d_"),
+                    plot_text["title"], ".png")
+
+  dots <- list(...)
 
   modified_plot <- plot +
     theme_pcj_aesthetics(base_size = base_size,
@@ -41,8 +52,8 @@ theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
   if (!is.null(save_path)) {
 
     ggplot2::ggsave(
-      filename = paste0(save_path, format(Sys.time(), "%Y%m%d_"),
-                        plot_text["title"], ".png"),
+      filename = filename,
+      plot = modified_plot,
       dpi = 900,
       bg = "transparent",
       ...

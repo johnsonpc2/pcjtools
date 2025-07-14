@@ -6,6 +6,7 @@ C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/NAMESPACE=
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/import_data.R="7ECF532D"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/import_helpers.R="A71C7F97"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/pcjtools-package.R="F2FDC5C3"
+C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/plot_saver_helpers.R="D55679CE"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/theme_helpers.R="56317CE9"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/theme_pcj.R="992B7383"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/zzz.R="330006C7"
@@ -15,4 +16,5 @@ C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/man/pcjtoo
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat.R="828F151E"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-import_data.R="26547553"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-import_helpers.R="ADD7DA31"
+C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-test-plot_saver_helpers.R="E202B783"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-theme_pcj.R="FA3DD6AF"

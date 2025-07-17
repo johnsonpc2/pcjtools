@@ -4,9 +4,9 @@
 \name{pcjtools-package}
 \alias{pcjtools}
 \alias{pcjtools-package}
-\title{A Set of Tools Developed for Wrangling and Analyzing Data from jsPsych}
+\title{A suite of tools built to make data wrangling and analysis easier}
 \description{
-Convenience functions to make some common data wrangling and analysis of experimental data from jsPsych and Congition.run a bit easier.
+A suite of tools developed to aid data wrangling and analysis. Includes functions to import data, make consistent plots, and save batches of plots with consistent settings.
 }
 \author{
 \strong{Maintainer}: Pierce Johnson \email{johnsonpierce.c@gmail.com} (\href{https://orcid.org/0009-0002-8517-2452}{ORCID})

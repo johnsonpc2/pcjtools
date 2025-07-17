@@ -1,4 +1,4 @@
-#' A Custom Theme
+#' Custom Theme
 #'
 #' A function to create and save consistent plots with aesthetics chosen to
 #' enhance accessibility
@@ -28,10 +28,18 @@ theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
                       continuous = FALSE,
                       plot_text = c(title = "title", subtitle = "subtitle",
                                     xlab = "xlab", ylab = "ylab",
-                                    caption = paste0("Rendered:",
+                                    caption = paste0("Created: ",
                                                      format(Sys.time(),
                                                             "%Y%m%d, %H:%M"))),
                       alt_text = TRUE, save_path = NULL, ...) {
+
+  stopifnot(is_ggplot(plot),
+            is.numeric(base_size) && length(base_size) == 1L,
+            is.character(dark_text) && length(dark_text) == 1L,
+            is.character(font) && length(font) == 1L,
+            is.character(palette) && length(palette) == 1L,
+            is.logical(continuous) && length(continuous) == 1L,
+            is.character(plot_text) && length(plot_text <= 5L))
 
   filename <- paste0(save_path, format(Sys.time(), "%Y%m%d_"),
                     plot_text["title"], ".png")
@@ -51,13 +59,8 @@ theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
 
   if (!is.null(save_path)) {
 
-    ggplot2::ggsave(
-      filename = filename,
-      plot = modified_plot,
-      dpi = 900,
-      bg = "transparent",
-      ...
-    )
+    plot_saver(plots = modified_plot, dir = save_path)
+
   }
 
   invisible(x = modified_plot)

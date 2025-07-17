@@ -7,13 +7,14 @@
 import_data(x)
 }
 \arguments{
-\item{x}{A string or list of strings containing the path of file(s) to
-read in; can be the name of a \code{data.table} column in the form
-\code{dt$filepaths}, which contains filepaths. All files in a list will be read
-in and returned as a single \code{data.table} object.}
+\item{x}{A string or list of strings—e.g., c(string1, string2)—containing the
+path(s) of file(s) to read in, or can be the name of a \code{data.table} or
+\code{dataframe} column in the form \code{dt$filepath_col} which contains filepaths.
+All files in a list will be read in and returned as a single \code{data.table}
+object.}
 }
 \value{
-a data.table object containing the read-in data from the paths
+A \code{data.table} object containing the read-in data from the paths
 specified in \code{x}.
 }
 \description{
@@ -25,9 +26,4 @@ first column of the \code{data.table} produced by the \code{file_info()} functio
 \examples{
 info <- files_info()
 file <- import_data(x = info$filepath)
-
-# alternatively:
-
-file <- import_data(x = info[, "filepath"])
-file <- import_data(x = info[, 1]) # Where '1' is the column with filepath(s)
 }

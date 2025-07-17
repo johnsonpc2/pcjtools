@@ -4,7 +4,7 @@ test_that("files_info runs", {
 
   expect_s3_class(info, c("data.table"))
 
-  expect_length(info, 6)
+  expect_length(info, 2)
 
 })
 

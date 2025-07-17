@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme_pcj.R
 \name{theme_pcj}
 \alias{theme_pcj}
-\title{A Custom Theme}
+\title{Custom Theme}
 \usage{
 theme_pcj(
   plot,
@@ -12,7 +12,7 @@ theme_pcj(
   palette = "default",
   continuous = FALSE,
   plot_text = c(title = "title", subtitle = "subtitle", xlab = "xlab", ylab = "ylab",
-    caption = paste0("Rendered:", format(Sys.time(), "\%Y\%m\%d, \%H:\%M"))),
+    caption = paste0("Created: ", format(Sys.time(), "\%Y\%m\%d, \%H:\%M"))),
   alt_text = TRUE,
   save_path = NULL,
   ...
@@ -21,23 +21,25 @@ theme_pcj(
 \arguments{
 \item{plot}{A ggplot object to be formatted.}
 
-\item{base_size}{an integer. The graph's default font size.}
+\item{base_size}{The plot's default font size; must be numeric.}
 
-\item{dark_text}{a quoted hex string. Sets the color of the darkest text in a
-plot. All text is based on shades of the specified hex code.}
+\item{dark_text}{A quoted hex code that sets the color of the darkest text in
+the plot. All text is based on shades of the specified hex code.}
 
-\item{font}{a quoted name of the font you would like the plot's text to be
-printed in}
+\item{font}{A character string containing the name of the font in which to
+print the plot's text.}
 
-\item{palette}{a string. The name of the palette to be mapped to a variable,
+\item{palette}{A string. The name of the palette to be mapped to a variable,
 including: "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
 "mono_yellow", or "ualbany".}
 
-\item{continuous}{logical. Is the variable continuous or discrete?}
+\item{continuous}{Logical. Is the variable continuous or discrete?}
 
-\item{plot_text}{a named list of plot features and their text label}
+\item{plot_text}{A named character vector where plot features are names and
+the text to be printed in the plot are values (e.g.,
+c(title = "Plot Title", etc.)).}
 
-\item{alt_text}{logical. Should a subtitle and caption be generated for the
+\item{alt_text}{Logical. Should a subtitle and caption be generated for the
 plot?}
 
 \item{save_path}{A string. The directory path where the plot should be saved.}

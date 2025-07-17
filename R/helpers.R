@@ -1,23 +1,91 @@
-#' a helper function used by 'theme_pcj()' to make consistently themed plots
+#' File Reader
 #'
-#' @param base_size an integer. The graph's default font size.
-#' @param dark_text a quoted hex string. Sets the color of the darkest text in a
-#' plot. All text is based on shades of the specified hex code.
-#' @param font a quoted name of the font you would like the plot's text to be
-#' printed in
-#' @param ... additional arguments passed to 'theme()'
+#' A helper used by `'read_file_list()'` to read in individual data files.
+#'
+#' @param x A filepath in the form of a string.
+#'
+#' @returns A `data.table` object containing data from a file supplied to
+#' `'read_data_list()'`.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' info <- files_info()
+#' file <- read_file(x = info$filepath)
+#' }
+
+read_file <- function(x) {
+
+  data.table::fread(
+    file = x,
+    na.strings = c("", "null", NA),
+    nThread = data.table::getDTthreads(),
+    data.table = TRUE
+  )
+
+}
+
+
+
+#' A Reader for Lists of Files
+#'
+#' A wrapper to read in multiple files passed from the `'read_file()'` helper
+#' and bind them together into a single object.
+#'
+#' @param files A string or an object containing filepath string(s).
+#'
+#' @returns A `data.table` object with concatenated data from all named files
+#'  supplied in `'file_list'`.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' info <- files_info()
+#' data <- read_file_list(files = info$filepath)
+#' }
+
+read_file_list <- function(files) {
+
+  for (i in seq_along(files)) {
+
+    list <- list(read_file(x = files[i]))
+
+  }
+
+  data.table::rbindlist(list)
+
+}
+
+
+
+#' Make Consistently Themed Plots
+#'
+#' A helper function to set the aesthetics of plots to ensure plots formatted
+#' with the `'theme_pcj()'` function all have the same settings.
+#'
+#' @param base_size The plot's default font size; must be numeric.
+#' @param dark_text A quoted hex code that sets the color of the darkest text in
+#' the plot. All text is based on shades of the specified hex code.
+#' @param font A character string containing the name of the font in which to
+#' print the plot's text.
+#' @param ... Optional arguments to be passed to `'theme()'`.
 #'
 #' @import ggplot2
 #'
 #' @keywords internal
 #'
-#' @returns a plot configured with aesthetics reflecting the specified settings
+#' @returns A plot configured with the declared aesthetics.
 #'
 #' @examples
 #' \dontrun{
 #' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
 #' ggplot2::geom_point() +
-#' theme_pcj_aesthetics(base_size = 12, dark_text = "#000000")
+#' theme_pcj_aesthetics(
+#' base_size = 12,
+#' dark_text = "#000000",
+#' font = "Atkinson Hyperlegible")
 #' }
 
 theme_pcj_aesthetics <- function(base_size,
@@ -95,23 +163,30 @@ theme_pcj_aesthetics <- function(base_size,
 
 
 
-#' a helper function defining the palettes accessible to 'theme_pcj()'
+#' Plot Color Palettes
 #'
-#' @param palette a string. The name of the palette to be mapped to a variable,
+#' A helper function defining the palettes accessible to `'theme_pcj()'`.
+#'
+#' @param palette A string. The name of the palette to be mapped to a variable,
 #' including: "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
 #' "mono_yellow", or "ualbany".
-#' @param continuous logical. Is the variable continuous or discrete?
-#' @param .colors loads the colors defined within pcj_colors.
-#' @param .palettes loads the palettes defined within pcj_palettes.
+#' @param continuous Logical. Is the variable continuous or discrete?
+#' @param .colors Loads the colors defined within pcj_colors.
+#' @param .palettes Loads the palettes defined within pcj_palettes.
 #'
 #' @keywords internal
 #'
-#' @returns a plot object with the specified aesthetics rendered.
+#' @returns A plot object with the specified aesthetics rendered.
 #'
 #' @examples
 #' \dontrun{
-#' pcj_graph_palettes(palette = "default")
-#' pcj_graph_palettes(palette = "mono_printing")
+#' ggplot2::ggplot(
+#' data = mtcars,
+#' mapping = ggplot2::aes(x = wt, y = mpg, color = gear)) +
+#' ggplot2::geom_point() +
+#' pcj_graph_palettes(
+#' palette = "ualbany",
+#' continuous = FALSE)
 #' }
 
 theme_pcj_palettes <- function(palette, continuous,
@@ -210,16 +285,20 @@ theme_pcj_palettes <- function(palette, continuous,
 
 
 
-#' a function to apply text to a plot
+#' Plot Text Settings
 #'
-#' @param plot_text a named list of plot features and their text label
-#' @param alt_text logical. Should a subtitle and caption be generated for the
-#' plot?
+#' A helper to define the text for various elements of a plot as part of the
+#' `'theme_pcj()'` function.
+#'
+#' @param plot_text A named character vector where plot features are names and
+#'  the text to be printed in the plot are values (e.g.,
+#'  c(title = "Plot Title", etc.)).
+#' @param alt_text Logical. Should a subtitle and caption be generated for the
+#'  plot?
 #'
 #' @keywords internal
 #'
-#' @returns a ggplot object with the rendered text specified in the function
-#' call
+#' @returns A ggplot object with the text declared in the function call.
 #'
 #' @examples
 #' \dontrun{
@@ -228,56 +307,41 @@ theme_pcj_palettes <- function(palette, continuous,
 #'   theme_pcj_text()
 #'   }
 
-theme_pcj_text <- function(
-    plot_text = c("title", "subtitle", "xlab", "ylab",
-      paste0("Rendered:", format(Sys.time(), "%Y%m%d, %H:%M"))
-    ),
-    alt_text = FALSE) {
+theme_pcj_text <- function(plot_text, alt_text) {
 
-  label_names <- plot_text
+  # In case the full expected names of the plot elements aren't given
+  names(plot_text) <- match.arg(arg = names(plot_text),
+                                choices = c("title", "subtitle",
+                                            "xlab", "ylab", "caption"),
+                                several.ok = TRUE)
+
+  default_caption <- paste0("Created: ", format(Sys.time(), "%Y%m%d, %H:%M"))
 
   if (alt_text == TRUE) {
 
     labs(
-      title = if (!is.na(label_names["title"])) {
-        label_names["title"]
-      } else {
-              NULL},
-      subtitle = if (!is.na(label_names["subtitle"])) {
-        label_names["subtitle"]
-      } else {
-              NULL},
-      x = if (!is.na(label_names["xlab"])) {
-        label_names["xlab"]
-      } else {
-              NULL},
-      y = if (!is.na(label_names["ylab"])) {
-        label_names["ylab"]
-      } else {
-              NULL},
-      caption = if (!is.na(label_names["caption"])) {
-        label_names["caption"]
-      } else {
-        paste0("Rendered: ", format(Sys.time(), "%Y%m%d, %H:%M"))
-      }
+      title = if ("title" %in% names(plot_text))
+        plot_text[["title"]] else "title",
+      subtitle = if ("subtitle" %in% names(plot_text))
+        plot_text[["subtitle"]] else "subtitle",
+      x = if ("xlab" %in% names(plot_text))
+        plot_text[["xlab"]] else "xlab",
+      y = if ("ylab" %in% names(plot_text))
+        plot_text[["ylab"]] else "ylab",
+      caption = if ("caption" %in% names(plot_text))
+        plot_text[["caption"]] else default_caption
     )
 
   } else {
 
     labs(
-      title = if (!is.na(label_names["title"])) {
-        label_names["title"]
-      } else {
-              NULL},
+      title = if ("title" %in% names(plot_text))
+        plot_text[["title"]] else "title",
       subtitle = NULL,
-      x = if (!is.na(label_names["xlab"])) {
-        label_names["xlab"]
-      } else {
-              NULL},
-      y = if (!is.na(label_names["ylab"])) {
-        label_names["ylab"]
-      } else {
-              NULL},
+      x = if ("xlab" %in% names(plot_text))
+        plot_text[["xlab"]] else "xlab",
+      y = if ("ylab" %in% names(plot_text))
+        plot_text[["ylab"]] else "ylab",
       caption = NULL
     )
   }

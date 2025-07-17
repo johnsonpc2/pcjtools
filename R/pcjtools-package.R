@@ -1,8 +1,7 @@
 #' @keywords internal
-#' @title A Set of Tools Developed for Wrangling and Analyzing Data from jsPsych
+#' @title A suite of tools built to make data wrangling and analysis easier
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom stats runif
 ## usethis namespace: end
 NULL

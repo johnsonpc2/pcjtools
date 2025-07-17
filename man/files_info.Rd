@@ -6,7 +6,7 @@
 \usage{
 files_info(
   path = system.file("extdata", package = "pcjtools"),
-  extension = "csv",
+  extension = NULL,
   ...
 )
 }
@@ -15,24 +15,17 @@ files_info(
 
 \item{extension}{A string naming the extension of the files to import.}
 
-\item{...}{Optional logical arguments of the following to pass to
-\code{list.files()}: \code{'all.files'}, \code{'recursive'}, \code{'ignore.case'},
-\code{'include.dirs'}. All default to \code{FALSE}.}
+\item{...}{Optional logical arguments to pass to \code{list.files()}, such as:
+\code{'all.files'}, \code{'recursive'}, \code{'ignore.case'}, \code{'include.dirs'}. All default
+to \code{FALSE}.}
 }
 \value{
-A data.table containing file information from the file(s) found in
-the directory specified at \code{'path'}. Including:
-\itemize{
-\item full filepath
-\item basename
-\item extension
-\item the last date the file was modified
-\item the age in days since the file was last modified.
-}
+A \code{data.table} containing file information from the file(s) found in
+the directory specified at \code{'path'}. Including the full filepath and the
+basename of the file(s).
 
 This information can be stored in a vector and is intended to be passed to
-\code{import_data()} to read in a list of data files to a single \code{data.table}
-object.
+\code{import_data()} in order to concatenate data files together.
 }
 \description{
 A function to gather information about data files located at \code{'path'}. Only

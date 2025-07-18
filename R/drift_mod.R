@@ -89,7 +89,8 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
       fill = choice,
       alpha = .1)
   ) +
-    geom_density()
+    geom_density() +
+   guides(alpha = "none")
 
  fp2 <- theme_pcj(
    plot = rt_dist_plot,

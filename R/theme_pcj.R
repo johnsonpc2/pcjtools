@@ -55,8 +55,6 @@ theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
     theme_pcj_text(plot_text = plot_text,
                    alt_text = alt_text)
 
-  print(modified_plot)
-
   if (!is.null(save_path)) {
 
     plot_saver(plots = modified_plot, dir = save_path)

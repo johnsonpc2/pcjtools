@@ -18,7 +18,8 @@
 #' g1 <- ggplot2::ggplot(
 #' data = mtcars,
 #' mapping = ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
-#' )
+#' ) +
+#' ggplot2::geom_point()
 #'
 #' plot_saver(plots = g1, dir = tempdir())
 

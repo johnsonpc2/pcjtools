@@ -1,3 +1,15 @@
+test_that("diffusion_sim runs a single simulation of a drift diffusion model", {
+
+  drift <- diffusion_sim()
+
+  expect_vector(drift)
+
+  expect_s3_class(drift, c("data.table", "data.frame"))
+
+})
+
+
+
 test_that("read_file reads single files", {
 
   info <- files_info()

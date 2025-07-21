@@ -26,17 +26,8 @@
 #' @examples
 #' diffusion_sim()
 
-diffusion_sim <- function(
-    v = 0,
-    sv = 0,
-    a = 2,
-    w = 0.5,
-    sw = 0,
-    t0 = 0.2,
-    st0 = 0,
-    dt = 0.01,
-    t_max = Inf
-) {
+diffusion_sim <- function(v = 0, sv = 0, a = 2, w = 0.5, sw = 0,
+                          t0 = 0.2, st0 = 0, dt = 0.01, t_max = Inf) {
 
   # See notes Section 4.3 on parameter considerations for slow and fast errors
 
@@ -54,7 +45,7 @@ diffusion_sim <- function(
   x_record <- x
   t_record <- t
 
-  while (x < b_upper & x > b_lower & t < t_max) {
+  while (x < b_upper && x > b_lower && t < t_max) {
     x_sample <- stats::rnorm(n = 1, mean = trial_v * dt, sd = 1 * sqrt(dt))
     x <- x + x_sample
     t <- t + dt
@@ -63,6 +54,242 @@ diffusion_sim <- function(
   }
 
   return(data.table::data.table(t = t_record, x = x_record))
+}
+
+
+
+#' Fit a Diffusion Model
+#'
+#' This function will fit a diffusion model to subjects' aggregated data.
+#'
+#' @param prop_correct Proportion correct.
+#' @param rt_correct_variance_seconds The variance of the correct response times
+#'  (in seconds).
+#' @param rt_correct_mean_seconds The mean of correct response times (in
+#' seconds).
+#' @param nTrials The number of trials.
+#' @param s A scaling parameter (often set to 1.0—the default—or 0.1).
+#'
+#' @returns A vector containing `'a'` (boundary),
+#' `'v'` (drift rate), and `'ter'` (non-decision time) parameters.
+#'
+#' @export
+#'
+#' @examples
+#' ezddm(prop_correct = .802, rt_correct_variance_seconds = .112,
+#' rt_correct_mean_seconds = .723, n_trials = 100)
+
+ezddm <- function(prop_correct, rt_correct_variance_seconds,
+                  rt_correct_mean_seconds, n_trials, s = 1) {
+
+  # Function adapted from the function of the same name in the `fddm` package
+  s2 <- s^2
+  v <- as.numeric(NA)
+  a <- as.numeric(NA)
+  ter <- as.numeric(NA)
+
+  prop_correct <- (2 * n_trials * prop_correct) /
+    (2 * n_trials + 1) + 1 / (4 * n_trials * n_trials)
+  l <- stats::qlogis(prop_correct)
+  x <- l * (l * prop_correct^2 - l * prop_correct + prop_correct - 0.5) /
+    rt_correct_variance_seconds
+  v <- sign(prop_correct - 0.5) * s * x^(1 / 4)
+  a <- s2 * stats::qlogis(prop_correct) / v
+  y <- -v * a / s2
+  mdt <- (a / (2 * v)) * (1 - exp(y)) / (1 + exp(y))
+  ter <- rt_correct_mean_seconds - mdt
+  return(c("a" = a, "v" = v, "ter" = ter))
+}
+
+
+
+#' Title
+#'
+#' @param par Start
+#' @param rt Start
+#' @param response Start
+#' @param bound_index Start
+#' @param drift_index Start
+#' @param resid_index Start
+#' @param sv_index Start
+#' @param sw_index Start
+#' @param st0_index Start
+#' @param ... Optional arguments to pass to `'WienR'` package functions.
+#'
+#' @returns A vector of gradients
+#'
+#' @export
+#'
+#' @examples
+#' gradient(par, rt, response, bound_index, drift_index, resid_index)
+gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
+                     sv_index = NULL, sw_index = NULL, st0_index = NULL, ...) {
+
+  a <- par[paste0("a[", bound_index, "]")]
+  v <- par[paste0("v[", drift_index, "]")]
+  w <- par[paste0("w[", bound_index, "]")]
+  t0 <- par[paste0("t0[", resid_index, "]")]
+
+  if (is.na(par["sv[1]"])) {
+    sv <- 0
+    use_sv <- FALSE
+  } else {
+    sv <- par[paste0("sv[", sv_index, "]")]
+    use_sv <- TRUE
+  }
+
+  if (is.na(par["sw[1]"])) {
+    sw <- 0
+    use_sw <- FALSE
+  } else {
+    sw <- par[paste0("sw[", sw_index, "]")]
+    use_sw <- TRUE
+  }
+
+  if (is.na(par["st0[1]"])) {
+    st0 <- 0
+    use_st0 <- FALSE
+  } else {
+    st0 <- par[paste0("st0[", st0_index, "]")]
+    use_st0 <- TRUE
+  }
+
+  eval_grad <- try(WienR::gradWienerPDF(t = rt, response = response, a = a,
+                                        v = v, w = w, t0 = t0, sv = sv, sw = sw,
+                                        st0 = st0, ...),
+                   silent = TRUE)
+
+  if (any(class(eval_grad) == "try-error")) return(rep(NaN, length(par)))
+
+  eval_pdf <- try(WienR::WienerPDF(t = rt, response = response, a = a,
+                                   v = v, w = w, t0 = t0, sv = sv, sw = sw,
+                                   st0 = st0, ...),
+                  silent = TRUE)
+
+  if (any(class(eval_pdf) == "try-error")) return(rep(NaN, length(par)))
+
+  # Derivative of log(f(x)) is f'(x) / f(x)
+
+  grad <- rep(NaN, length(par))
+  names(grad) <- names(par)
+
+  for (i in 1:max(bound_index)) {
+    grad[paste0("a[", i, "]")] <- sum(eval_grad$deriv[bound_index == i, "da"] /
+                                        eval_pdf$value[bound_index == i])
+    grad[paste0("w[", i, "]")] <- sum(eval_grad$deriv[bound_index == i, "dw"] /
+                                        eval_pdf$value[bound_index == i])
+  }
+
+  if (use_sw) {
+    for (i in 1:max(sw_index)) {
+      grad[paste0("sw[", i, "]")] <- sum(eval_grad$deriv[sw_index == i, "dsw"] /
+                                           eval_pdf$value[sw_index == i])
+    }
+  }
+
+  for (i in 1:max(drift_index)) {
+    grad[paste0("v[", i, "]")] <- sum(eval_grad$deriv[drift_index == i, "dv"] /
+                                        eval_pdf$value[drift_index == i])
+  }
+
+  if (use_sv) {
+    for (i in 1:max(sv_index)) {
+      grad[paste0("sv[", i, "]")] <- sum(eval_grad$deriv[sv_index == i, "dsv"] /
+                                           eval_pdf$value[sv_index == i])
+    }
+  }
+
+  for (i in 1:max(resid_index)) {
+    grad[paste0("t0[", i, "]")] <-
+      sum(eval_grad$deriv[resid_index == i, "dt0"] /
+            eval_pdf$value[resid_index == i])
+  }
+
+  if (use_st0) {
+    for (i in 1:max(st0_index)) {
+      grad[paste0("st0[", i, "]")] <-
+        sum(eval_grad$deriv[st0_index == i, "dst0"] /
+              eval_pdf$value[st0_index == i])
+    }
+  }
+
+  return(-grad)
+}
+
+
+
+#' Find The Negative Log Likelihood of a Parameter
+#'
+#' A helper function used by `'fit_wienr()` to find the negative log likelihood
+#' of a set of parameters
+#'
+#' @inheritParams gradient
+#' @param ... Optional arguments to pass to `'WienerPDF()'`.
+#'
+#' @returns
+#'
+#' @export
+#'
+#' @examples
+
+nll <- function(par, rt, response, bound_index, drift_index, resid_index,
+                sv_index = NULL, sw_index = NULL, st0_index = NULL, ...) {
+
+  a <- par[paste0("a[", bound_index, "]")]
+  v <- par[paste0("v[", drift_index, "]")]
+  w <- par[paste0("w[", bound_index, "]")]
+  t0 <- par[paste0("t0[", resid_index, "]")]
+
+  if (is.na(par["sv[1]"])) sv <- 0 else
+    sv <- par[paste0("sv[", sv_index, "]")]
+
+  if (is.na(par["sw[1]"])) sw <- 0 else
+    sw <- par[paste0("sw[", sw_index, "]")]
+
+  if (is.na(par["st0[1]"])) st0 <- 0 else
+    st0 <- par[paste0("st0[", st0_index, "]")]
+
+  eval_pdf <- try(WienR::WienerPDF(t = rt, response = response, a = a,
+                                   v = v, w = w, t0 = t0, sv = sv, sw = sw,
+                                   st0 = st0, ...),
+                  silent = TRUE)
+
+  if (any(class(eval_pdf) == "try-error")) return(Inf)
+
+  return(-sum(eval_pdf$logvalue))
+}
+
+
+
+#' Title
+#'
+#' @param p
+#' @param response
+#' @param ... Optional arguments to pass to the functions from the `'WienR'`
+#'  package.
+#'
+#' @returns
+#'
+#' @export
+#'
+#' @examples
+
+q_wdm <- function(p, response, ...) {
+
+  p_resp <- WienR::WienerCDF(Inf, response = response, ...)$value
+
+  res <- try(
+    uniroot(f = function(t) {
+      WienR::WienerCDF(t, response = response, ...)$value} / p_resp - p,
+      interval = c(0, 5),
+      f.lower = -p,
+      extendInt = "upX"
+    )
+  )
+
+  if (class(res) == "try-error") NA else res$root #You may need to add back in
+  # the explicit return() here.
+
 }
 
 

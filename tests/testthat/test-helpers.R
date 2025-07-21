@@ -10,6 +10,18 @@ test_that("diffusion_sim runs a single simulation of a drift diffusion model", {
 
 
 
+test_that("ezddm sets the conditions for a drift diffusion model", {
+
+  model <- ezddm(prop_correct = .802, rt_correct_variance_seconds = .112,
+                 rt_correct_mean_seconds = .723, n_trials = 100)
+
+  expect_true(is.numeric(model))
+  expect_type(model, "double")
+
+})
+
+
+
 test_that("read_file reads single files", {
 
   info <- files_info()

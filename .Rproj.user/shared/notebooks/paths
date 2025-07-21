@@ -4,6 +4,7 @@ C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/DESCRIPTIO
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/LICENSE.md="27E8C9BD"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/NAMESPACE="A1E8197E"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/drift_mod.R="DB2D2AD6"
+C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/fit_wienR.R="52F51A9F"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/helpers.R="AD2ACFD0"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/import_data.R="7ECF532D"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/R/pcjtools-package.R="F2FDC5C3"
@@ -18,5 +19,4 @@ C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/test
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-helpers.R="4A6C3E1D"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-import_data.R="26547553"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-plot_saver.R="67E824F4"
-C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-test-drift_mod.R="A3C1A5E5"
 C:/Users/johns/OneDrive/Desktop/20241013_official+files_pdoc/pcjtools/tests/testthat/test-theme_pcj.R="FA3DD6AF"

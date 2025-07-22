@@ -64,7 +64,7 @@ qp_fit <- function(rt, response, par = NULL, rt_p = c(0.1, 0.3, 0.5, 0.7, 0.9),
              st0_index, response) %>%
     summarize(n_resp = n(), .groups = "keep") %>%
     ungroup() %>%
-    complete(nesting(drift_index, bound_index, resid_index, sv_index, sw_index,
+    tidyr::complete(nesting(drift_index, bound_index, resid_index, sv_index, sw_index,
                      st0_index), response, fill = list(n_resp = 0)) %>%
     group_by(drift_index, bound_index,
              resid_index, sv_index, sw_index, st0_index) %>%

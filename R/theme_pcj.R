@@ -39,7 +39,7 @@ theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
             is.character(font) && length(font) == 1L,
             is.character(palette) && length(palette) == 1L,
             is.logical(continuous) && length(continuous) == 1L,
-            is.character(plot_text) && length(plot_text <= 5L))
+            is.list(plot_text) && length(plot_text <= 5L))
 
   filename <- paste0(save_path, format(Sys.time(), "%Y%m%d_"),
                     plot_text["title"], ".png")

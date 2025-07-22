@@ -1,16 +1,20 @@
-#' Title
+#' Fit a model
 #'
-#' @param fit_sv
-#' @param fit_sw
-#' @param fit_st0
-#' @param optim_control
-#' @param init_par
+#' @param fit_sv Start
+#' @param fit_sw Start
+#' @param fit_st0 Start
+#' @param optim_control Start
+#' @param init_par Start
 #' @inheritParams nll
 #'
-#' @returns
+#' @returns Something
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' fit_wienr()
+#' }
+
 fit_wienr <- function(rt, response, fit_sv = FALSE, fit_sw = FALSE,
                       fit_st0 = FALSE, optim_control = list(), init_par = NULL,
                       drift_index = NULL, bound_index = NULL, resid_index = NULL,
@@ -20,6 +24,12 @@ fit_wienr <- function(rt, response, fit_sv = FALSE, fit_sw = FALSE,
   response_numeric <- as.numeric(response)
 
   par_names <- c()
+  n_drift <- NULL
+  n_bound <- NULL
+  n_resid <- NULL
+  n_sv <- NULL
+  n_sw <- NULL
+  n_st0 <- NULL
 
   if (is.null(drift_index)) {
 
@@ -110,7 +120,7 @@ fit_wienr <- function(rt, response, fit_sv = FALSE, fit_sw = FALSE,
   init_to_use[startsWith(par_names, "v[")] <- unname(ez_init["v"])
   init_to_use[startsWith(par_names, "w[")] <- 0.5
   init_to_use[startsWith(par_names, "t0[")] <- unname(min(0.99 * min(rt),
-                                                          ez_init["Ter"]))
+                                                          ez_init["ter"]))
 
   if (fit_sv) init_to_use[startsWith(par_names, "sv[")] <- 0
   if (fit_sw) init_to_use[startsWith(par_names, "sw[")] <- 0

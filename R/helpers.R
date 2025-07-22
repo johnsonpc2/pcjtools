@@ -226,11 +226,14 @@ gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
 #' @inheritParams gradient
 #' @param ... Optional arguments to pass to `'WienerPDF()'`.
 #'
-#' @returns
+#' @returns Something
 #'
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' nll()
+#' }
 
 nll <- function(par, rt, response, bound_index, drift_index, resid_index,
                 sv_index = NULL, sw_index = NULL, st0_index = NULL, ...) {
@@ -240,14 +243,11 @@ nll <- function(par, rt, response, bound_index, drift_index, resid_index,
   w <- par[paste0("w[", bound_index, "]")]
   t0 <- par[paste0("t0[", resid_index, "]")]
 
-  if (is.na(par["sv[1]"])) sv <- 0 else
-    sv <- par[paste0("sv[", sv_index, "]")]
+  if (is.na(par["sv[1]"])) sv <- 0 else sv <- par[paste0("sv[", sv_index, "]")]
 
-  if (is.na(par["sw[1]"])) sw <- 0 else
-    sw <- par[paste0("sw[", sw_index, "]")]
+  if (is.na(par["sw[1]"])) sw <- 0 else sw <- par[paste0("sw[", sw_index, "]")]
 
-  if (is.na(par["st0[1]"])) st0 <- 0 else
-    st0 <- par[paste0("st0[", st0_index, "]")]
+  if (is.na(par["st0[1]"])) st0 <- 0 else st0 <- par[paste0("st0[", st0_index, "]")]
 
   eval_pdf <- try(WienR::WienerPDF(t = rt, response = response, a = a,
                                    v = v, w = w, t0 = t0, sv = sv, sw = sw,
@@ -263,16 +263,19 @@ nll <- function(par, rt, response, bound_index, drift_index, resid_index,
 
 #' Title
 #'
-#' @param p
-#' @param response
+#' @param p Start
+#' @param response Start
 #' @param ... Optional arguments to pass to the functions from the `'WienR'`
 #'  package.
 #'
-#' @returns
+#' @returns Something
 #'
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' q_wdm()
+#' }
 
 q_wdm <- function(p, response, ...) {
 

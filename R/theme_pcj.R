@@ -34,12 +34,14 @@ theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
                       alt_text = TRUE, save_path = NULL, ...) {
 
   stopifnot(is_ggplot(plot),
-            is.numeric(base_size) && length(base_size) == 1L,
+            if (!is.null(base_size)) {
+              is.numeric(base_size) && length(base_size) == 1L
+              } else {break},
             is.character(dark_text) && length(dark_text) == 1L,
             is.character(font) && length(font) == 1L,
             is.character(palette) && length(palette) == 1L,
             is.logical(continuous) && length(continuous) == 1L,
-            is.list(plot_text) && length(plot_text <= 5L))
+            is.character(plot_text) && length(plot_text <= 5L))
 
   filename <- paste0(save_path, format(Sys.time(), "%Y%m%d_"),
                     plot_text["title"], ".png")

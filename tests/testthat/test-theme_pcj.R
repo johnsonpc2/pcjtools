@@ -21,7 +21,7 @@ test_that("theme_pcj works with lines", {
     ggplot2::aes(x = wt, y = mpg, color = factor(cyl))
   ) +
     ggplot2::geom_line(linewidth = 2)
-  thm <- theme_pcj(plot = g1, base_size = 10,
+  thm <- theme_pcj(plot = g1,
                    plot_text = c(title = "MPG of Cars Based on Weight and Cylinders",
                                  ylab = "MPG",
                                  xlab = "Weight"),
@@ -30,7 +30,7 @@ test_that("theme_pcj works with lines", {
                    save_path = ".")
 
   expect_s3_class(thm, "ggplot")
-  expect_equal(thm$theme$text$size, 10)
+  expect_equal(thm$theme$text$size, 12)
   expect_length(thm, 11)
 
   file <- paste0("./", format(Sys.time(), "%Y%m%d_"), "Plot.png")

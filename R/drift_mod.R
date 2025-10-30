@@ -1,13 +1,15 @@
-#' A Drift Diffusion Model
+#' Drift Diffusion Model
 #'
-#' @param nsims The number of simulation pf the drift difussion model to run
+#' A function to run and visualize the results of a drift diffusion model.
+#'
+#' @param nsims An integer; the number of simulations of the model to run.
 #' @inheritParams diffusion_sim
-#' @param plots Logical: should plot elements be generated?
-#' @param ... optional arguments to be passed to `'theme_pcj()'`.
+#' @param plots Logical; should plot elements be generated?
+#' @param ... optional arguments passed to `'theme_pcj()'`.
 #'
-#' @returns A list, including the results of the simulation, and plots for the
+#' @returns A list—including the results of the simulation—and plots for the
 #' average evidence accumulation over time, the conditional rt distribution,
-#' and the quantile-probability plot
+#' and the quantile-probability plot.
 #'
 #' @import data.table
 #' @import ggplot2
@@ -23,7 +25,7 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
 
 # Initialize and Run Simulation -------------------------------------------
 
-  # Specify the number of simulations to run
+  # The number of simulations to run
   n_sims <- nsims
 
   # Initially empty, this will eventually save our random walk simulations

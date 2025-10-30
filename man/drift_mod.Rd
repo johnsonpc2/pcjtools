@@ -2,7 +2,7 @@
 % Please edit documentation in R/drift_mod.R
 \name{drift_mod}
 \alias{drift_mod}
-\title{A Drift Diffusion Model}
+\title{Drift Diffusion Model}
 \usage{
 drift_mod(
   nsims = 1000,
@@ -20,7 +20,7 @@ drift_mod(
 )
 }
 \arguments{
-\item{nsims}{The number of simulation pf the drift difussion model to run}
+\item{nsims}{An integer; the number of simulations of the model to run.}
 
 \item{v}{The average drift rate towards a boundary.}
 
@@ -43,17 +43,17 @@ by the distance between the starting point and the}
 
 \item{t_max}{Maximum time: the max time the model will draw samples}
 
-\item{plots}{Logical: should plot elements be generated?}
+\item{plots}{Logical; should plot elements be generated?}
 
-\item{...}{optional arguments to be passed to \code{'theme_pcj()'}.}
+\item{...}{optional arguments passed to \code{'theme_pcj()'}.}
 }
 \value{
-A list, including the results of the simulation, and plots for the
+A list—including the results of the simulation—and plots for the
 average evidence accumulation over time, the conditional rt distribution,
-and the quantile-probability plot
+and the quantile-probability plot.
 }
 \description{
-A Drift Diffusion Model
+A function to run and visualize the results of a drift diffusion model.
 }
 \examples{
 drift_mod()

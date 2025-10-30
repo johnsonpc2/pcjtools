@@ -44,31 +44,41 @@ qp_fit <- function(rt, response, par = NULL, rt_p = c(0.1, 0.3, 0.5, 0.7, 0.9),
     n_st0 <- max(st0_index)
   }
 
-  obs_rt_quantiles <- tibble(rt = rt, response = response,
+  obs_rt_quantiles <- dplyr::tibble(rt = rt, response = response,
                              drift_index = drift_index,
                              bound_index = bound_index,
                              resid_index = resid_index, sv_index = sv_index,
-                             sw_index = sw_index, st0_index = st0_index) %>%
-    group_by(drift_index, bound_index, resid_index, sv_index, sw_index,
-             st0_index, response) %>%
-    reframe(rt_q = quantile(rt, probs = rt_p)) %>%
-    mutate(rt_p = rep(rt_p, n() / length(rt_p))) %>%
-    complete(nesting(drift_index, bound_index, resid_index, sv_index, sw_index,
-                     st0_index), response, rt_p, fill = list(rt_q = NA))
+                             sw_index = sw_index, st0_index = st0_index) |>
 
-  obs_p_resp <- tibble(rt = rt, response = response, drift_index = drift_index,
+    dplyr::group_by(drift_index, bound_index, resid_index, sv_index, sw_index,
+             st0_index, response) |>
+
+    dplyr::reframe(rt_q = stats::quantile(rt, probs = rt_p)) |>
+    dplyr::mutate(rt_p = rep(rt_p, dplyr::n() / length(rt_p))) |>
+
+    tidyr::complete(tidyr::nesting(drift_index, bound_index, resid_index,
+                                   sv_index, sw_index, st0_index),
+                    response,
+                    rt_p, fill = list(rt_q = NA))
+
+  obs_p_resp <- dplyr::tibble(rt = rt, response = response, drift_index = drift_index,
                        bound_index = bound_index, resid_index = resid_index,
                        sv_index = sv_index, sw_index = sw_index,
-                       st0_index = st0_index) %>%
-    group_by(drift_index, bound_index, resid_index, sv_index, sw_index,
-             st0_index, response) %>%
-    summarize(n_resp = n(), .groups = "keep") %>%
-    ungroup() %>%
-    tidyr::complete(nesting(drift_index, bound_index, resid_index, sv_index, sw_index,
-                     st0_index), response, fill = list(n_resp = 0)) %>%
-    group_by(drift_index, bound_index,
-             resid_index, sv_index, sw_index, st0_index) %>%
-    mutate(p_resp = n_resp / sum(n_resp))
+                       st0_index = st0_index) |>
+
+    dplyr::group_by(drift_index, bound_index, resid_index, sv_index, sw_index,
+             st0_index, response) |>
+
+    dplyr::summarize(n_resp = dplyr::n(), .groups = "keep") |>
+
+    dplyr::ungroup() |>
+
+    tidyr::complete(tidyr::nesting(drift_index, bound_index, resid_index, sv_index, sw_index,
+                     st0_index), response, fill = list(n_resp = 0)) |>
+
+    dplyr::group_by(drift_index, bound_index,
+             resid_index, sv_index, sw_index, st0_index) |>
+    dplyr::mutate(p_resp = n_resp / sum(n_resp))
 
   if (!is.null(par)) {
     par_names <- c(paste0("a[", 1:n_bound, "]"),
@@ -81,15 +91,16 @@ qp_fit <- function(rt, response, par = NULL, rt_p = c(0.1, 0.3, 0.5, 0.7, 0.9),
 
     par_to_use <- rep(0, length(par_names))
     names(par_to_use) <- par_names
-    overlap <- intersect(names(par_to_use), names(par))
+    overlap <- dplyr::intersect(names(par_to_use), names(par))
     par_to_use[overlap] <- par[overlap]
 
-    fitDF <- expand_grid(nesting(drift_index, bound_index, resid_index,
+    fitDF <- tidyr::expand_grid(tidyr::nesting(drift_index, bound_index, resid_index,
                                  sv_index, sw_index, st0_index),
-                         response = c("upper", "lower"), rt_p = rt_p) %>%
-      mutate(rt_q = NA, p_resp = NA)
+                         response = c("upper", "lower"), rt_p = rt_p) |>
+      dplyr::mutate(rt_q = NA, p_resp = NA)
 
     for (i in 1:nrow(fitDF)) {
+
       fitDF$rt_q[i] <- q_wdm(p = fitDF$rt_p[i], response = fitDF$response[i],
                              a = par_to_use[paste0("a[", fitDF$bound_index[i], "]")],
                              v = par_to_use[paste0("v[", fitDF$drift_index[i], "]")],
@@ -110,19 +121,27 @@ qp_fit <- function(rt, response, par = NULL, rt_p = c(0.1, 0.3, 0.5, 0.7, 0.9),
     }
 
     if (is.numeric(response)) {
-      fitDF <- fitDF %>%
-        mutate(response = as.numeric(factor(response,
-                                            levels = c("lower", "upper"))))
+      fitDF |>
+        dplyr::mutate(response = as.numeric(
+          factor(response, levels = c("upper", "lower"))
+        )
+      )
     }
 
-    obs_fit_data <- full_join(
-      full_join(obs_p_resp, obs_rt_quantiles) %>%
-        mutate(source = "Observed"),
-      fitDF %>% mutate(source = "Fitted")
+    fitDT <- data.table::setDT(fitDF)
+
+    fitDT[, response := dplyr::case_when(
+      response == "upper" ~ 1,
+      response == "lower" ~ 0
+    )] -> fitDT
+
+    obs_fit_data <- dplyr::full_join(
+      (dplyr::full_join(obs_p_resp, obs_rt_quantiles) |> dplyr::mutate(source = "Observed")),
+      (fitDT |>  dplyr::mutate(source = "Fitted"))
     )
 
     return(obs_fit_data)
   } else {
-    return(full_join(obs_p_resp, obs_rt_quantiles))
+    return(dplyr::full_join(obs_p_resp, obs_rt_quantiles))
   }
 }

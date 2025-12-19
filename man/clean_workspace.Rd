@@ -4,16 +4,21 @@
 \alias{clean_workspace}
 \title{Clear the console and plot window, and remove objects from the environment}
 \usage{
-clean_workspace()
+clean_workspace(ask = TRUE)
+}
+\arguments{
+\item{ask}{Logical; should the function ask for confirmation before clearing?
+Defaults to TRUE for safety.}
 }
 \value{
-confirmation that the environment has been cleaned
+confirmation that the environment has been cleaned (invisibly)
 }
 \description{
 Clear the console and plot window, and remove objects from the environment
 }
 \examples{
 \donttest{
-clean_workspace()
+# Clean workspace without asking (use with caution!)
+clean_workspace(ask = FALSE)
 }
 }

@@ -341,6 +341,7 @@ read_file <- function(x) {
 #' @param parallel Logical; use parallel processing? Default is FALSE.
 #' @param n_cores Integer; number of cores to use. Default uses all but one core.
 #' @param show_progress Logical; show progress bar? Default is TRUE.
+#' @inheritParams data.table::rbindlist
 #'
 #' @returns A `data.table` object with concatenated data from all named files.
 #'
@@ -356,7 +357,7 @@ read_file <- function(x) {
 #' data <- read_file_list(files = info$filepath, parallel = TRUE)
 #' }
 read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
-                           show_progress = TRUE) {
+                           show_progress = TRUE, ...) {
 
   # Parallel processing
   if (parallel && requireNamespace("parallel", quietly = TRUE) && length(files) > 1) {
@@ -393,7 +394,7 @@ read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
   }
 
   # Efficiently combine all data
-  data.table::rbindlist(dt_list, fill = TRUE, use.names = TRUE)
+  data.table::rbindlist(dt_list, ...)
 }
 
 

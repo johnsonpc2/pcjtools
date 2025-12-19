@@ -4,7 +4,13 @@
 \alias{read_file_list}
 \title{A Reader for Lists of Files}
 \usage{
-read_file_list(files, parallel = FALSE, n_cores = NULL, show_progress = TRUE)
+read_file_list(
+  files,
+  parallel = FALSE,
+  n_cores = NULL,
+  show_progress = TRUE,
+  ...
+)
 }
 \arguments{
 \item{files}{A string or an object containing filepath string(s).}

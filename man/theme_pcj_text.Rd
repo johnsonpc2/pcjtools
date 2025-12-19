@@ -21,11 +21,4 @@ A ggplot object with the text declared in the function call.
 A helper to define the text for various elements of a plot as part of the
 \code{'theme_pcj()'} function.
 }
-\examples{
-\dontrun{
-ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-  ggplot2::geom_point() +
-  theme_pcj_text()
-  }
-}
 \keyword{internal}

@@ -45,5 +45,11 @@ A vector of gradients
 Title
 }
 \examples{
+par <- c(0.5, 1.0, 0.3)
+rt <- rnorm(100, 0.5, 0.1)
+response <- sample(c(0, 1), 100, replace = TRUE)
+bound_index <- c(1)
+drift_index <- c(2)
+resid_index <- c(3)
 gradient(par, rt, response, bound_index, drift_index, resid_index)
 }

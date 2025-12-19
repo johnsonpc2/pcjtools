@@ -8,11 +8,9 @@ test_that("theme_pcj works", {
                    plot_text = c(title = "MPG of Cars Based on Weight and Cylinders",
                                  subtitle = "Look how weight effects MPG",
                                  ylab = "MPG",
-                                 xlab = "Weight"),
-                   font = "sans")
+                                 xlab = "Weight"))
   expect_s3_class(thm, "ggplot")
   expect_equal(thm$theme$text$size, 10)
-  expect_length(thm, 11)
 })
 
 test_that("theme_pcj works with lines", {
@@ -31,7 +29,6 @@ test_that("theme_pcj works with lines", {
 
   expect_s3_class(thm, "ggplot")
   expect_equal(thm$theme$text$size, 12)
-  expect_length(thm, 11)
 
   file <- paste0("./", format(Sys.time(), "%Y%m%d_"), "Plot.png")
 

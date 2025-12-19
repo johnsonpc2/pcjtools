@@ -27,11 +27,15 @@ location given in \code{'dir'}.
 Efficiently Save Plot(s) to File with Consistent Settings
 }
 \examples{
-g1 <- ggplot2::ggplot(
-data = mtcars,
-mapping = ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
+\donttest{
+library(ggplot2)
+
+g1 <- ggplot(
+  data = mtcars,
+  mapping = aes(x = mpg, y = wt, color = factor(cyl))
 ) +
-ggplot2::geom_point()
+  geom_point()
 
 plot_saver(plots = g1, dir = tempdir())
+}
 }

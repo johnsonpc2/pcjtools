@@ -67,7 +67,7 @@ diffusion_sim <- function(v = 0, sv = 0, a = 2, w = 0.5, sw = 0,
 #'  (in seconds).
 #' @param rt_correct_mean_seconds The mean of correct response times (in
 #' seconds).
-#' @param nTrials The number of trials.
+#' @param n_trials The number of trials.
 #' @param s A scaling parameter (often set to 1.0—the default—or 0.1).
 #'
 #' @returns A vector containing `'a'` (boundary),
@@ -121,7 +121,14 @@ ezddm <- function(prop_correct, rt_correct_variance_seconds,
 #' @export
 #'
 #' @examples
+#' par <- c(0.5, 1.0, 0.3)
+#' rt <- rnorm(100, 0.5, 0.1)
+#' response <- sample(c(0, 1), 100, replace = TRUE)
+#' bound_index <- c(1)
+#' drift_index <- c(2)
+#' resid_index <- c(3)
 #' gradient(par, rt, response, bound_index, drift_index, resid_index)
+
 gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
                      sv_index = NULL, sw_index = NULL, st0_index = NULL, ...) {
 
@@ -159,14 +166,14 @@ gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
                                         st0 = st0, ...),
                    silent = TRUE)
 
-  if (any(class(eval_grad) == "try-error")) return(rep(NaN, length(par)))
+  if (inherits(eval_grad, "try-error")) return(rep(NaN, length(par)))
 
   eval_pdf <- try(WienR::WienerPDF(t = rt, response = response, a = a,
                                    v = v, w = w, t0 = t0, sv = sv, sw = sw,
                                    st0 = st0, ...),
                   silent = TRUE)
 
-  if (any(class(eval_pdf) == "try-error")) return(rep(NaN, length(par)))
+  if (inherits(eval_pdf, "try-error")) return(rep(NaN, length(par)))
 
   # Derivative of log(f(x)) is f'(x) / f(x)
 
@@ -254,7 +261,7 @@ nll <- function(par, rt, response, bound_index, drift_index, resid_index,
                                    st0 = st0, ...),
                   silent = TRUE)
 
-  if (any(class(eval_pdf) == "try-error")) return(Inf)
+  if (inherits(eval_pdf, "try-error")) return(Inf)
 
   return(-sum(eval_pdf$logvalue))
 }
@@ -282,7 +289,7 @@ q_wdm <- function(p, response, ...) {
   p_resp <- WienR::WienerCDF(Inf, response = response, ...)$value
 
   res <- try(
-    uniroot(f = function(t) {
+    stats::uniroot(f = function(t) {
       WienR::WienerCDF(t, response = response, ...)$value} / p_resp - p,
       interval = c(0, 5),
       f.lower = -p,
@@ -290,8 +297,7 @@ q_wdm <- function(p, response, ...) {
     )
   )
 
-  if (class(res) == "try-error") NA else res$root #You may need to add back in
-  # the explicit return() here.
+  if (inherits(res, "try-error")) NA else res$root
 
 }
 
@@ -376,16 +382,6 @@ read_file_list <- function(files) {
 #' @keywords internal
 #'
 #' @returns A plot configured with the declared aesthetics.
-#'
-#' @examples
-#' \dontrun{
-#' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-#' ggplot2::geom_point() +
-#' theme_pcj_aesthetics(
-#' base_size = 12,
-#' dark_text = "#000000",
-#' font = "Atkinson Hyperlegible")
-#' }
 
 theme_pcj_aesthetics <- function(base_size,
                                  dark_text,
@@ -476,17 +472,6 @@ theme_pcj_aesthetics <- function(base_size,
 #' @keywords internal
 #'
 #' @returns A plot object with the specified aesthetics rendered.
-#'
-#' @examples
-#' \dontrun{
-#' ggplot2::ggplot(
-#' data = mtcars,
-#' mapping = ggplot2::aes(x = wt, y = mpg, color = gear)) +
-#' ggplot2::geom_point() +
-#' pcj_graph_palettes(
-#' palette = "ualbany",
-#' continuous = FALSE)
-#' }
 
 theme_pcj_palettes <- function(palette, continuous,
                                .colors = pcj_colors,
@@ -568,15 +553,13 @@ theme_pcj_palettes <- function(palette, continuous,
 
     ggplot2::discrete_scale(
       palette = grDevices::colorRampPalette(.palettes[[palette]]),
-      aesthetics = c("color", "fill"),
-      na.value = .colors$na_value
+      aesthetics = c("color", "fill")
     )
 
   } else {
 
     ggplot2::scale_color_gradientn(
-      colors = .palettes[[palette]],
-      na.value = .colors$na_value
+      colors = .palettes[[palette]]
     )
 
   }
@@ -598,13 +581,6 @@ theme_pcj_palettes <- function(palette, continuous,
 #' @keywords internal
 #'
 #' @returns A ggplot object with the text declared in the function call.
-#'
-#' @examples
-#' \dontrun{
-#' ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-#'   ggplot2::geom_point() +
-#'   theme_pcj_text()
-#'   }
 
 theme_pcj_text <- function(plot_text, alt_text) {
 

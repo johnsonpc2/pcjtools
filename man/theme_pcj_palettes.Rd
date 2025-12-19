@@ -28,15 +28,4 @@ A plot object with the specified aesthetics rendered.
 \description{
 A helper function defining the palettes accessible to \code{'theme_pcj()'}.
 }
-\examples{
-\dontrun{
-ggplot2::ggplot(
-data = mtcars,
-mapping = ggplot2::aes(x = wt, y = mpg, color = gear)) +
-ggplot2::geom_point() +
-pcj_graph_palettes(
-palette = "ualbany",
-continuous = FALSE)
-}
-}
 \keyword{internal}

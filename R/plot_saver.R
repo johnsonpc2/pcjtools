@@ -15,13 +15,17 @@
 #' @export
 #'
 #' @examples
-#' g1 <- ggplot2::ggplot(
-#' data = mtcars,
-#' mapping = ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
+#' \donttest{
+#' library(ggplot2)
+#'
+#' g1 <- ggplot(
+#'   data = mtcars,
+#'   mapping = aes(x = mpg, y = wt, color = factor(cyl))
 #' ) +
-#' ggplot2::geom_point()
+#'   geom_point()
 #'
 #' plot_saver(plots = g1, dir = tempdir())
+#' }
 
 plot_saver <- function(plots, dir = ".", names = NULL, ...) {
 
@@ -39,19 +43,18 @@ plot_saver <- function(plots, dir = ".", names = NULL, ...) {
   filename <- NULL
 
   if (length(names) == 0L) {
-    filename <- paste0(dir, "\\", date,  "Plot.png")
-
+    filename <- file.path(dir, paste0(date, "Plot.png"))
   } else if (length(names) == 1L) {
-    for (i in seq_along(plots)) {
-      filename[i] <- paste0(dir, "\\", date, names, i, ".png")
-    }
-
+    filename <- vapply(seq_along(plots), function(i) {
+      file.path(dir, paste0(date, names, i, ".png"))
+    }, character(1))
   } else if (length(names) == length(plots)) {
-    for (i in seq_along(plots)) {
-      filename[i] <- paste0(dir, "\\", date, names[i], ".png")
-    }
-
-  } else {stop("Names must match length of plots, or have a length of 1.")}
+    filename <- vapply(seq_along(plots), function(i) {
+      file.path(dir, paste0(date, names[i], ".png"))
+    }, character(1))
+  } else {
+    stop("Names must match length of plots, or have a length of 1.")
+  }
 
   for (i in seq_along(plots)) {
 
@@ -59,8 +62,12 @@ plot_saver <- function(plots, dir = ".", names = NULL, ...) {
       filename = filename[i],
       plot = plots[[i]],
       dpi = 900,
-      bg = "transparent"
+      bg = "transparent",
+      ...
     )
 
   }
+
+  invisible(plots)
+
 }

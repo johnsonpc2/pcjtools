@@ -6,10 +6,10 @@
 \alias{pcjtools-package}
 \title{A suite of tools built to make data wrangling and analysis easier}
 \description{
-A suite of tools developed to aid data wrangling and analysis. Includes functions to import data, make consistent plots, and save batches of plots with consistent settings.
+What the package does (one paragraph).
 }
 \author{
-\strong{Maintainer}: Pierce Johnson \email{johnsonpierce.c@gmail.com} (\href{https://orcid.org/0009-0002-8517-2452}{ORCID})
+\strong{Maintainer}: First Last \email{first.last@example.com}
 
 }
 \keyword{internal}

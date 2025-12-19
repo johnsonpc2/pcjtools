@@ -1,21 +1,22 @@
 Package: pcjtools
-Title: Data Wrangling and Analysis Tools
-Version: 1.0.0
+Title: What the Package Does (One Line, Title Case)
+Version: 0.0.0.9000
 Authors@R: 
-    person("Pierce", "Johnson", , "johnsonpierce.c@gmail.com", role = c("aut", "cre"),
-           comment = c(ORCID = "0009-0002-8517-2452"))
-Description: A suite of tools developed to aid data wrangling and
-    analysis.  Includes functions to import data, make consistent plots,
-    and save batches of plots with consistent settings.
-License: CC BY 4.0
+    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
+License: GPL (>= 3)
 Imports: 
     data.table,
     dplyr,
     ggplot2,
     monochromeR,
-    systemfonts
-Suggests: 
-    testthat (>= 3.2.0)
+    systemfonts,
+    tidyr,
+    ucminf,
+    WienR
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
+Suggests: 
+    MASS (>= 7.3),
+    testthat (>= 3.0.0)

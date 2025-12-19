@@ -111,7 +111,7 @@ fit_wienr <- function(rt, response, fit_sv = FALSE, fit_sw = FALSE,
 
   ez_init <- ezddm(
     prop_correct = mean(response_numeric == 2),
-    rt_correct_variance_seconds = var(rt[response_numeric == 2]),
+    rt_correct_variance_seconds = stats::var(rt[response_numeric == 2]),
     rt_correct_mean_seconds = mean(rt[response_numeric == 2]),
     n_trials = length(response_numeric)
   )
@@ -157,7 +157,7 @@ fit_wienr <- function(rt, response, fit_sv = FALSE, fit_sw = FALSE,
     init_par0 <- init_par[!(startsWith(names(init_par), "sw") ||
                               startsWith(names(init_par), "st0"))]
 
-    fit0 <- try(optim(
+    fit0 <- try(stats::optim(
       par = init_par0,
       fn = nll,
       gr = gradient,
@@ -173,13 +173,13 @@ fit_wienr <- function(rt, response, fit_sv = FALSE, fit_sw = FALSE,
       st0_index = st0_index
     ), silent = TRUE)
 
-    if (class(fit0) != "try-error") {
+    if (!inherits(fit0, "try-error")) {
       overlap <- intersect(names(init_par), names(init_par0))
       init_par[overlap] <- fit0$par[overlap]
     }
   }
 
-  fit1 <- optim(
+  fit1 <- stats::optim(
     par = init_par,
     fn = nll,
     gr = gradient,

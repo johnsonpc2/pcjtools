@@ -21,9 +21,9 @@ ezddm(
 \item{rt_correct_mean_seconds}{The mean of correct response times (in
 seconds).}
 
-\item{s}{A scaling parameter (often set to 1.0—the default—or 0.1).}
+\item{n_trials}{The number of trials.}
 
-\item{nTrials}{The number of trials.}
+\item{s}{A scaling parameter (often set to 1.0—the default—or 0.1).}
 }
 \value{
 A vector containing \code{'a'} (boundary),

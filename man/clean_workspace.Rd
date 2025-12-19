@@ -13,5 +13,7 @@ confirmation that the environment has been cleaned
 Clear the console and plot window, and remove objects from the environment
 }
 \examples{
+\donttest{
 clean_workspace()
+}
 }

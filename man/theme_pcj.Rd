@@ -54,11 +54,28 @@ A function to create and save consistent plots with aesthetics chosen to
 enhance accessibility
 }
 \examples{
-g1 <- ggplot2::ggplot(
-data = mtcars,
-ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
-) +
-ggplot2::geom_line(linewidth = 2)
+\donttest{
+library(ggplot2)
 
-thm <- theme_pcj(plot = g1, font = "sans")
+# Create a basic plot
+g1 <- ggplot(
+  data = mtcars,
+  aes(x = mpg, y = wt, color = factor(cyl))
+) +
+  geom_line(linewidth = 2)
+
+# Apply custom theme
+thm <- theme_pcj(
+  plot = g1,
+  font = "sans",
+  plot_text = c(
+    title = "Car Weight vs MPG",
+    xlab = "Miles per Gallon",
+    ylab = "Weight (1000 lbs)"
+  )
+)
+
+# Display the plot
+print(thm)
+}
 }

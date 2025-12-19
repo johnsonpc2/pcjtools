@@ -4,14 +4,16 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' clean_workspace()
+#' }
 
 clean_workspace <- function() {
   # Clear console
   cat("\014")
 
   # Clear graphs
-  graphics.off()
+  grDevices::graphics.off()
 
   # Remove objects from the environment
   rm(list = ls(all.names = TRUE))

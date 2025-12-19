@@ -24,14 +24,4 @@ A plot configured with the declared aesthetics.
 A helper function to set the aesthetics of plots to ensure plots formatted
 with the \code{'theme_pcj()'} function all have the same settings.
 }
-\examples{
-\dontrun{
-ggplot2::ggplot(data = mtcars, ggplot2::aes(x = wt, y = mpg, color = gear)) +
-ggplot2::geom_point() +
-theme_pcj_aesthetics(
-base_size = 12,
-dark_text = "#000000",
-font = "Atkinson Hyperlegible")
-}
-}
 \keyword{internal}

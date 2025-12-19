@@ -56,5 +56,14 @@ and the quantile-probability plot.
 A function to run and visualize the results of a drift diffusion model.
 }
 \examples{
-drift_mod()
+\donttest{
+# Run simulation with default parameters
+results <- drift_mod(nsims = 100)
+
+# Access simulation data
+head(results$sim_results)
+
+# Run without plots
+results_no_plots <- drift_mod(nsims = 100, plots = FALSE)
+}
 }

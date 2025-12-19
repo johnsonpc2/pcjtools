@@ -4,23 +4,31 @@
 \alias{read_file_list}
 \title{A Reader for Lists of Files}
 \usage{
-read_file_list(files)
+read_file_list(files, parallel = FALSE, n_cores = NULL, show_progress = TRUE)
 }
 \arguments{
 \item{files}{A string or an object containing filepath string(s).}
+
+\item{parallel}{Logical; use parallel processing? Default is FALSE.}
+
+\item{n_cores}{Integer; number of cores to use. Default uses all but one core.}
+
+\item{show_progress}{Logical; show progress bar? Default is TRUE.}
 }
 \value{
-A \code{data.table} object with concatenated data from all named files
-supplied in \code{'file_list'}.
+A \code{data.table} object with concatenated data from all named files.
 }
 \description{
-A wrapper to read in multiple files passed from the \code{'read_file()'} helper
-and bind them together into a single object.
+A wrapper to read in multiple files and bind them together into a single object.
 }
 \examples{
 \dontrun{
 info <- files_info()
+# Serial with progress
 data <- read_file_list(files = info$filepath)
+
+# Parallel without progress
+data <- read_file_list(files = info$filepath, parallel = TRUE)
 }
 }
 \keyword{internal}

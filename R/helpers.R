@@ -335,32 +335,65 @@ read_file <- function(x) {
 
 #' A Reader for Lists of Files
 #'
-#' A wrapper to read in multiple files passed from the `'read_file()'` helper
-#' and bind them together into a single object.
+#' A wrapper to read in multiple files and bind them together into a single object.
 #'
 #' @param files A string or an object containing filepath string(s).
+#' @param parallel Logical; use parallel processing? Default is FALSE.
+#' @param n_cores Integer; number of cores to use. Default uses all but one core.
+#' @param show_progress Logical; show progress bar? Default is TRUE.
 #'
-#' @returns A `data.table` object with concatenated data from all named files
-#'  supplied in `'file_list'`.
+#' @returns A `data.table` object with concatenated data from all named files.
 #'
 #' @keywords internal
 #'
 #' @examples
 #' \dontrun{
 #' info <- files_info()
+#' # Serial with progress
 #' data <- read_file_list(files = info$filepath)
+#'
+#' # Parallel without progress
+#' data <- read_file_list(files = info$filepath, parallel = TRUE)
 #' }
+read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
+                           show_progress = TRUE) {
 
-read_file_list <- function(files) {
+  # Parallel processing
+  if (parallel && requireNamespace("parallel", quietly = TRUE) && length(files) > 1) {
+    if (is.null(n_cores)) {
+      n_cores <- max(1, parallel::detectCores() - 1)
+    }
 
-  for (i in seq_along(files)) {
+    if (show_progress && interactive()) {
+      message("Reading ", length(files), " files in parallel using ",
+              n_cores, " cores...")
+    }
 
-    list <- list(read_file(x = files[i]))
+    cl <- parallel::makeCluster(n_cores)
+    on.exit(parallel::stopCluster(cl))
 
+    parallel::clusterExport(cl, c("read_file"), envir = environment())
+    parallel::clusterEvalQ(cl, library(data.table))
+
+    dt_list <- parallel::parLapply(cl, files, read_file)
+
+  } else {
+    # Serial processing with optional progress bar
+    if (show_progress && interactive() && length(files) > 1) {
+      pb <- utils::txtProgressBar(min = 0, max = length(files), style = 3)
+      on.exit(close(pb))
+
+      dt_list <- lapply(seq_along(files), function(i) {
+        utils::setTxtProgressBar(pb, i)
+        read_file(files[i])
+      })
+    } else {
+      dt_list <- lapply(files, read_file)
+    }
   }
 
-  data.table::rbindlist(list)
-
+  # Efficiently combine all data
+  data.table::rbindlist(dt_list, fill = TRUE, use.names = TRUE)
 }
 
 

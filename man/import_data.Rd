@@ -4,7 +4,7 @@
 \alias{import_data}
 \title{Data Importer}
 \usage{
-import_data(x)
+import_data(x, ...)
 }
 \arguments{
 \item{x}{A string or list of strings—e.g., c(string1, string2)—containing the
@@ -12,6 +12,15 @@ path(s) of file(s) to read in, or can be the name of a \code{data.table} or
 \code{dataframe} column in the form \code{dt$filepath_col} which contains filepaths.
 All files in a list will be read in and returned as a single \code{data.table}
 object.}
+
+\item{...}{
+  Arguments passed on to \code{\link[=read_file_list]{read_file_list}}
+  \describe{
+    \item{\code{files}}{A string or an object containing filepath string(s).}
+    \item{\code{parallel}}{Logical; use parallel processing? Default is FALSE.}
+    \item{\code{n_cores}}{Integer; number of cores to use. Default uses all but one core.}
+    \item{\code{show_progress}}{Logical; show progress bar? Default is TRUE.}
+  }}
 }
 \value{
 A \code{data.table} object containing the read-in data from the paths

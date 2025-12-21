@@ -57,6 +57,7 @@ files_info <- function(
 #'  `dataframe` column in the form `dt$filepath_col` which contains filepaths.
 #'  All files in a list will be read in and returned as a single `data.table`
 #'  object.
+#' @inheritDotParams read_file_list
 #'
 #' @return A `data.table` object containing the read-in data from the paths
 #' specified in `x`.
@@ -67,10 +68,10 @@ files_info <- function(
 #' info <- files_info()
 #' file <- import_data(x = info$filepath)
 
-import_data <- function(x) {
+import_data <- function(x, ...) {
 
   stopifnot((is.character(x) || is.list(x)), length(x) > 0L)
 
-  read_file_list(files = x)
+  read_file_list(files = x, ...)
 
 }

@@ -341,7 +341,7 @@ read_file <- function(x) {
 #' @param parallel Logical; use parallel processing? Default is FALSE.
 #' @param n_cores Integer; number of cores to use. Default uses all but one core.
 #' @param show_progress Logical; show progress bar? Default is TRUE.
-#' @inheritParams data.table::rbindlist
+#' @inheritDotParams data.table::rbindlist
 #'
 #' @returns A `data.table` object with concatenated data from all named files.
 #'

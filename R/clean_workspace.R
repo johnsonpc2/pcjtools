@@ -16,6 +16,8 @@
 #' }
 clean_workspace <- function(confirm = TRUE) {
 
+# Validation and Error Handling -------------------------------------------
+
   if (confirm && interactive()) {
     cat("1: Yes\n")
     cat("2: No\n")
@@ -26,6 +28,8 @@ clean_workspace <- function(confirm = TRUE) {
       return(invisible(NULL))
     }
   }
+
+# Cleaning Operations -----------------------------------------------------
 
   # Clear console
   cat("\014")

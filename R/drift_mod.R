@@ -1,58 +1,60 @@
 #' Drift Diffusion Model
 #'
 #' A function to run and visualize the results of a drift diffusion model.
+#' Serves as a wrapper for an internal function, [diffusion_sim].
 #'
-#' @param nsims An integer; the number of simulations of the model to run.
+#' @param nsims An integer (1000 by default). The number of simulations to run.
 #' @inheritParams diffusion_sim
-#' @param plots Logical; should plot elements be generated?
-#' @param ... optional arguments passed to `'theme_pcj()'`.
-#'
-#' @returns A list—including the results of the simulation—and plots for the
-#' average evidence accumulation over time, the conditional rt distribution,
-#' and the quantile-probability plot.
-#'
-#' @import data.table
-#' @import ggplot2
-#'
+#' @param plots Logical (TRUE by default). Should plots be generated when the
+#'  model is run?
+#' @param show_legend Logical (FALSE by default). Should the legend be shown
+#'  on the evidence plot?
+#' @param ... Optional arguments to be passed to `'theme_pcj()'` which is used to
+#'  style the generated plots.
+#' @returns A list with the results of the simulation and plots for the
+#'  average evidence accumulation over time, the conditional rt distribution,
+#'  and the quantile-probability plot.
 #' @export
-#'
 #' @examples
 #' \donttest{
 #' # Run simulation with default parameters
-#' results <- drift_mod(nsims = 100)
+#' results <- drift_mod()
 #'
 #' # Access simulation data
-#' head(results$sim_results)
+#' results$sim_results
 #'
 #' # Run without plots
-#' results_no_plots <- drift_mod(nsims = 100, plots = FALSE)
+#' results <- drift_mod(nsims = 100, plots = FALSE)
+#'
+#' # Show legend on evidence plot
+#' results <- drift_mod(nsims = 100, show_legend = TRUE)
 #' }
 drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
                       t0 = 0, st0 = .2, dt = .01, t_max = Inf, plots = TRUE,
-                      ...) {
+                      show_legend = FALSE, ...) {
 
-  # Initialize and Run Simulation -------------------------------------------
-  # The number of simulations to run
-  n_sims <- nsims
-  # Initially empty, this will eventually save our random walk simulations
+# Initialize and Run Simulation -------------------------------------------
+
+  # Initially empty, this will save the random walk simulations
   sim_results <- c()
-  # The for loop increments a counter over a specified range (from 1 to n_sims)
-  for (i in 1:n_sims) {
+
+  for (i in 1:nsims) {
     # Simulate a single realization of the random walk with the given parameters
     current_result <- diffusion_sim(v, sv, a, w, sw, t0, st0, dt, t_max)
-    # "Bind" the current simulation to the ongoing record of simulation results
+    # "Bind" the each simulation to the record of results
     sim_results <- rbind(
       sim_results,
-      # Add a new column that identifies which simulation this was
+      # Add a new column that identifies each simulation
       current_result[, sim_index := i]
     )
   }
 
-  # Visualize Simulation Results --------------------------------------------
+# Visualize Simulation Results --------------------------------------------
+
   if (plots == TRUE) {
     # Extract simulated choices and RT's
-    choice_rt <- sim_results[, `:=`(choice = ifelse(last(x) > 0, "upper", "lower"),
-                                    rt = last(t)),
+    choice_rt <- sim_results[, `:=`(choice = ifelse(data.table::last(x) > 0, "upper", "lower"),
+                                    rt = data.table::last(t)),
                              by = sim_index]
 
     # Quantile-probability plot
@@ -62,13 +64,13 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
                           by = choice]
 
     # Visualize the internal evidence states
-    evidence_plot <- ggplot(
+    evidence_plot <- ggplot2::ggplot(
       data = sim_results,
-      mapping = aes(
+      mapping = ggplot2::aes(
         x = t,
         y = x)
     ) +
-      stat_density2d_filled(show.legend = FALSE)
+      ggplot2::stat_density2d_filled(show.legend = show_legend)
 
     fp1 <- theme_pcj(
       plot = evidence_plot,
@@ -81,15 +83,15 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
     )
 
     # Plot conditional RT distributions
-    rt_dist_plot <- ggplot(
+    rt_dist_plot <- ggplot2::ggplot(
       data = choice_rt,
-      mapping = aes(
+      mapping = ggplot2::aes(
         x = rt,
         fill = choice,
         alpha = .1)
     ) +
-      geom_density() +
-      guides(alpha = "none")
+      ggplot2::geom_density() +
+      ggplot2::guides(alpha = "none")
 
     fp2 <- theme_pcj(
       plot = rt_dist_plot,
@@ -102,15 +104,18 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
     )
 
     # Plot the quantiles of the upper and lower response distributions
-    response_quantiles <- ggplot(
+    response_quantiles <- ggplot2::ggplot(
       data = dplyr::full_join(sim_choice_p, sim_rt_q, by = "choice"),
-      mapping = aes(
+      mapping = ggplot2::aes(
         x = p_resp,
         y = rt_q,
         color = choice)
     ) +
-      geom_point() +
-      expand_limits(x = c(0, 1))
+      ggplot2::geom_point() +
+      ggplot2::scale_x_continuous(
+        limits = c(0, 1),
+        expand = ggplot2::expansion(mult = 0.05)
+      )
 
     fp3 <- theme_pcj(
       plot = response_quantiles,

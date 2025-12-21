@@ -16,11 +16,12 @@ drift_mod(
   dt = 0.01,
   t_max = Inf,
   plots = TRUE,
+  show_legend = FALSE,
   ...
 )
 }
 \arguments{
-\item{nsims}{An integer; the number of simulations of the model to run.}
+\item{nsims}{An integer (1000 by default). The number of simulations to run.}
 
 \item{v}{The average drift rate towards a boundary.}
 
@@ -43,27 +44,36 @@ by the distance between the starting point and the}
 
 \item{t_max}{Maximum time: the max time the model will draw samples}
 
-\item{plots}{Logical; should plot elements be generated?}
+\item{plots}{Logical (TRUE by default). Should plots be generated when the
+model is run?}
 
-\item{...}{optional arguments passed to \code{'theme_pcj()'}.}
+\item{show_legend}{Logical (FALSE by default). Should the legend be shown
+on the evidence plot?}
+
+\item{...}{Optional arguments to be passed to \code{'theme_pcj()'} which is used to
+style the generated plots.}
 }
 \value{
-A list—including the results of the simulation—and plots for the
+A list with the results of the simulation and plots for the
 average evidence accumulation over time, the conditional rt distribution,
 and the quantile-probability plot.
 }
 \description{
 A function to run and visualize the results of a drift diffusion model.
+Serves as a wrapper for an internal function, \link{diffusion_sim}.
 }
 \examples{
 \donttest{
 # Run simulation with default parameters
-results <- drift_mod(nsims = 100)
+results <- drift_mod()
 
 # Access simulation data
-head(results$sim_results)
+results$sim_results
 
 # Run without plots
-results_no_plots <- drift_mod(nsims = 100, plots = FALSE)
+results <- drift_mod(nsims = 100, plots = FALSE)
+
+# Show legend on evidence plot
+results <- drift_mod(nsims = 100, show_legend = TRUE)
 }
 }

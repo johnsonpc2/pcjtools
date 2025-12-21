@@ -10,6 +10,7 @@ Imports:
     dplyr,
     ggplot2,
     monochromeR,
+    purrr,
     systemfonts,
     tidyr,
     ucminf,

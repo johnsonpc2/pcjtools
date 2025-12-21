@@ -382,7 +382,6 @@ read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
     parallel::clusterExport(cl, "read_file", envir = environment())
     parallel::clusterEvalQ(cl, library(data.table))
 
-    # pbapply provides progress bar for parallel operations
     dt_list <- pbapply::pblapply(
       files,
       read_file,
@@ -402,7 +401,19 @@ read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
   if (show_progress && interactive()) {
     message("\nCombining data...")
   }
-  data.table::rbindlist(dt_list, use.names = TRUE, fill = TRUE, ...)
+
+  # Set defaults for rbindlist, allow user to override via ...
+  rbind_args <- list(
+    l = dt_list,
+    use.names = TRUE,
+    fill = TRUE
+  )
+
+  # Merge with user-provided arguments (user args override defaults)
+  dots <- list(...)
+  rbind_args[names(dots)] <- dots
+
+  do.call(data.table::rbindlist, rbind_args)
 }
 
 

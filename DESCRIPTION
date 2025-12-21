@@ -1,6 +1,6 @@
 Package: pcjtools
 Title: Tools and Utilities for Data Analysis
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: 
     person("Pierce", "Johnson", , "johnsonpierce.c@gmail.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).

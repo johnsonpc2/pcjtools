@@ -54,7 +54,7 @@ theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
             is.character(font) && length(font) == 1L,
             is.character(palette) && length(palette) == 1L,
             is.logical(continuous) && length(continuous) == 1L,
-            is.character(plot_text) && length(plot_text <= 5L))
+            is.character(plot_text) && length(plot_text) <= 5L)
 
   # Check if Atkinson Hyperlegible is registered
   available_fonts <- systemfonts::system_fonts()$family

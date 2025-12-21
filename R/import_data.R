@@ -69,9 +69,9 @@ files_info <- function(
 #' file <- import_data(x = info$filepath)
 
 import_data <- function(x, ...) {
-
-  stopifnot((is.character(x) || is.list(x)), length(x) > 0L)
-
+  stopifnot(
+    "x must be a character vector or list" = (is.character(x) || is.list(x)),
+    "x must have length > 0" = length(x) > 0L
+  )
   read_file_list(files = x, ...)
-
 }

@@ -321,14 +321,12 @@ q_wdm <- function(p, response, ...) {
 #' }
 
 read_file <- function(x) {
-
   data.table::fread(
     file = x,
     na.strings = c("", "null", NA),
     nThread = data.table::getDTthreads(),
     data.table = TRUE
   )
-
 }
 
 
@@ -356,45 +354,55 @@ read_file <- function(x) {
 #' # Parallel without progress
 #' data <- read_file_list(files = info$filepath, parallel = TRUE)
 #' }
+
 read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
                            show_progress = TRUE, ...) {
+  # Validate inputs
+  if (length(files) == 0) {
+    stop("No files provided")
+  }
 
-  # Parallel processing
-  if (parallel && requireNamespace("parallel", quietly = TRUE) && length(files) > 1) {
+  # Check if files exist
+  missing_files <- files[!file.exists(files)]
+  if (length(missing_files) > 0) {
+    warning("Missing files: ", paste(missing_files, collapse = ", "))
+    files <- files[file.exists(files)]
+    if (length(files) == 0) stop("No valid files found")
+  }
+
+  # Parallel processing with pbapply
+  if (parallel && length(files) > 1) {
     if (is.null(n_cores)) {
       n_cores <- max(1, parallel::detectCores() - 1)
     }
 
-    if (show_progress && interactive()) {
-      message("Reading ", length(files), " files in parallel using ",
-              n_cores, " cores...")
-    }
-
     cl <- parallel::makeCluster(n_cores)
-    on.exit(parallel::stopCluster(cl))
+    on.exit(parallel::stopCluster(cl), add = TRUE)
 
-    parallel::clusterExport(cl, c("read_file"), envir = environment())
+    parallel::clusterExport(cl, "read_file", envir = environment())
     parallel::clusterEvalQ(cl, library(data.table))
 
-    dt_list <- parallel::parLapply(cl, files, read_file)
+    # pbapply provides progress bar for parallel operations
+    dt_list <- pbapply::pblapply(
+      files,
+      read_file,
+      cl = cl
+    )
 
   } else {
-    # Serial processing with optional progress bar
-    if (show_progress && interactive() && length(files) > 1) {
-      pb <- utils::txtProgressBar(min = 0, max = length(files), style = 3)
-      on.exit(close(pb))
-
-      dt_list <- lapply(seq_along(files), function(i) {
-        utils::setTxtProgressBar(pb, i)
-        read_file(files[i])
-      })
+    # Serial processing with progress bar
+    if (show_progress && length(files) > 1) {
+      dt_list <- pbapply::pblapply(files, read_file)
     } else {
       dt_list <- lapply(files, read_file)
     }
   }
 
   # Efficiently combine all data
-  data.table::rbindlist(dt_list, ...)
+  if (show_progress && interactive()) {
+    message("\nCombining data...")
+  }
+  data.table::rbindlist(dt_list, use.names = TRUE, fill = TRUE, ...)
 }
 
 

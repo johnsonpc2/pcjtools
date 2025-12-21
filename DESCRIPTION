@@ -1,8 +1,8 @@
 Package: pcjtools
-Title: What the Package Does (One Line, Title Case)
-Version: 1.0.0.0000
+Title: Tools and Utilities for Data Analysis
+Version: 1.0.0
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
+    person("Pierce", "Johnson", , "johnsonpierce.c@gmail.com", role = c("aut", "cre"))
 Description: What the package does (one paragraph).
 License: GPL (>= 3)
 Imports: 
@@ -21,4 +21,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Suggests: 
     MASS (>= 7.3),
+    spelling,
     testthat (>= 3.0.0)
+Language: en-US

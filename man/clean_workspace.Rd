@@ -2,23 +2,28 @@
 % Please edit documentation in R/clean_workspace.R
 \name{clean_workspace}
 \alias{clean_workspace}
-\title{Clear the console and plot window, and remove objects from the environment}
+\title{Work Space Cleaner}
 \usage{
-clean_workspace(ask = TRUE)
+clean_workspace(confirm = TRUE)
 }
 \arguments{
-\item{ask}{Logical; should the function ask for confirmation before clearing?
-Defaults to TRUE for safety.}
+\item{confirm}{Logical (default is TRUE). Should the function ask for
+confirmation before clearing?}
 }
 \value{
-confirmation that the environment has been cleaned (invisibly)
+Confirmation that the environment has been cleaned.
 }
 \description{
-Clear the console and plot window, and remove objects from the environment
+Clear the console, plot window, and remove objects from the global
+environment.
 }
 \examples{
 \donttest{
-# Clean workspace without asking (use with caution!)
-clean_workspace(ask = FALSE)
+# Execute without asking (use with caution)
+clean_workspace(confirm = FALSE)
 }
+}
+\seealso{
+\code{\link[=graphics.off]{graphics.off()}} and \code{\link[=rm]{rm()}}, which clean_workspace serves
+as a wrapper for.
 }

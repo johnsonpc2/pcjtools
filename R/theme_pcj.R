@@ -11,7 +11,6 @@
 #' @param ... Additional arguments passed to `theme()` or `ggsave()`.
 #'
 #' @returns A plot object with the specified aesthetics.
-#'
 #' @export
 #'
 #' @examples

@@ -1,23 +1,28 @@
-#' Clear the console and plot window, and remove objects from the environment
+#' Work Space Cleaner
 #'
-#' @param ask Logical; should the function ask for confirmation before clearing?
-#'   Defaults to TRUE for safety.
+#' Clear the console, plot window, and remove objects from the global
+#'  environment.
 #'
-#' @returns confirmation that the environment has been cleaned (invisibly)
+#' @param confirm Logical (default is TRUE). Should the function ask for
+#'  confirmation before clearing?
+#' @returns Confirmation that the environment has been cleaned.
+#' @seealso [graphics.off()] and [rm()], which clean_workspace serves
+#'  as a wrapper for.
 #' @export
-#'
 #' @examples
 #' \donttest{
-#' # Clean workspace without asking (use with caution!)
-#' clean_workspace(ask = FALSE)
+#' # Execute without asking (use with caution)
+#' clean_workspace(confirm = FALSE)
 #' }
+clean_workspace <- function(confirm = TRUE) {
 
-clean_workspace <- function(ask = TRUE) {
+  if (confirm && interactive()) {
+    cat("1: Yes\n")
+    cat("2: No\n")
+    response <- readline(prompt = "Clear all objects from workspace?\n")
 
-  if (ask && interactive()) {
-    response <- readline(prompt = "Clear all objects from workspace? (y/n): ")
-    if (tolower(response) != "y") {
-      message("Workspace cleaning cancelled.")
+    if (response != "1") {
+      message("Operation cancelled.")
       return(invisible(NULL))
     }
   }
@@ -31,6 +36,6 @@ clean_workspace <- function(ask = TRUE) {
   # Remove objects from the global environment
   rm(list = ls(envir = .GlobalEnv, all.names = TRUE), envir = .GlobalEnv)
 
-  message("Your workspace has been cleaned")
+  message("Workspace cleaned")
   invisible(NULL)
 }

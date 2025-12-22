@@ -4,10 +4,10 @@
 #'  environment.
 #'
 #' @param confirm Logical (default is TRUE). Should the function ask for
-#'  confirmation before clearing?
+#'  confirmation before clearing the work space?
 #' @returns Confirmation that the environment has been cleaned.
-#' @seealso [graphics.off()] and [rm()], which clean_workspace serves
-#'  as a wrapper for.
+#' @seealso [graphics.off()] and [rm()], for which clean_workspace serves
+#'  as a wrapper.
 #' @export
 #' @examples
 #' \donttest{

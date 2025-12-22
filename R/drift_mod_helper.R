@@ -5,12 +5,16 @@
 #' All model parameters should be numeric and of length 1, unless otherwise
 #' specified.
 #'
-#' @param v The average drift rate towards a boundary.
-#' @param sv Drift rate standard deviation: variability of the sampled drift
-#'  rate. When multiple simulations are run, such as with the `'drift_mod()'`
-#'  function, this allows drift rates to change from one simulation to the next.
-#' @param a Response caution: the threshold to come to a decision represented
-#' by the distance between the starting point and the
+#' @param v The average drift rate. This parameter determines the rate the
+#'  agent will travel towards a boundary.
+#' @param sv The standard deviation of the drift rate. When multiple simulations
+#'  are run, such as with the `'drift_mod()'` function, standard deviation > 1
+#'  allows drift rates to change from one simulation to the next based on
+#'  random sampling.
+#' @param a Response caution, represented by the distance from the
+#' starting point of the agent to either decision threshold. Larger distances
+#' between the starting point and a threshold represent more caution because
+#' more evidence is required for the agent to come to a decision.
 #' @param w Response bias mean: the avg ease of traveling to either boundary
 #' @param sw Boundary/starting point deviation
 #' @param t0 Residual time: time lag between evidence accumulation and action

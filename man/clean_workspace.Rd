@@ -8,7 +8,7 @@ clean_workspace(confirm = TRUE)
 }
 \arguments{
 \item{confirm}{Logical (default is TRUE). Should the function ask for
-confirmation before clearing?}
+confirmation before clearing the work space?}
 }
 \value{
 Confirmation that the environment has been cleaned.
@@ -24,6 +24,6 @@ clean_workspace(confirm = FALSE)
 }
 }
 \seealso{
-\code{\link[=graphics.off]{graphics.off()}} and \code{\link[=rm]{rm()}}, which clean_workspace serves
-as a wrapper for.
+\code{\link[=graphics.off]{graphics.off()}} and \code{\link[=rm]{rm()}}, for which clean_workspace serves
+as a wrapper.
 }

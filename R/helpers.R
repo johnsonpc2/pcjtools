@@ -353,7 +353,9 @@ theme_pcj_text <- function(plot_text, alt_text) {
       y = if ("ylab" %in% names(plot_text))
         plot_text[["ylab"]] else "ylab",
       caption = if ("caption" %in% names(plot_text))
-        plot_text[["caption"]] else default_caption
+        plot_text[["caption"]] else default_caption,
+      fill = if ("fill" %in% names(plot_text))
+        plot_text[["fill"]] else NULL
     )
 
   } else {

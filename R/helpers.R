@@ -335,7 +335,8 @@ theme_pcj_text <- function(plot_text, alt_text) {
   # In case the full expected names of the plot elements aren't given
   names(plot_text) <- match.arg(arg = names(plot_text),
                                 choices = c("title", "subtitle",
-                                            "xlab", "ylab", "caption"),
+                                            "xlab", "ylab", "caption",
+                                            "color", "fill", "shape", "size"),
                                 several.ok = TRUE)
 
   default_caption <- paste0("Created: ", format(Sys.time(), "%Y%m%d, %H:%M"))

@@ -17,20 +17,20 @@ diffusion_sim(
 )
 }
 \arguments{
-\item{v}{The average drift rate. This parameter determines the rate the
-agent will travel towards a boundary.}
+\item{v}{The average drift rate. Determines the rate the agent travels
+towards evidence boundaries. When multiple trials are simulated, drift rates
+are randomly sampled from a normal distribution with a mean of \code{v}.}
 
 \item{sv}{The standard deviation of the drift rate. When multiple simulations
-are run, such as with the \code{'drift_mod()'} function, standard deviation > 1
-allows drift rates to change from one simulation to the next based on
-random sampling.}
+are run and \code{sv} > 0, drift rates change trial by trial based on random
+sampling from a normal distribution.}
 
-\item{a}{Response caution, represented by the distance from the
-starting point of the agent to either decision threshold. Larger distances
-between the starting point and a threshold represent more caution because
-more evidence is required for the agent to come to a decision.}
+\item{a}{Response caution, represented by the distance between evidence
+boundaries and the agent's starting point. Larger distances between the
+starting point and decision threshold represent more caution as more evidence
+is required for the agent to come to a decision.}
 
-\item{w}{Response bias mean: the avg ease of traveling to either boundary}
+\item{w}{Average response bias. the avg ease of traveling to either boundary}
 
 \item{sw}{Boundary/starting point deviation}
 

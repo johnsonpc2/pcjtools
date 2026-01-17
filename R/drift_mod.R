@@ -72,26 +72,23 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
                           by = choice]
 
     # Visualize the internal evidence states
-    evidence_plot <- ggplot2::ggplot(
+    fp1 <- ggplot2::ggplot(
       data = sim_results,
       mapping = ggplot2::aes(
         x = t,
         y = x)
     ) +
-      ggplot2::stat_density2d_filled(show.legend = show_legend)
-
-    fp1 <- theme_pcj(
-      plot = evidence_plot,
-      plot_text = c(title = "Internal Evidence States Over Time",
-                    ylab = "Accumulated Evidence",
-                    xlab = "Time",
-                    fill = "Relative frequency"),
-      alt_text = FALSE,
-      ...
-    )
+      ggplot2::stat_density2d_filled(show.legend = show_legend) +
+      theme_pcj() +
+      ggplot2::labs(
+        title = "Internal Evidence States Over Time",
+        ylab = "Accumulated Evidence",
+        xlab = "Time",
+        fill = "Relative frequency"
+      )
 
     # Plot conditional RT distributions
-    rt_dist_plot <- ggplot2::ggplot(
+    fp2 <- ggplot2::ggplot(
       data = choice_rt,
       mapping = ggplot2::aes(
         x = rt,
@@ -99,20 +96,18 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
         alpha = .1)
     ) +
       ggplot2::geom_density() +
-      ggplot2::guides(alpha = "none")
-
-    fp2 <- theme_pcj(
-      plot = rt_dist_plot,
-      plot_text = c(title = "Conditional RT Distributions",
-                    subtitle = "",
-                    ylab = "Frequency",
-                    xlab = "Response Time",
-                    color = "Choice"),
-      ...
-    )
+      ggplot2::guides(alpha = "none") +
+      theme_pcj() +
+      ggplot2::labs(
+        title = "Conditional RT Distributions",
+        subtitle = "",
+        ylab = "Frequency",
+        xlab = "Response Time",
+        color = "Choice"
+      )
 
     # Plot the quantiles of the upper and lower response distributions
-    response_quantiles <- ggplot2::ggplot(
+    fp3 <- ggplot2::ggplot(
       data = dplyr::full_join(sim_choice_p, sim_rt_q, by = "choice"),
       mapping = ggplot2::aes(
         x = p_resp,
@@ -123,16 +118,13 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
       ggplot2::scale_x_continuous(
         limits = c(0, 1),
         expand = ggplot2::expansion(mult = 0.05)
+      ) + theme_pcj() +
+      ggplot2::labs(
+        title = "Quantile-Probability Plot",
+        subtitle = "",
+        ylab = "RT Quantile",
+        xlab = "Response Proportion"
       )
-
-    fp3 <- theme_pcj(
-      plot = response_quantiles,
-      plot_text = c(title = "Quantile-Probability Plot",
-                    subtitle = "",
-                    ylab = "RT Quantile",
-                    xlab = "Response Proportion"),
-      ...
-    )
 
     # Build results list with plots
     results <- list(

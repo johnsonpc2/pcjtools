@@ -15,6 +15,7 @@ Imports:
     monochromeR,
     pbapply,
     purrr,
+    rlang,
     systemfonts,
     tidyr,
     ucminf,

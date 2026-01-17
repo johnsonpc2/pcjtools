@@ -1,11 +1,11 @@
-#' Work Space Cleaner
+#' Tidy the RStudio Work Space
 #'
 #' Clear the console, plot window, and remove objects from the global
 #'  environment.
 #'
-#' @param confirm Logical (default is TRUE). Should the function ask for
+#' @param confirm Logical (defaults to TRUE). Should the function ask for
 #'  confirmation before clearing the work space?
-#' @returns Confirmation that the environment has been cleaned.
+#' @returns Confirmation the environment has been cleaned.
 #' @seealso [graphics.off()] and [rm()], for which clean_workspace serves
 #'  as a wrapper.
 #' @export
@@ -39,6 +39,9 @@ clean_workspace <- function(confirm = TRUE) {
 
   # Remove objects from the global environment
   rm(list = ls(envir = .GlobalEnv, all.names = TRUE), envir = .GlobalEnv)
+
+
+# Output ------------------------------------------------------------------
 
   message("Workspace cleaned")
   invisible(NULL)

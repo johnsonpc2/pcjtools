@@ -2,16 +2,16 @@
 % Please edit documentation in R/clean_workspace.R
 \name{clean_workspace}
 \alias{clean_workspace}
-\title{Work Space Cleaner}
+\title{Tidy the RStudio Work Space}
 \usage{
 clean_workspace(confirm = TRUE)
 }
 \arguments{
-\item{confirm}{Logical (default is TRUE). Should the function ask for
+\item{confirm}{Logical (defaults to TRUE). Should the function ask for
 confirmation before clearing the work space?}
 }
 \value{
-Confirmation that the environment has been cleaned.
+Confirmation the environment has been cleaned.
 }
 \description{
 Clear the console, plot window, and remove objects from the global

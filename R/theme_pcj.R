@@ -3,108 +3,147 @@
 #' A function to create and save consistent plots with aesthetics chosen to
 #' enhance accessibility
 #'
-#' @param plot A ggplot object to be formatted.
-#' @inheritParams theme_pcj_aesthetics
+#' @param gridlines Logical, defaults to TRUE. Should gridlines be generated
+#'  behind plotted data?
 #' @inheritParams theme_pcj_palettes
-#' @inheritParams theme_pcj_text
-#' @param save_path A string. The directory path where the plot should be saved.
-#' @param ... Additional arguments passed to `theme()` or `ggsave()`.
+#' @param font The font to be used in a plot. Defaults to Atkinson Hyperlegible.
+#' @inheritDotParams ggplot2::theme
 #'
 #' @returns A plot object with the specified aesthetics.
 #' @export
 #'
 #' @examples
 #' \donttest{
-#' library(ggplot2)
-#'
 #' # Create a basic plot
-#' g1 <- ggplot(
+#' g1 <- ggplot2::ggplot(
 #'   data = mtcars,
-#'   aes(x = mpg, y = wt, color = factor(cyl))
+#'   ggplot2::aes(x = mpg, y = wt, color = factor(cyl))
 #' ) +
-#'   geom_line(linewidth = 2)
+#'   ggplot2::geom_point() +
+#'   ggplot2::facet_wrap(~factor(cyl))
 #'
 #' # Apply custom theme
-#' thm <- theme_pcj(
-#'   plot = g1,
-#'   font = "sans",
-#'   plot_text = c(
-#'     title = "Car Weight vs MPG",
-#'     xlab = "Miles per Gallon",
-#'     ylab = "Weight (1000 lbs)"
-#'   )
-#' )
-#'
-#' # Display the plot
-#' print(thm)
+#' g1 + theme_pcj(font = "sans")
 #' }
 
-theme_pcj <- function(plot, base_size = 12, dark_text = "#000000",
-                      font = "Atkinson Hyperlegible", palette = "default",
-                      continuous = FALSE,
-                      plot_text = c(title = "title", subtitle = "subtitle",
-                                    xlab = "xlab", ylab = "ylab",
-                                    caption = paste0("Created: ",
-                                                     format(Sys.time(),
-                                                            "%Y%m%d, %H:%M"))),
-                      alt_text = TRUE, save_path = NULL, ...) {
-  stopifnot(is_ggplot(plot),
-            is.null(base_size) || (is.numeric(base_size) && length(base_size) == 1L),  # Changed this line
-            is.character(dark_text) && length(dark_text) == 1L,
-            is.character(font) && length(font) == 1L,
-            is.character(palette) && length(palette) == 1L,
-            is.logical(continuous) && length(continuous) == 1L,
-            is.character(unlist(plot_text)) && length(unlist(plot_text)) <= 5L)
+theme_pcj <- function(gridlines = TRUE, palette = "default",
+                      font = "Atkinson Hyperlegible", ...) {
 
-  # Check if Atkinson Hyperlegible is registered
-  available_fonts <- systemfonts::system_fonts()$family
+  `%+replace%` <- ggplot2::`%+replace%`
 
-  if ("Atkinson Hyperlegible" %in% available_fonts) {
-    base_family <- "Atkinson Hyperlegible"
+  font_install(font = font)
+
+  colors <- c('#000000', '#131619', '#1d252b', '#29353d', '#354651', '#425765',
+              '#506879', '#607a8d', '#708da1', '#82a0b5', '#95b3c8', '#abc6da',
+              '#c3daea', '#deedf8', '#ffffff')
+
+  border <- ggplot2::element_rect(
+    color = colors[1],
+    fill = NA,
+    linewidth = 0.10
+  )
+
+  # Set gridlines based on argument
+  gridlines <- if (isTRUE(gridlines)) {
+    ggplot2::element_line(
+      color = colors[6],
+      linewidth = .25,
+      linetype = "dashed"
+    )
   } else {
-    # Try to register from bundled fonts if not already available
-    font_dir <- system.file("fonts", package = "pcjtools")
-    if (dir.exists(font_dir)) {
-      # Attempt registration (in case .onLoad didn't work)
-      tryCatch({
-        font_files <- list.files(font_dir, pattern = "\\.ttf$|\\.otf$",
-                                 full.names = TRUE, ignore.case = TRUE)
-        regular <- grep("regular", font_files, ignore.case = TRUE, value = TRUE)[1]
-        if (!is.na(regular)) {
-          systemfonts::register_font(
-            name = "Atkinson Hyperlegible",
-            plain = regular
-          )
-          base_family <- "Atkinson Hyperlegible"
-        } else {
-          base_family <- "sans"
-        }
-      }, error = function(e) {
-        base_family <- "sans"
-      })
-    } else {
-      base_family <- "sans"
-    }
+    ggplot2::element_blank()
   }
 
-  filename <- paste0(save_path, format(Sys.time(), "%Y%m%d_"),
-                    plot_text["title"], ".png")
-
-  modified_plot <- plot +
-    theme_pcj_aesthetics(base_size = base_size,
-                         dark_text = dark_text,
-                         font = font, ...) +
-    theme_pcj_palettes(palette = palette,
-                       continuous = continuous) +
-    theme_pcj_text(plot_text = plot_text,
-                   alt_text = alt_text)
-
-  if (!is.null(save_path)) {
-
-    plot_saver(plots = modified_plot, dir = save_path)
-
-  }
-
-  return(modified_plot)
-
+  ggplot2::theme_void(...) %+replace%
+    ggplot2::theme(
+      line = ggplot2::element_line(
+        color = colors[1],
+        linewidth = .5
+      ),
+      text = ggplot2::element_text(
+        family = font,
+        size = 16,
+        face = "bold",
+        lineheight = 1.2,
+        margin = ggplot2::margin(t = 0, r = 0, b = 5, l = 0, unit = "pt")
+      ),
+      axis.line = ggplot2::element_line(
+        color = colors[1],
+        linewidth = 0.5
+      ),
+      axis.text = ggplot2::element_text(
+        size = ggplot2::rel(1.2),
+        color = colors[3]
+      ),
+      axis.text.y = ggplot2::element_text(
+        margin = ggplot2::margin(t = 0, r = 5, b = 0, l = 0)
+      ),
+      axis.text.x = ggplot2::element_text(
+        margin = ggplot2::margin(t = 5, r = 0, b = 0, l = 0)
+      ),
+      axis.ticks = ggplot2::element_line(
+        color = colors[1],
+        linewidth = 0.5
+      ),
+      axis.ticks.length = ggplot2::unit(3.5, "pt"),
+      axis.title = ggplot2::element_text(
+        size = ggplot2::rel(1.5),
+        color = colors[1]
+      ),
+      axis.title.y = ggplot2::element_text(
+        angle = 90,
+        margin = ggplot2::margin(t = 0, r = 10, b = 0, l = 0, unit = "pt")
+      ),
+      axis.title.x = ggplot2::element_text(
+        angle = 0,
+        margin = ggplot2::margin(t = 10, r = 0, b = 0, l = 0, unit = "pt")
+      ),
+      legend.box.background = ggplot2::element_rect(
+        linewidth = 1
+      ),
+      legend.box.margin = ggplot2::margin(t = 5, r = 25, b = 0, l = 25),
+      legend.box.spacing = ggplot2::unit(6, "pt"),
+      legend.direction = "horizontal",
+      legend.justification = c(1, 0),
+      legend.key.size = ggplot2::unit(20, "pt"),
+      legend.position = c(0.95, 1.035), # (horizontal, vertical)
+      legend.text = ggplot2::element_text(
+        size = ggplot2::rel(1.2),
+        color = colors[6],
+        margin = ggplot2::margin(t = 0, r = 0, b = 0, l = 0)
+      ),
+      legend.text.position = "bottom",
+      legend.title = ggplot2::element_text(
+        hjust = 0.5,
+        margin = ggplot2::margin(t = 0, r = 0, b = 1, l = 0, unit = "pt")
+      ),
+      legend.title.position = "top",
+      panel.grid.major = gridlines,
+      panel.grid.minor = ggplot2::element_blank(),
+      panel.spacing = ggplot2::unit(.5, units = "in"),
+      plot.background = ggplot2::element_rect(fill = colors[15]),
+      plot.caption = ggplot2::element_text(
+        color = colors[11],
+        hjust = 1
+      ),
+      plot.caption.position = "plot",
+      plot.margin = ggplot2::margin(t = .15, r = .25, b = .15, l = .25, unit = "in"),
+      plot.title = ggplot2::element_text(
+        color = colors[1],
+        size = ggplot2::rel(2.5),
+        hjust = 0,
+        margin = ggplot2::margin(t = 0, r = 0, b = 15, l = 0, unit = "pt")
+      ),
+      plot.title.position = "plot",
+      plot.subtitle = ggplot2::element_text(
+        size = ggplot2::rel(2),
+        color = colors[9],
+        hjust = 0,
+        margin = ggplot2::margin(t = 0, r = 0, b = 10, l = 0, unit = "pt")
+      ),
+      strip.background = ggplot2::element_rect(
+        fill = colors[13]
+      ),
+      strip.placement = "inside"
+    )
 }

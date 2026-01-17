@@ -29,14 +29,14 @@
 
 plot_saver <- function(plots, dir = ".", names = NULL, ...) {
 
-  stopifnot((is_ggplot(plots) || is.list(plots)),
+  stopifnot((ggplot2::is_ggplot(plots) || is.list(plots)),
             (dir.exists(dir) && is.character(dir) && length(dir) == 1L),
             (is.null(names) ||
                ((length(names) == 1L || length(names) == length(plots)) &&
                   is.character(names)))
   )
 
-  if (is_ggplot(plots)) plots <- list(plots)
+  if (ggplot2::is_ggplot(plots)) plots <- list(plots)
 
   date <- format(Sys.time(), "%Y%m%d_")
 

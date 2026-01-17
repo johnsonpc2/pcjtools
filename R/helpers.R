@@ -125,7 +125,7 @@ read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
 #' print the plot's text.
 #' @param ... Optional arguments to be passed to `'theme()'`.
 #'
-#' @import ggplot2
+#' @importFrom ggplot2 %+replace%
 #'
 #' @keywords internal
 #'
@@ -139,7 +139,7 @@ theme_pcj_aesthetics <- function(base_size,
   mid_text <- monochromeR::generate_palette(
     colour = dark_text,
     modification = "go_lighter",
-    n_colours = 9
+    n_colours = 11
   )[4]
 
   light_text <- monochromeR::generate_palette(
@@ -152,49 +152,49 @@ theme_pcj_aesthetics <- function(base_size,
     font <- "sans"  # fallback to system font
   }
 
-  theme_minimal() %+replace%
-    theme(
-      text = element_text(
+  ggplot2::theme_minimal() %+replace%
+    ggplot2::theme(
+      text = ggplot2::element_text(
         family = font,
         size = base_size,
         face = "bold",
         lineheight = 1.1,
-        margin = margin(t = 0, r = 0, b = 10, l = 0)
+        margin = ggplot2::margin(t = 0, r = 0, b = 10, l = 0)
       ),
-      plot.title = element_text(
+      plot.title = ggplot2::element_text(
         color = dark_text,
-        size = rel(2),
+        size = ggplot2::rel(2),
         hjust = 0
       ),
       plot.title.position = "plot",
       plot.caption.position = "plot",
-      plot.subtitle = element_text(
-        size = rel(1.5),
+      plot.subtitle = ggplot2::element_text(
+        size = ggplot2::rel(1.5),
         color = mid_text,
         hjust = 0
       ),
-      axis.text = element_text(
-        size = rel(1.0),
+      axis.text = ggplot2::element_text(
+        size = ggplot2::rel(1.0),
         color = dark_text
       ),
-      axis.title = element_text(
-        size = rel(1.2),
+      axis.title = ggplot2::element_text(
+        size = ggplot2::rel(1.2),
         color = dark_text
       ),
-      panel.grid = element_line(
+      panel.grid = ggplot2::element_line(
         color = mid_text,
         linewidth = .15,
         linetype = "dashed"
       ),
-      plot.caption = element_text(
+      plot.caption = ggplot2::element_text(
         color = light_text,
         hjust = 1
       ),
-      axis.ticks = element_blank(),
-      panel.grid.minor = element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      panel.grid.minor = ggplot2::element_blank(),
       legend.position = "top",
-      legend.text = element_text(
-        size = rel(1.2),
+      legend.text = ggplot2::element_text(
+        size = ggplot2::rel(1.2),
         lineheight = 1,
         color = mid_text
       ),
@@ -343,7 +343,7 @@ theme_pcj_text <- function(plot_text, alt_text) {
 
   if (alt_text == TRUE) {
 
-    labs(
+    ggplot2::labs(
       title = if ("title" %in% names(plot_text))
         plot_text[["title"]] else "title",
       subtitle = if ("subtitle" %in% names(plot_text))
@@ -360,7 +360,7 @@ theme_pcj_text <- function(plot_text, alt_text) {
 
   } else {
 
-    labs(
+    ggplot2::labs(
       title = if ("title" %in% names(plot_text))
         plot_text[["title"]] else "title",
       subtitle = NULL,

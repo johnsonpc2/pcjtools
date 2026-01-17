@@ -11,6 +11,8 @@
 #' @param sw_index Variance in the starting position (I think)
 #' @param st0_index Variance of the non-decision time
 #'
+#' @importFrom rlang .data
+#'
 #' @returns Something
 #' @export
 #'
@@ -125,11 +127,14 @@ qp_fit <- function(rt, response, par = NULL, rt_p = c(0.1, 0.3, 0.5, 0.7, 0.9),
   )
 
   obs_p_regrouped <- dplyr::group_by(
-    obs_p_completed,
-    drift_index, bound_index, resid_index, sv_index, sw_index, st0_index
+    obs_p_completed, drift_index, bound_index,
+    resid_index, sv_index, sw_index, st0_index
   )
 
-  obs_p_resp <- dplyr::mutate(obs_p_regrouped, p_resp = .data$n_resp / sum(.data$n_resp))
+  obs_p_resp <- dplyr::mutate(
+    .data = obs_p_regrouped,
+    p_resp = .data$n_resp / sum(.data$n_resp)
+    )
 
   if (!is.null(par)) {
     par_names <- c(

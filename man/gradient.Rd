@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit_wienR_helpers.R
 \name{gradient}
 \alias{gradient}
-\title{Compute Gradient of Negative Log Likelihood}
+\title{Gradient of Negative Log Likelihood}
 \usage{
 gradient(
   par,
@@ -18,41 +18,45 @@ gradient(
 )
 }
 \arguments{
-\item{par}{Named numeric vector of parameters. Names should follow the format
-\code{a[i]}, \code{v[i]}, \code{w[i]}, \code{t0[i]}, \code{sv[i]}, \code{sw[i]}, \code{st0[i]} where i is the
-parameter index.}
+\item{par}{Named numeric vector of parameters in the format \code{param[i]} where
+param is the parameter name (a, v, w, t0, sv, sw, st0) and i is the index.}
 
 \item{rt}{Numeric vector of response times in seconds.}
 
 \item{response}{Numeric vector of responses (typically 1 or 2, representing
 lower or upper boundary).}
 
-\item{bound_index}{Integer vector mapping each trial to its boundary separation
-(a) and starting point (w) parameter index.}
+\item{bound_index}{Integer vector mapping each trial to its boundary
+separation (a) and starting point (w) parameter index.}
 
 \item{drift_index}{Integer vector mapping each trial to its drift rate (v)
 parameter index.}
 
-\item{resid_index}{Integer vector mapping each trial to its non-decision time
+\item{resid_index}{Integer vector mapping each trial to its nondecision time
 (t0) parameter index.}
 
-\item{sv_index}{Integer vector mapping each trial to its drift rate variability
-(sv) parameter index. Can be NULL if sv is not being estimated.}
+\item{sv_index}{Integer vector mapping each trial to its drift rate
+variability (sv) parameter index. Can be NULL if not estimated.}
 
 \item{sw_index}{Integer vector mapping each trial to its starting point
-variability (sw) parameter index. Can be NULL if sw is not being estimated.}
+variability (sw) parameter index. Can be NULL if not estimated.}
 
-\item{st0_index}{Integer vector mapping each trial to its non-decision time
-variability (st0) parameter index. Can be NULL if st0 is not being estimated.}
+\item{st0_index}{Integer vector mapping each trial to its nondecision time
+variability (st0) parameter index. Can be NULL if not estimated.}
 
 \item{...}{Additional arguments passed to \code{\link[WienR:WienerPDF]{WienR::WienerPDF()}}.}
 }
 \value{
-A named numeric vector of gradients with the same length and names
-as par. Returns a vector of NaN values if gradient evaluation fails.
+Named numeric vector of gradients with the same length and names as
+\code{par}. Returns vector of \code{NaN} values if gradient evaluation fails.
 }
 \description{
-Calculates the gradient (first derivative) of the negative log likelihood
-with respect to each model parameter. Used for gradient-based optimization
-in fit_wienr().
+Computes the gradient (first derivatives) of the negative log likelihood
+with respect to each diffusion model parameter. Enables gradient-based
+optimization methods for improved parameter estimation efficiency.
+}
+\references{
+Ratcliff, R., & Tuerlinckx, F. (2002). Estimating parameters of the diffusion
+model: Approaches to dealing with contaminant reaction times and parameter
+variability. \emph{Psychonomic Bulletin & Review, 9}(3), 438-481.
 }

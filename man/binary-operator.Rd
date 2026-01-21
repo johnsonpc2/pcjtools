@@ -3,16 +3,19 @@
 \name{binary operator}
 \alias{binary operator}
 \alias{\%||\%}
-\title{Helper function for null-coalescing operator}
+\title{Null-Coalescing Operator}
 \usage{
 x \%||\% y
 }
 \arguments{
-\item{x}{Condition 1}
+\item{x}{First value to check.}
 
-\item{y}{Condition 2}
+\item{y}{Default value if \code{x} is \code{NULL}.}
+}
+\value{
+Either \code{x} (if not \code{NULL}) or \code{y}.
 }
 \description{
-If x is null, y. Otherwise, x.
+Returns \code{y} if \code{x} is \code{NULL}, otherwise returns \code{x}.
 }
 \keyword{internal}

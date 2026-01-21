@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit_wienR_helpers.R
 \name{ezddm}
 \alias{ezddm}
-\title{EZ Diffusion Model Estimation}
+\title{EZ Diffusion Model Parameter Estimation}
 \usage{
 ezddm(
   prop_correct,
@@ -13,31 +13,35 @@ ezddm(
 )
 }
 \arguments{
-\item{prop_correct}{Proportion of correct responses (between 0 and 1).}
+\item{prop_correct}{Proportion of correct responses (0 to 1).}
 
-\item{rt_correct_variance_seconds}{Variance of response times for correct
-responses, in seconds.}
+\item{rt_correct_variance_seconds}{Variance of correct response times (s²).}
 
-\item{rt_correct_mean_seconds}{Mean response time for correct responses,
-in seconds.}
+\item{rt_correct_mean_seconds}{Mean correct response time (s).}
 
-\item{n_trials}{Total number of trials (used for edge correction).}
+\item{n_trials}{Number of trials (used for edge correction).}
 
-\item{s}{Scaling parameter for the diffusion process (default = 1).
-Traditionally set to 1 or 0.1 depending on the scaling convention.}
+\item{s}{Diffusion scaling parameter (default = 1). Traditionally fixed at
+0.1 or 1 depending on convention.}
 }
 \value{
-A named numeric vector with three elements:
-\item{a}{Boundary separation (distance between response boundaries)}
-\item{v}{Drift rate (rate of evidence accumulation)}
-\item{ter}{Non-decision time (encoding and motor response time)}
+Named numeric vector with elements:
+\item{a}{Boundary separation}
+\item{v}{Drift rate}
+\item{ter}{Nondecision time (encoding and motor response)}
 }
 \description{
-Calculates simple, closed-form estimates of diffusion model parameters
-from summary statistics. This provides a quick approximation useful for
-initial parameter values. Based on the EZ-diffusion method.
+Calculates closed-form estimates of simplified diffusion model parameters
+from summary statistics. Provides fast initial parameter estimates by
+assuming no trial-to-trial variability and unbiased starting point
+(Wagenmakers et al., 2007). Useful for starting values in full model fitting.
 }
 \examples{
 ezddm(prop_correct = 0.802, rt_correct_variance_seconds = 0.112,
       rt_correct_mean_seconds = 0.723, n_trials = 100)
+}
+\references{
+Wagenmakers, E.-J., Van Der Maas, H. L. J., & Grasman, R. P. P. P. (2007).
+An EZ-diffusion model for response time and accuracy. \emph{Psychonomic
+Bulletin & Review, 14}(1), 3-22.
 }

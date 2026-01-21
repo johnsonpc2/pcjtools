@@ -14,6 +14,7 @@
 #' # Execute without asking (use with caution)
 #' clean_workspace(confirm = FALSE)
 #' }
+
 clean_workspace <- function(confirm = TRUE) {
 
 # Validation and Error Handling -------------------------------------------

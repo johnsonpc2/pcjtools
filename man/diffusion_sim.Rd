@@ -17,30 +17,34 @@ diffusion_sim(
 )
 }
 \arguments{
-\item{v}{The average drift rate. Determines the rate the agent travels
-towards evidence boundaries. When multiple trials are simulated, drift rates
-are randomly sampled from a normal distribution with a mean of \code{v}.}
+\item{v}{Mean drift rate. Determines the rate of evidence accumulation toward
+response boundaries and represents the quality of information extracted from
+the stimulus (Ratcliff & McKoon, 2008).}
 
-\item{sv}{The standard deviation of the drift rate. When multiple simulations
-are run and \code{sv} > 0, drift rates change trial by trial based on random
-sampling from a normal distribution.}
+\item{sv}{Standard deviation of drift rate. Allows drift rate to vary across
+trials from a normal distribution (Ratcliff & Rouder, 1998), accounting for
+trial-to-trial variability in information processing.}
 
-\item{a}{Response caution, represented by the distance between evidence
-boundaries and the agent's starting point. Larger distances between the
-starting point and decision threshold represent more caution as more evidence
-is required for the agent to come to a decision.}
+\item{a}{Boundary separation. Represents response caution or the amount of
+evidence required before making a decision (Voss et al., 2004). Larger values
+indicate more cautious responding.}
 
-\item{w}{Average response bias. the avg ease of traveling to either boundary}
+\item{w}{Relative starting point (0-1). Represents a priori response bias,
+where values ≠ 0.5 indicate bias toward one boundary (Ratcliff & McKoon, 2008).}
 
-\item{sw}{Boundary/starting point deviation}
+\item{sw}{Starting point variability. Range of uniform distribution for
+trial-to-trial variation in starting point (Ratcliff & Rouder, 1998).}
 
-\item{t0}{Residual time: time lag between evidence accumulation and action}
+\item{t0}{Nondecision time. Duration of processes outside the decision stage,
+including stimulus encoding and motor response execution (Ratcliff & McKoon,
+2008).}
 
-\item{st0}{The mean of the residual time distribution}
+\item{st0}{Range of nondecision time distribution. Allows nondecision time to
+vary uniformly across trials (Ratcliff & Tuerlinckx, 2002).}
 
-\item{dt}{Delta t: the units by which time increments}
+\item{dt}{Time step increment for the simulation.}
 
-\item{t_max}{Maximum time: the max time the model will draw samples}
+\item{t_max}{Maximum simulation time before termination.}
 }
 \value{
 A \code{'data.table'} object containing the time and activation of the
@@ -52,6 +56,22 @@ simulation of a drift diffusion process based on the specified parameters.
 All model parameters should be numeric and of length 1, unless otherwise
 specified.
 }
-\examples{
-diffusion_sim()
+\references{
+Ratcliff, R. (1978). A theory of memory retrieval. \emph{Psychological Review,
+85}(2), 59-108.
+
+Ratcliff, R., & McKoon, G. (2008). The diffusion decision model: Theory and
+data for two-choice decision tasks. \emph{Neural Computation, 20}(4), 873-922.
+
+Ratcliff, R., & Rouder, J. N. (1998). Modeling response times for two-choice
+decisions. \emph{Psychological Science, 9}(5), 347-356.
+
+Ratcliff, R., & Tuerlinckx, F. (2002). Estimating parameters of the diffusion
+model: Approaches to dealing with contaminant reaction times and parameter
+variability. \emph{Psychonomic Bulletin & Review, 9}(3), 438-481.
+
+Voss, A., Rothermund, K., & Voss, J. (2004). Interpreting the parameters of
+the diffusion model: An empirical validation. \emph{Memory & Cognition,
+32}(7), 1206-1220.
 }
+\keyword{internal}

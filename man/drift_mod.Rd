@@ -21,50 +21,63 @@ drift_mod(
 )
 }
 \arguments{
-\item{nsims}{An integer (1000 by default). The number of simulations to run.}
+\item{nsims}{Number of simulations to run.}
 
-\item{v}{The average drift rate. Determines the rate the agent travels
-towards evidence boundaries. When multiple trials are simulated, drift rates
-are randomly sampled from a normal distribution with a mean of \code{v}.}
+\item{v}{Mean drift rate. Determines the rate of evidence accumulation toward
+response boundaries and represents the quality of information extracted from
+the stimulus (Ratcliff & McKoon, 2008).}
 
-\item{sv}{The standard deviation of the drift rate. When multiple simulations
-are run and \code{sv} > 0, drift rates change trial by trial based on random
-sampling from a normal distribution.}
+\item{sv}{Standard deviation of drift rate. Allows drift rate to vary across
+trials from a normal distribution (Ratcliff & Rouder, 1998), accounting for
+trial-to-trial variability in information processing.}
 
-\item{a}{Response caution, represented by the distance between evidence
-boundaries and the agent's starting point. Larger distances between the
-starting point and decision threshold represent more caution as more evidence
-is required for the agent to come to a decision.}
+\item{a}{Boundary separation. Represents response caution or the amount of
+evidence required before making a decision (Voss et al., 2004). Larger values
+indicate more cautious responding.}
 
-\item{w}{Average response bias. the avg ease of traveling to either boundary}
+\item{w}{Relative starting point (0-1). Represents a priori response bias,
+where values ≠ 0.5 indicate bias toward one boundary (Ratcliff & McKoon, 2008).}
 
-\item{sw}{Boundary/starting point deviation}
+\item{sw}{Starting point variability. Range of uniform distribution for
+trial-to-trial variation in starting point (Ratcliff & Rouder, 1998).}
 
-\item{t0}{Residual time: time lag between evidence accumulation and action}
+\item{t0}{Nondecision time. Duration of processes outside the decision stage,
+including stimulus encoding and motor response execution (Ratcliff & McKoon,
+2008).}
 
-\item{st0}{The mean of the residual time distribution}
+\item{st0}{Range of nondecision time distribution. Allows nondecision time to
+vary uniformly across trials (Ratcliff & Tuerlinckx, 2002).}
 
-\item{dt}{Delta t: the units by which time increments}
+\item{dt}{Time step increment for the simulation.}
 
-\item{t_max}{Maximum time: the max time the model will draw samples}
+\item{t_max}{Maximum simulation time before termination.}
 
-\item{plots}{Logical (TRUE by default). Should plots be generated when the
-model is run?}
+\item{plots}{Logical. If \code{TRUE} (default), generates visualization plots.}
 
-\item{show_legend}{Logical (FALSE by default). Should the legend be shown
-on the evidence plot?}
+\item{show_legend}{Logical. If \code{TRUE}, displays legend on the evidence
+accumulation plot. Default is \code{FALSE}.}
 
-\item{...}{Optional arguments to be passed to \code{'theme_pcj()'} which is used to
-style the generated plots.}
+\item{...}{
+  Arguments passed on to \code{\link[=theme_pcj]{theme_pcj}}
+  \describe{
+    \item{\code{gridlines}}{Logical, defaults to TRUE. Should gridlines be generated
+behind plotted data?}
+    \item{\code{font}}{The font to be used in a plot. Defaults to Atkinson Hyperlegible.}
+    \item{\code{palette}}{A string. The name of the palette to be mapped to a variable,
+including: "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
+"mono_yellow", or "ualbany".}
+  }}
 }
 \value{
 Returns a list containing:
 \itemize{
-\item The results of the simulation
-\item A density plot of evidence accumulation over time
-\item A plot of the rt distributions for one outcome over the other
-\item The RT quintile-probability plot for each decision with points at the
-0.1, 0.3, 0.5, 0.7, and 0.9 quintiles
+\item \code{sim_results}: Data table with simulation trajectories
+\item \verb{Evidence Plot}: Density visualization of evidence accumulation over time
+\item \verb{RT Dist}: Conditional response time distributions for each decision
+\item \verb{Quantile Plot}: Quantile-probability function plotting RT quantiles
+(0.1, 0.3, 0.5, 0.7, 0.9) against response proportions, providing a
+joint summary of RT distribution shape and accuracy (Ratcliff &
+Tuerlinckx, 2002)
 }
 }
 \description{
@@ -91,5 +104,13 @@ results <- drift_mod(nsims = 100, show_legend = TRUE)
 }
 }
 \references{
-Farrell, S., & Lewandowsky, S. (2018). Computational modeling of cognition and behavior. Cambridge University Press.
+Farrell, S., & Lewandowsky, S. (2018). \emph{Computational modeling of
+cognition and behavior}. Cambridge University Press.
+
+Ratcliff, R. (1978). A theory of memory retrieval. \emph{Psychological Review,
+85}(2), 59-108.
+
+Ratcliff, R., & Tuerlinckx, F. (2002). Estimating parameters of the diffusion
+model: Approaches to dealing with contaminant reaction times and parameter
+variability. \emph{Psychonomic Bulletin & Review, 9}(3), 438-481.
 }

@@ -2,32 +2,37 @@
 % Please edit documentation in R/fit_wienR_helpers.R
 \name{q_wdm}
 \alias{q_wdm}
-\title{Quantile Function for Wiener Diffusion Model}
+\title{Wiener Diffusion Model Quantile Function}
 \usage{
 q_wdm(p, response, ...)
 }
 \arguments{
-\item{p}{Numeric value between 0 and 1 representing the desired quantile
-(e.g., 0.5 for median, 0.95 for 95th percentile).}
+\item{p}{Quantile probability (0 to 1); e.g., 0.5 for median, 0.95 for 95th
+percentile.}
 
-\item{response}{Numeric value indicating which response boundary (typically
-1 for lower, 2 for upper).}
+\item{response}{Response boundary indicator (typically 1 for lower, 2 for
+upper).}
 
-\item{...}{Additional arguments passed to \code{\link[WienR:WienerCDF]{WienR::WienerCDF()}}, such as
-model parameters (a, v, w, t0, sv, sw, st0).}
+\item{...}{Model parameters passed to \code{\link[WienR:WienerCDF]{WienR::WienerCDF()}}: a (boundary
+separation), v (drift rate), w (starting point), t0 (nondecision time),
+and optionally sv, sw, st0 (trial-to-trial variability parameters).}
 }
 \value{
-A numeric value representing the response time at the specified
-quantile for the given response boundary. Returns NA if root-finding fails.
+Response time at the specified quantile. Returns \code{NA} if root-finding
+fails.
 }
 \description{
-Computes quantiles of the response time distribution for a given response
-boundary in the Wiener diffusion model. Uses root-finding to invert the
-cumulative distribution function.
+Computes quantiles of the response time distribution for a specified response
+boundary by numerically inverting the Wiener diffusion model's cumulative
+distribution function.
 }
 \examples{
 \dontrun{
-# Find the median RT for upper boundary responses
+# Median RT for upper boundary responses
 q_wdm(p = 0.5, response = 2, a = 1.5, v = 2, w = 0.5, t0 = 0.3)
 }
+}
+\references{
+Ratcliff, R. (1978). A theory of memory retrieval. \emph{Psychological Review,
+85}(2), 59-108.
 }

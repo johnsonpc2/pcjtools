@@ -1,36 +1,40 @@
-#' Find The Negative Log Likelihood
+#' Negative Log Likelihood for Diffusion Model
 #'
-#' A helper function used by fit_wienr() to calculate the negative log
-#' likelihood of a set of diffusion model parameters given observed data.
+#' Computes the negative log likelihood of diffusion model parameters given
+#' observed response time and choice data. Used as the objective function for
+#' maximum likelihood parameter estimation (Ratcliff & Tuerlinckx, 2002).
 #'
-#' @param par Named numeric vector of parameters. Names should follow the format
-#'   `a[i]`, `v[i]`, `w[i]`, `t0[i]`, `sv[i]`, `sw[i]`, `st0[i]` where i is the
-#'   parameter index.
+#' @param par Named numeric vector of parameters in the format `param[i]` where
+#'   param is the parameter name (a, v, w, t0, sv, sw, st0) and i is the index.
 #' @param rt Numeric vector of response times in seconds.
 #' @param response Numeric vector of responses (typically 1 or 2, representing
 #'   lower or upper boundary).
-#' @param bound_index Integer vector mapping each trial to its boundary separation
-#'   (a) and starting point (w) parameter index.
+#' @param bound_index Integer vector mapping each trial to its boundary
+#'   separation (a) and starting point (w) parameter index.
 #' @param drift_index Integer vector mapping each trial to its drift rate (v)
 #'   parameter index.
-#' @param resid_index Integer vector mapping each trial to its non-decision time
+#' @param resid_index Integer vector mapping each trial to its nondecision time
 #'   (t0) parameter index.
-#' @param sv_index Integer vector mapping each trial to its drift rate variability
-#'   (sv) parameter index. Can be NULL if sv is not being estimated.
+#' @param sv_index Integer vector mapping each trial to its drift rate
+#'   variability (sv) parameter index. Can be NULL if not estimated.
 #' @param sw_index Integer vector mapping each trial to its starting point
-#'   variability (sw) parameter index. Can be NULL if sw is not being estimated.
-#' @param st0_index Integer vector mapping each trial to its non-decision time
-#'   variability (st0) parameter index. Can be NULL if st0 is not being estimated.
+#'   variability (sw) parameter index. Can be NULL if not estimated.
+#' @param st0_index Integer vector mapping each trial to its nondecision time
+#'   variability (st0) parameter index. Can be NULL if not estimated.
 #' @param ... Additional arguments passed to [WienR::WienerPDF()].
 #'
-#' @returns A single numeric value representing the negative log likelihood.
-#'   Returns Inf if the PDF evaluation fails (e.g., invalid parameters).
+#' @returns Negative log likelihood value. Returns `Inf` if PDF evaluation fails.
+#' @references
+#' Ratcliff, R., & Tuerlinckx, F. (2002). Estimating parameters of the diffusion
+#'  model: Approaches to dealing with contaminant reaction times and parameter
+#'  variability. \emph{Psychonomic Bulletin & Review, 9}(3), 438-481.
 #' @export
 
 nll <- function(par, rt, response, bound_index, drift_index, resid_index,
                 sv_index = NULL, sw_index = NULL, st0_index = NULL, ...) {
 
-  # Extract parameters
+  # Extract Parameters ------------------------------------------------------
+
   a <- par[paste0("a[", bound_index, "]")]
   v <- par[paste0("v[", drift_index, "]")]
   w <- par[paste0("w[", bound_index, "]")]
@@ -39,7 +43,8 @@ nll <- function(par, rt, response, bound_index, drift_index, resid_index,
   sw <- if (is.na(par["sw[1]"])) 0 else par[paste0("sw[", sw_index, "]")]
   st0 <- if (is.na(par["st0[1]"])) 0 else par[paste0("st0[", st0_index, "]")]
 
-  # Evaluate PDF
+  # Evaluate PDF and Return Negative Log Likelihood -------------------------
+
   eval_pdf <- try(WienR::WienerPDF(
     t = rt, response = response, a = a, v = v, w = w, t0 = t0,
     sv = sv, sw = sw, st0 = st0, ...
@@ -50,22 +55,27 @@ nll <- function(par, rt, response, bound_index, drift_index, resid_index,
 }
 
 
-#' Compute Gradient of Negative Log Likelihood
+#' Gradient of Negative Log Likelihood
 #'
-#' Calculates the gradient (first derivative) of the negative log likelihood
-#' with respect to each model parameter. Used for gradient-based optimization
-#' in fit_wienr().
+#' Computes the gradient (first derivatives) of the negative log likelihood
+#' with respect to each diffusion model parameter. Enables gradient-based
+#' optimization methods for improved parameter estimation efficiency.
 #'
 #' @inheritParams nll
 #'
-#' @returns A named numeric vector of gradients with the same length and names
-#'   as par. Returns a vector of NaN values if gradient evaluation fails.
+#' @returns Named numeric vector of gradients with the same length and names as
+#'   `par`. Returns vector of `NaN` values if gradient evaluation fails.
+#' @references
+#' Ratcliff, R., & Tuerlinckx, F. (2002). Estimating parameters of the diffusion
+#'  model: Approaches to dealing with contaminant reaction times and parameter
+#'  variability. \emph{Psychonomic Bulletin & Review, 9}(3), 438-481.
 #' @export
 
 gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
                      sv_index = NULL, sw_index = NULL, st0_index = NULL, ...) {
 
-  # Extract parameters and determine which are used
+  # Extract Parameters and Determine Which Are Used ------------------------
+
   a <- par[paste0("a[", bound_index, "]")]
   v <- par[paste0("v[", drift_index, "]")]
   w <- par[paste0("w[", bound_index, "]")]
@@ -79,7 +89,8 @@ gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
   sw <- if (use_sw) par[paste0("sw[", sw_index, "]")] else 0
   st0 <- if (use_st0) par[paste0("st0[", st0_index, "]")] else 0
 
-  # Evaluate gradient and PDF
+  # Evaluate Gradient and PDF -----------------------------------------------
+
   eval_grad <- try(WienR::gradWienerPDF(
     t = rt, response = response, a = a, v = v, w = w, t0 = t0,
     sv = sv, sw = sw, st0 = st0, ...
@@ -94,7 +105,9 @@ gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
 
   if (inherits(eval_pdf, "try-error")) return(rep(NaN, length(par)))
 
-  # Compute gradients (derivative of log(f(x)) is f'(x) / f(x))
+  # Compute Gradients -------------------------------------------------------
+
+  # Derivative of log(f(x)) is f'(x) / f(x)
   grad <- rep(NaN, length(par))
   names(grad) <- names(par)
 
@@ -119,26 +132,29 @@ gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
 }
 
 
-#' EZ Diffusion Model Estimation
+#' EZ Diffusion Model Parameter Estimation
 #'
-#' Calculates simple, closed-form estimates of diffusion model parameters
-#' from summary statistics. This provides a quick approximation useful for
-#' initial parameter values. Based on the EZ-diffusion method.
+#' Calculates closed-form estimates of simplified diffusion model parameters
+#' from summary statistics. Provides fast initial parameter estimates by
+#' assuming no trial-to-trial variability and unbiased starting point
+#' (Wagenmakers et al., 2007). Useful for starting values in full model fitting.
 #'
-#' @param prop_correct Proportion of correct responses (between 0 and 1).
-#' @param rt_correct_variance_seconds Variance of response times for correct
-#'   responses, in seconds.
-#' @param rt_correct_mean_seconds Mean response time for correct responses,
-#'   in seconds.
-#' @param n_trials Total number of trials (used for edge correction).
-#' @param s Scaling parameter for the diffusion process (default = 1).
-#'   Traditionally set to 1 or 0.1 depending on the scaling convention.
+#' @param prop_correct Proportion of correct responses (0 to 1).
+#' @param rt_correct_variance_seconds Variance of correct response times (s²).
+#' @param rt_correct_mean_seconds Mean correct response time (s).
+#' @param n_trials Number of trials (used for edge correction).
+#' @param s Diffusion scaling parameter (default = 1). Traditionally fixed at
+#'   0.1 or 1 depending on convention.
 #'
-#' @returns A named numeric vector with three elements:
-#'   \item{a}{Boundary separation (distance between response boundaries)}
-#'   \item{v}{Drift rate (rate of evidence accumulation)}
-#'   \item{ter}{Non-decision time (encoding and motor response time)}
+#' @returns Named numeric vector with elements:
+#'   \item{a}{Boundary separation}
+#'   \item{v}{Drift rate}
+#'   \item{ter}{Nondecision time (encoding and motor response)}
 #'
+#' @references
+#' Wagenmakers, E.-J., Van Der Maas, H. L. J., & Grasman, R. P. P. P. (2007).
+#'  An EZ-diffusion model for response time and accuracy. \emph{Psychonomic
+#'  Bulletin & Review, 14}(1), 3-22.
 #' @export
 #' @examples
 #' ezddm(prop_correct = 0.802, rt_correct_variance_seconds = 0.112,
@@ -147,11 +163,15 @@ gradient <- function(par, rt, response, bound_index, drift_index, resid_index,
 ezddm <- function(prop_correct, rt_correct_variance_seconds,
                   rt_correct_mean_seconds, n_trials, s = 1) {
 
+  # Apply Edge Correction ---------------------------------------------------
+
   s2 <- s^2
 
   # Edge correction for proportion correct
   prop_correct <- (2 * n_trials * prop_correct) / (2 * n_trials + 1) +
     1 / (4 * n_trials^2)
+
+  # Calculate EZ Parameters -------------------------------------------------
 
   l <- stats::qlogis(prop_correct)
   x <- l * (l * prop_correct^2 - l * prop_correct + prop_correct - 0.5) /
@@ -166,31 +186,40 @@ ezddm <- function(prop_correct, rt_correct_variance_seconds,
 }
 
 
-#' Quantile Function for Wiener Diffusion Model
+#' Wiener Diffusion Model Quantile Function
 #'
-#' Computes quantiles of the response time distribution for a given response
-#' boundary in the Wiener diffusion model. Uses root-finding to invert the
-#' cumulative distribution function.
+#' Computes quantiles of the response time distribution for a specified response
+#' boundary by numerically inverting the Wiener diffusion model's cumulative
+#' distribution function.
 #'
-#' @param p Numeric value between 0 and 1 representing the desired quantile
-#'   (e.g., 0.5 for median, 0.95 for 95th percentile).
-#' @param response Numeric value indicating which response boundary (typically
-#'   1 for lower, 2 for upper).
-#' @param ... Additional arguments passed to [WienR::WienerCDF()], such as
-#'   model parameters (a, v, w, t0, sv, sw, st0).
+#' @param p Quantile probability (0 to 1); e.g., 0.5 for median, 0.95 for 95th
+#'   percentile.
+#' @param response Response boundary indicator (typically 1 for lower, 2 for
+#'   upper).
+#' @param ... Model parameters passed to [WienR::WienerCDF()]: a (boundary
+#'   separation), v (drift rate), w (starting point), t0 (nondecision time),
+#'   and optionally sv, sw, st0 (trial-to-trial variability parameters).
 #'
-#' @returns A numeric value representing the response time at the specified
-#'   quantile for the given response boundary. Returns NA if root-finding fails.
+#' @returns Response time at the specified quantile. Returns `NA` if root-finding
+#'   fails.
 #'
+#' @references
+#' Ratcliff, R. (1978). A theory of memory retrieval. \emph{Psychological Review,
+#'  85}(2), 59-108.
 #' @export
 #' @examples
 #' \dontrun{
-#' # Find the median RT for upper boundary responses
+#' # Median RT for upper boundary responses
 #' q_wdm(p = 0.5, response = 2, a = 1.5, v = 2, w = 0.5, t0 = 0.3)
 #' }
 
 q_wdm <- function(p, response, ...) {
+
+  # Calculate Response Probability ------------------------------------------
+
   p_resp <- WienR::WienerCDF(Inf, response = response, ...)$value
+
+  # Find Quantile via Root Finding ------------------------------------------
 
   res <- try(stats::uniroot(
     f = function(t) WienR::WienerCDF(t, response = response, ...)$value / p_resp - p,
@@ -202,17 +231,17 @@ q_wdm <- function(p, response, ...) {
   if (inherits(res, "try-error")) NA else res$root
 }
 
-#' Helper function for null-coalescing operator
+#' Null-Coalescing Operator
 #'
-#' If x is null, y. Otherwise, x.
+#' Returns `y` if `x` is `NULL`, otherwise returns `x`.
 #'
 #' @name binary operator
-#' @param x Condition 1
-#' @param y Condition 2
+#' @param x First value to check.
+#' @param y Default value if `x` is `NULL`.
 #'
+#' @returns Either `x` (if not `NULL`) or `y`.
 #' @keywords internal
+
 `%||%` <- function(x, y){
-
   if (is.null(x)) y else x
-
 }

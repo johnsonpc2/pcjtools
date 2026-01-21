@@ -78,7 +78,8 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
     # Quantile-probability plot
     sim_choice_p <- choice_rt[, .N, by = choice][, p_resp := N / sum(N)]
     qprobs <- c(0.1, 0.3, 0.5, 0.7, 0.9)
-    sim_rt_q <- choice_rt[, list(rt_q = stats::quantile(x = rt, probs = qprobs)),
+    sim_rt_q <- choice_rt[, list(rt_q = stats::quantile(x = rt, probs = qprobs),
+                                 "quantile" = qprobs),  # Add quantile labels
                           by = choice]
 
     # Visualize the internal evidence states
@@ -118,13 +119,21 @@ drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,
 
     # Plot the quantiles of the upper and lower response distributions
     fp3 <- ggplot2::ggplot(
-      data = dplyr::full_join(sim_choice_p, sim_rt_q, by = "choice"),
+      data = merge(sim_choice_p, sim_rt_q, by = "choice", all = TRUE),
       mapping = ggplot2::aes(
         x = p_resp,
         y = rt_q,
         color = choice)
     ) +
-      ggplot2::geom_point() +
+      ggplot2::geom_line(ggplot2::aes(group = sim_rt_q$quantile),
+                         color = "gray70") +
+      ggplot2::geom_point(size = 1.5) +
+      ggplot2::geom_text(
+        ggplot2::aes(label = qprobs),
+        nudge_y = 0.05,
+        size = 3,
+        show.legend = FALSE
+      ) +
       ggplot2::scale_x_continuous(
         limits = c(0, 1),
         expand = ggplot2::expansion(mult = 0.05)

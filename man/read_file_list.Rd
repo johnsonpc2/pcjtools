@@ -37,14 +37,4 @@ A \code{data.table} object with concatenated data from all named files.
 \description{
 A wrapper to read in multiple files and bind them together into a single object.
 }
-\examples{
-\dontrun{
-info <- files_info()
-# Serial with progress
-data <- read_file_list(files = info$filepath)
-
-# Parallel without progress
-data <- read_file_list(files = info$filepath, parallel = TRUE)
-}
-}
 \keyword{internal}

@@ -144,6 +144,7 @@ theme_pcj <- function(gridlines = TRUE, palette = "default",
       strip.background = ggplot2::element_rect(
         fill = colors[13]
       ),
-      strip.placement = "inside"
+      strip.placement = "inside",
+      ...
     )
 }

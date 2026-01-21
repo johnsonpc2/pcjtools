@@ -2,7 +2,7 @@
 % Please edit documentation in R/fit_wienR.R
 \name{fit_wienr}
 \alias{fit_wienr}
-\title{Fit a Drift Diffusion Model}
+\title{Fit Wiener Diffusion Model via Maximum Likelihood}
 \usage{
 fit_wienr(
   rt,
@@ -21,61 +21,76 @@ fit_wienr(
 )
 }
 \arguments{
-\item{rt}{Numeric vector of response times in seconds.}
+\item{rt}{Numeric vector of response times (seconds).}
 
-\item{response}{Factor or numeric vector of responses. Will be converted to
-numeric if not already (typically 1 for lower boundary, 2 for upper boundary).}
+\item{response}{Factor or numeric vector of responses. Converted to numeric
+if necessary (typically 1 for lower, 2 for upper boundary).}
 
-\item{fit_sv}{Logical (defaults to FALSE). Should between-trial variability
-in drift rate (sv) be estimated? Setting to TRUE allows drift rate to vary
-across trials.}
+\item{fit_sv}{Logical. If \code{TRUE}, estimates trial-to-trial drift rate
+variability (sv). Default is \code{FALSE}.}
 
-\item{fit_sw}{Logical (defaults to FALSE). Should between-trial variability
-in starting point (sw) be estimated? Setting to TRUE allows the starting
-point bias to vary across trials.}
+\item{fit_sw}{Logical. If \code{TRUE}, estimates trial-to-trial starting point
+variability (sw). Default is \code{FALSE}.}
 
-\item{fit_st0}{Logical (defaults to FALSE). Should between-trial variability
-in non-decision time (st0) be estimated? Setting to TRUE allows non-decision
-time to vary across trials.}
+\item{fit_st0}{Logical. If \code{TRUE}, estimates trial-to-trial nondecision time
+variability (st0). Default is \code{FALSE}.}
 
-\item{optim_control}{A list of control parameters for the optimization
-procedure, supplied to the control argument of \code{\link[stats:optim]{stats::optim()}} and
-\code{\link[ucminf:ucminf]{ucminf::ucminf()}}. See respective documentation for available options.}
+\item{optim_control}{List of control parameters passed to \code{\link[stats:optim]{stats::optim()}}
+and \code{\link[ucminf:ucminf]{ucminf::ucminf()}}. See respective documentation for options.}
 
-\item{init_par}{Named vector of initial parameter values (optional). If NULL,
-initial values are computed using the EZ-diffusion method. Parameter names
-should match the format \code{a[1]}, \code{v[1]}, \code{w[1]}, \code{t0[1]}, etc.}
+\item{init_par}{Named vector of initial parameter values (optional). If
+\code{NULL}, computed via EZ-diffusion (Wagenmakers et al., 2007). Parameter
+names should follow format: \code{a[1]}, \code{v[1]}, \code{w[1]}, \code{t0[1]}, etc.}
 
 \item{drift_index}{Integer vector indicating which drift rate parameter each
-trial should use. If NULL, all trials use the same drift rate (default).
-Length must equal length of rt.}
+trial uses. If \code{NULL}, all trials use same parameter. Length must equal
+length of \code{rt}.}
 
 \item{bound_index}{Integer vector indicating which boundary separation (a)
-and starting point (w) parameter each trial should use. If NULL, all trials
-use the same parameters (default). Length must equal length of rt.}
+and starting point (w) each trial uses. If \code{NULL}, all trials use same
+parameters. Length must equal length of \code{rt}.}
 
-\item{resid_index}{Integer vector indicating which non-decision time (t0)
-parameter each trial should use. If NULL, all trials use the same parameter
-(default). Length must equal length of rt.}
+\item{resid_index}{Integer vector indicating which nondecision time (t0)
+each trial uses. If \code{NULL}, all trials use same parameter. Length must
+equal length of \code{rt}.}
 
 \item{sv_index}{Integer vector indicating which drift rate variability (sv)
-parameter each trial should use. Only relevant if fit_sv = TRUE. If NULL,
-all trials use the same parameter. Length must equal length of rt.}
+each trial uses. Only relevant if \code{fit_sv = TRUE}. If \code{NULL}, all trials
+use same parameter. Length must equal length of \code{rt}.}
 
-\item{sw_index}{Integer vector indicating which starting point variability (sw)
-parameter each trial should use. Only relevant if fit_sw = TRUE. If NULL,
-all trials use the same parameter. Length must equal length of rt.}
+\item{sw_index}{Integer vector indicating which starting point variability
+(sw) each trial uses. Only relevant if \code{fit_sw = TRUE}. If \code{NULL}, all
+trials use same parameter. Length must equal length of \code{rt}.}
 
-\item{st0_index}{Integer vector indicating which non-decision time variability
-(st0) parameter each trial should use. Only relevant if fit_st0 = TRUE.
-If NULL, all trials use the same parameter. Length must equal length of rt.}
+\item{st0_index}{Integer vector indicating which nondecision time variability
+(st0) each trial uses. Only relevant if \code{fit_st0 = TRUE}. If \code{NULL}, all
+trials use same parameter. Length must equal length of \code{rt}.}
 }
 \value{
-A list object from \code{\link[ucminf:ucminf]{ucminf::ucminf()}} containing the fitted parameters,
-convergence information, and other optimization details.
+List object from \code{\link[ucminf:ucminf]{ucminf::ucminf()}} containing:
+\item{par}{Fitted parameter values}
+\item{value}{Negative log-likelihood at minimum}
+\item{convergence}{Convergence code (1 = success)}
+\item{message}{Convergence message}
+See \code{\link[ucminf:ucminf]{ucminf::ucminf()}} documentation for complete details.
 }
 \description{
-This function fits a Wiener (Drift) Diffusion Model to response time data
-using maximum likelihood estimation. The model is fit using a two-stage
-optimization procedure: first Nelder-Mead, then ucminf for refinement.
+Estimates Wiener diffusion model parameters from response time and choice
+data using maximum likelihood estimation (Ratcliff & Tuerlinckx, 2002).
+Employs a multi-stage optimization strategy: Nelder-Mead for global search
+followed by quasi-Newton (ucminf) for local refinement, combining the
+strengths of both approaches for robust parameter recovery.
+}
+\references{
+Nielsen, H. B. (2000). UCMINF - An algorithm for unconstrained, nonlinear
+optimization. Report IMM-REP-2000-19, Department of Mathematical Modelling,
+Technical University of Denmark.
+
+Ratcliff, R., & Tuerlinckx, F. (2002). Estimating parameters of the diffusion
+model: Approaches to dealing with contaminant reaction times and parameter
+variability. \emph{Psychonomic Bulletin & Review, 9}(3), 438-481.
+
+Wagenmakers, E.-J., Van Der Maas, H. L. J., & Grasman, R. P. P. P. (2007).
+An EZ-diffusion model for response time and accuracy. \emph{Psychonomic
+Bulletin & Review, 14}(1), 3-22.
 }

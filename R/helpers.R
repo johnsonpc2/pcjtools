@@ -1,19 +1,13 @@
 #' File Reader
 #'
-#' A helper used by `'read_file_list()'` to read in individual data files.
+#' A helper used by [read_file_list()] to read in individual data files.
 #'
-#' @param x A filepath in the form of a string.
+#' @param x A string giving the file path of a single file to read in.
 #'
 #' @returns A `data.table` object containing data from a file supplied to
-#' `'read_data_list()'`.
+#' `'read_file_list()'`.
 #'
 #' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#' info <- files_info()
-#' file <- read_file(x = info$filepath)
-#' }
 
 read_file <- function(x) {
   data.table::fread(
@@ -39,16 +33,6 @@ read_file <- function(x) {
 #' @returns A `data.table` object with concatenated data from all named files.
 #'
 #' @keywords internal
-#'
-#' @examples
-#' \dontrun{
-#' info <- files_info()
-#' # Serial with progress
-#' data <- read_file_list(files = info$filepath)
-#'
-#' # Parallel without progress
-#' data <- read_file_list(files = info$filepath, parallel = TRUE)
-#' }
 
 read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
                            show_progress = TRUE, ...) {
@@ -110,100 +94,6 @@ read_file_list <- function(files, parallel = FALSE, n_cores = NULL,
 
   do.call(data.table::rbindlist, rbind_args)
 }
-
-
-
-#' Make Consistently Themed Plots
-#'
-#' A helper function to set the aesthetics of plots to ensure plots formatted
-#' with the `'theme_pcj()'` function all have the same settings.
-#'
-#' @param base_size The plot's default font size; must be numeric.
-#' @param dark_text A quoted hex code that sets the color of the darkest text in
-#' the plot. All text is based on shades of the specified hex code.
-#' @param font A character string containing the name of the font in which to
-#' print the plot's text.
-#' @param ... Optional arguments to be passed to `'theme()'`.
-#'
-#' @importFrom ggplot2 %+replace%
-#'
-#' @keywords internal
-#'
-#' @returns A plot configured with the declared aesthetics.
-
-theme_pcj_aesthetics <- function(base_size,
-                                 dark_text,
-                                 font,
-                                 ...) {
-
-  mid_text <- monochromeR::generate_palette(
-    colour = dark_text,
-    modification = "go_lighter",
-    n_colours = 11
-  )[4]
-
-  light_text <- monochromeR::generate_palette(
-    colour = dark_text,
-    modification = "go_lighter",
-    n_colours = 9
-  )[7]
-
-  if (!font %in% systemfonts::system_fonts()$family) {
-    font <- "sans"  # fallback to system font
-  }
-
-  ggplot2::theme_minimal() %+replace%
-    ggplot2::theme(
-      text = ggplot2::element_text(
-        family = font,
-        size = base_size,
-        face = "bold",
-        lineheight = 1.1,
-        margin = ggplot2::margin(t = 0, r = 0, b = 10, l = 0)
-      ),
-      plot.title = ggplot2::element_text(
-        color = dark_text,
-        size = ggplot2::rel(2),
-        hjust = 0
-      ),
-      plot.title.position = "plot",
-      plot.caption.position = "plot",
-      plot.subtitle = ggplot2::element_text(
-        size = ggplot2::rel(1.5),
-        color = mid_text,
-        hjust = 0
-      ),
-      axis.text = ggplot2::element_text(
-        size = ggplot2::rel(1.0),
-        color = dark_text
-      ),
-      axis.title = ggplot2::element_text(
-        size = ggplot2::rel(1.2),
-        color = dark_text
-      ),
-      panel.grid = ggplot2::element_line(
-        color = mid_text,
-        linewidth = .15,
-        linetype = "dashed"
-      ),
-      plot.caption = ggplot2::element_text(
-        color = light_text,
-        hjust = 1
-      ),
-      axis.ticks = ggplot2::element_blank(),
-      panel.grid.minor = ggplot2::element_blank(),
-      legend.position = "top",
-      legend.text = ggplot2::element_text(
-        size = ggplot2::rel(1.2),
-        lineheight = 1,
-        color = mid_text
-      ),
-      legend.direction = "horizontal",
-      ...
-    )
-
-}
-
 
 
 #' Plot Color Palettes
@@ -310,65 +200,5 @@ theme_pcj_palettes <- function(palette, continuous,
       colors = .palettes[[palette]]
     )
 
-  }
-}
-
-
-
-#' Plot Text Settings
-#'
-#' A helper to define the text for various elements of a plot as part of the
-#' `'theme_pcj()'` function.
-#'
-#' @param plot_text A named character vector where plot features are names and
-#'  the text to be printed in the plot are values (e.g.,
-#'  c(title = "Plot Title", etc.)).
-#' @param alt_text Logical. Should a subtitle and caption be generated for the
-#'  plot?
-#'
-#' @keywords internal
-#'
-#' @returns A ggplot object with the text declared in the function call.
-
-theme_pcj_text <- function(plot_text, alt_text) {
-
-  # In case the full expected names of the plot elements aren't given
-  names(plot_text) <- match.arg(arg = names(plot_text),
-                                choices = c("title", "subtitle",
-                                            "xlab", "ylab", "caption",
-                                            "color", "fill", "shape", "size"),
-                                several.ok = TRUE)
-
-  default_caption <- paste0("Created: ", format(Sys.time(), "%Y%m%d, %H:%M"))
-
-  if (alt_text == TRUE) {
-
-    ggplot2::labs(
-      title = if ("title" %in% names(plot_text))
-        plot_text[["title"]] else "title",
-      subtitle = if ("subtitle" %in% names(plot_text))
-        plot_text[["subtitle"]] else NULL,
-      x = if ("xlab" %in% names(plot_text))
-        plot_text[["xlab"]] else "xlab",
-      y = if ("ylab" %in% names(plot_text))
-        plot_text[["ylab"]] else "ylab",
-      caption = if ("caption" %in% names(plot_text))
-        plot_text[["caption"]] else default_caption,
-      fill = if ("fill" %in% names(plot_text))
-        plot_text[["fill"]] else NULL
-    )
-
-  } else {
-
-    ggplot2::labs(
-      title = if ("title" %in% names(plot_text))
-        plot_text[["title"]] else "title",
-      subtitle = NULL,
-      x = if ("xlab" %in% names(plot_text))
-        plot_text[["xlab"]] else "xlab",
-      y = if ("ylab" %in% names(plot_text))
-        plot_text[["ylab"]] else "ylab",
-      caption = NULL
-    )
   }
 }

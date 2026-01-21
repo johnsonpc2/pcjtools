@@ -17,7 +17,7 @@ Load a list of packages
 }
 \examples{
 \donttest{
-packages <- c("dplyr", "ggplot2")
+packages <- c("data.table", "ggplot2")
 
 load_packages(x = packages)
 }

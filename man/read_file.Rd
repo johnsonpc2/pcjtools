@@ -7,19 +7,13 @@
 read_file(x)
 }
 \arguments{
-\item{x}{A filepath in the form of a string.}
+\item{x}{A string giving the file path of a single file to read in.}
 }
 \value{
 A \code{data.table} object containing data from a file supplied to
-\code{'read_data_list()'}.
+\code{'read_file_list()'}.
 }
 \description{
-A helper used by \code{'read_file_list()'} to read in individual data files.
-}
-\examples{
-\dontrun{
-info <- files_info()
-file <- read_file(x = info$filepath)
-}
+A helper used by \code{\link[=read_file_list]{read_file_list()}} to read in individual data files.
 }
 \keyword{internal}

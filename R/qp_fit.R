@@ -1,31 +1,76 @@
-#' Title
+#' Quick Q–P (Quantile–Probability) Fit for the Drift–Diffusion Model
 #'
-#' @param rt The RTs of decisions
-#' @param response What the subject chose a trial
-#' @param par Parameters
-#' @param rt_p The percentiles to calculate from the RT distribution.
-#' @param drift_index The index of the drift rate value.
-#' @param bound_index The index of the boundary.
-#' @param resid_index The index of residual
-#' @param sv_index Trial-level variance of the draft rate
-#' @param sw_index Variance in the starting position (I think)
-#' @param st0_index Variance of the non-decision time
+#' Compute observed quantiles and choice probabilities from a data set and,
+#' optionally, the corresponding predictions from a fitted drift–diffusion model.
+#' The function is designed for the "quantile–probability" method advocated by
+#' Ratcliff & Tuerlinckx (2002) and Ratcliff & McKoon (2008): RT quantiles
+#' (default: 0.1, 0.3, 0.5, 0.7, 0.9) are plotted against the proportion of
+#' choices for each condition, giving a compact graphical summary of accuracy,
+#' speed, and distributional shape.
 #'
-#' @importFrom rlang .data
+#' @param rt Response-time vector (seconds).
+#' @param response Choice vector: character ("upper"/"lower") or numeric (1/0).
+#' @param par Named numeric vector with DDM parameters (see *Details*). If
+#'   supplied, fitted quantiles/probabilities are appended to the output.
+#' @param rt_p Numeric vector of quantiles to calculate (default =
+#'   c(0.1, 0.3, 0.5, 0.7, 0.9)).
+#' @param drift_index Trial-by-trial integer mapping to the drift-rate
+#'   parameter (allows across-condition variability).
+#' @param bound_index Trial-by-trial mapping to boundary-separation parameter.
+#' @param resid_index Trial-by-trial mapping to non-decision-time parameter.
+#' @param sv_index Trial-by-trial mapping to drift-rate variability parameter.
+#' @param sw_index Trial-by-trial mapping to starting-point variability.
+#' @param st0_index Trial-by-trial mapping to non-decision-time variability.
 #'
-#' @returns Something
+#' @details
+#' When `par` is provided, predicted quantiles are obtained with `q_wdm()`
+#' (quantile function for the Wiener diffusion model) and choice probabilities
+#' with `WienR::WienerCDF()`. Parameters should be named in the style produced
+#' by `WienerDM` or `rtdists`: `a[1], v[1], w[1], t0[1], sv[1], sw[1], st0[1]`
+#' (indices correspond to the mapping vectors above). Any parameter not
+#' supplied defaults to 0 (or `a=1`, `w=0.5`).
+#'
+#' The function returns a `data.table` with one row per combination of
+#' condition indices, response, and quantile; columns `rt_q` and `p_resp`
+#' contain the observed (and, if `par` given, fitted) quantiles and choice
+#' proportions. This object can be piped directly into `ggplot2` to produce a
+#' quantile–probability plot (see examples).
+#'
+#' @return A `data.table` with columns:
+#'   * `drift_index`, `bound_index`, `resid_index`, `sv_index`, `sw_index`, `st0_index`: Condition indices
+#'   * `response`: "upper" or "lower"
+#'   * `rt_p`: Quantile probability
+#'   * `rt_q`: Observed RT quantile (seconds)
+#'   * `p_resp`: Observed choice proportion
+#'   * `source`: "Observed" or "Fitted" (when `par` supplied)
+#'
+#' @references
+#' Ratcliff, R. (1978). A theory of memory retrieval. *Psychological Review*,
+#' 85(2), 59–108. \doi{10.1037/0033-295X.85.2.59}
+#'
+#' Ratcliff, R., & McKoon, G. (2008). The diffusion decision model: Theory
+#' and data for two-choice decision tasks. *Neural Computation*, 20(4),
+#' 873–922. \doi{10.1162/neco.2008.12-06-420}
+#'
+#' Ratcliff, R., & Tuerlinckx, F. (2002). Estimating parameters of the
+#' diffusion model: Approaches to dealing with contaminant reaction times and
+#' parameter variability. *Psychonomic Bulletin & Review*, 9(3), 438–481.
+#' \doi{10.3758/BF03196302}
+#'
 #' @export
-#'
 #' @examples
 #' \dontrun{
 #' qp_fit(rt = data_sub$rt,
 #' response = data_sub$correct,
 #' par = ddm_fit$par)
 #' }
+#'
 
 qp_fit <- function(rt, response, par = NULL, rt_p = c(0.1, 0.3, 0.5, 0.7, 0.9),
                    drift_index = NULL, bound_index = NULL, resid_index = NULL,
                    sv_index = NULL, sw_index = NULL, st0_index = NULL) {
+
+  # Handle Indices ----------------------------------------------------------
 
   if (is.null(drift_index)) {
     drift_index <- rep(1, length(rt))
@@ -69,8 +114,9 @@ qp_fit <- function(rt, response, par = NULL, rt_p = c(0.1, 0.3, 0.5, 0.7, 0.9),
     n_st0 <- max(st0_index)
   }
 
-  # Calculate observed RT quantiles
-  obs_rt_temp <- dplyr::tibble(
+  # Create Observed Data ----------------------------------------------------
+
+  obs_dt <- data.table::data.table(
     rt = rt,
     response = response,
     drift_index = drift_index,
@@ -81,133 +127,102 @@ qp_fit <- function(rt, response, par = NULL, rt_p = c(0.1, 0.3, 0.5, 0.7, 0.9),
     st0_index = st0_index
   )
 
-  obs_rt_grouped <- dplyr::group_by(
-    obs_rt_temp,
-    drift_index, bound_index, resid_index, sv_index, sw_index, st0_index, response
-  )
+  # Calculate Observed RT Quantiles -----------------------------------------
 
-  obs_rt_reframed <- dplyr::reframe(obs_rt_grouped, rt_q = stats::quantile(rt, probs = rt_p))
+  grp_vars <- c("drift_index", "bound_index", "resid_index",
+                "sv_index", "sw_index", "st0_index", "response")
 
-  obs_rt_mutated <- dplyr::mutate(obs_rt_reframed, rt_p = rep(rt_p, dplyr::n() / length(rt_p)))
+  obs_rt_quantiles <- obs_dt[,
+                             .(rt_q = stats::quantile(rt, probs = rt_p)),
+                             by = grp_vars
+  ]
 
-  obs_rt_quantiles <- tidyr::complete(
-    obs_rt_mutated,
-    tidyr::nesting(drift_index, bound_index, resid_index, sv_index, sw_index, st0_index),
-    response,
-    rt_p,
-    fill = list(rt_q = NA)
-  )
+  # Add rt_p column
+  obs_rt_quantiles[, rt_p := rep(rt_p, .N / length(rt_p))]
 
-  # Calculate observed response proportions
-  obs_p_temp <- dplyr::tibble(
-    rt = rt,
-    response = response,
-    drift_index = drift_index,
-    bound_index = bound_index,
-    resid_index = resid_index,
-    sv_index = sv_index,
-    sw_index = sw_index,
-    st0_index = st0_index
-  )
+  # Calculate Observed Response Proportions ---------------------------------
 
-  obs_p_grouped <- dplyr::group_by(
-    obs_p_temp,
-    drift_index, bound_index, resid_index, sv_index, sw_index, st0_index, response
-  )
+  obs_p_resp <- obs_dt[, .(n_resp = .N), by = grp_vars]
+  obs_p_resp[, p_resp := n_resp / sum(n_resp),
+             by = c("drift_index", "bound_index", "resid_index",
+                    "sv_index", "sw_index", "st0_index")]
 
-  obs_p_summarized <- dplyr::summarize(obs_p_grouped, n_resp = dplyr::n(), .groups = "keep")
+  # Return Observed Only if No Parameters -----------------------------------
 
-  obs_p_ungrouped <- dplyr::ungroup(obs_p_summarized)
-
-  obs_p_completed <- tidyr::complete(
-    obs_p_ungrouped,
-    tidyr::nesting(drift_index, bound_index, resid_index, sv_index, sw_index, st0_index),
-    response,
-    fill = list(n_resp = 0)
-  )
-
-  obs_p_regrouped <- dplyr::group_by(
-    obs_p_completed, drift_index, bound_index,
-    resid_index, sv_index, sw_index, st0_index
-  )
-
-  obs_p_resp <- dplyr::mutate(
-    .data = obs_p_regrouped,
-    p_resp = .data$n_resp / sum(.data$n_resp)
-    )
-
-  if (!is.null(par)) {
-    par_names <- c(
-      paste0("a[", 1:n_bound, "]"),
-      paste0("v[", 1:n_drift, "]"),
-      paste0("w[", 1:n_bound, "]"),
-      paste0("t0[", 1:n_resid, "]"),
-      paste0("sv[", 1:n_sv, "]"),
-      paste0("sw[", 1:n_sw, "]"),
-      paste0("st0[", 1:n_st0, "]")
-    )
-
-    par_to_use <- rep(0, length(par_names))
-    names(par_to_use) <- par_names
-    overlap <- dplyr::intersect(names(par_to_use), names(par))
-    par_to_use[overlap] <- par[overlap]
-
-    fitDF_temp <- tidyr::expand_grid(
-      tidyr::nesting(drift_index, bound_index, resid_index, sv_index, sw_index, st0_index),
-      response = c("upper", "lower"),
-      rt_p = rt_p
-    )
-
-    fitDF <- dplyr::mutate(fitDF_temp, rt_q = NA, p_resp = NA)
-
-    for (i in 1:nrow(fitDF)) {
-
-      fitDF$rt_q[i] <- q_wdm(
-        p = fitDF$rt_p[i],
-        response = fitDF$response[i],
-        a = par_to_use[paste0("a[", fitDF$bound_index[i], "]")],
-        v = par_to_use[paste0("v[", fitDF$drift_index[i], "]")],
-        w = par_to_use[paste0("w[", fitDF$bound_index[i], "]")],
-        t0 = par_to_use[paste0("t0[", fitDF$resid_index[i], "]")],
-        sv = par_to_use[paste0("sv[", fitDF$sv_index[i], "]")],
-        sw = par_to_use[paste0("sw[", fitDF$sw_index[i], "]")],
-        st0 = par_to_use[paste0("st0[", fitDF$st0_index[i], "]")]
-      )
-
-      fitDF$p_resp[i] <- WienR::WienerCDF(
-        t = Inf,
-        response = fitDF$response[i],
-        a = par_to_use[paste0("a[", fitDF$bound_index[i], "]")],
-        v = par_to_use[paste0("v[", fitDF$drift_index[i], "]")],
-        w = par_to_use[paste0("w[", fitDF$bound_index[i], "]")],
-        t0 = par_to_use[paste0("t0[", fitDF$resid_index[i], "]")],
-        sv = par_to_use[paste0("sv[", fitDF$sv_index[i], "]")],
-        sw = par_to_use[paste0("sw[", fitDF$sw_index[i], "]")],
-        st0 = par_to_use[paste0("st0[", fitDF$st0_index[i], "]")]
-      )$value
-    }
-
-    if (is.numeric(response)) {
-      fitDF <- dplyr::mutate(
-        fitDF,
-        response = as.numeric(factor(.data$response, levels = c("upper", "lower")))
-      )
-    }
-
-    fitDT <- data.table::setDT(fitDF)
-
-    fitDT[, response := dplyr::case_when(
-      .data$response == "upper" ~ 1,
-      .data$response == "lower" ~ 0
-    )]
-
-    obs_joined <- dplyr::full_join(obs_p_resp, obs_rt_quantiles)
-    obs_with_source <- dplyr::mutate(obs_joined, source = "Observed")
-    fit_with_source <- dplyr::mutate(fitDT, source = "Fitted")
-    obs_fit_data <- dplyr::full_join(obs_with_source, fit_with_source)
-
-    return(obs_fit_data)
-  } else {
-    return(dplyr::full_join(obs_p_resp, obs_rt_quantiles))
+  if (is.null(par)) {
+    result <- merge(obs_p_resp, obs_rt_quantiles, by = grp_vars, all = TRUE)
+    return(result)
   }
+
+  # Build Parameter Vector --------------------------------------------------
+
+  par_names <- c(
+    paste0("a[", 1:n_bound, "]"),
+    paste0("v[", 1:n_drift, "]"),
+    paste0("w[", 1:n_bound, "]"),
+    paste0("t0[", 1:n_resid, "]"),
+    paste0("sv[", 1:n_sv, "]"),
+    paste0("sw[", 1:n_sw, "]"),
+    paste0("st0[", 1:n_st0, "]")
+  )
+
+  par_to_use <- rep(0, length(par_names))
+  names(par_to_use) <- par_names
+  overlap <- intersect(names(par_to_use), names(par))
+  par_to_use[overlap] <- par[overlap]
+
+  # Create Prediction Grid --------------------------------------------------
+
+  fit_dt <- data.table::CJ(
+    drift_index = 1:n_drift,
+    bound_index = 1:n_bound,
+    resid_index = 1:n_resid,
+    sv_index = 1:n_sv,
+    sw_index = 1:n_sw,
+    st0_index = 1:n_st0,
+    response = c("upper", "lower"),
+    rt_p = rt_p
+  )
+
+  # Calculate Fitted Quantiles and Probabilities ---------------------------
+
+  fit_dt[, rt_q := q_wdm(
+    p = rt_p,
+    response = response,
+    a = par_to_use[paste0("a[", bound_index, "]")],
+    v = par_to_use[paste0("v[", drift_index, "]")],
+    w = par_to_use[paste0("w[", bound_index, "]")],
+    t0 = par_to_use[paste0("t0[", resid_index, "]")],
+    sv = par_to_use[paste0("sv[", sv_index, "]")],
+    sw = par_to_use[paste0("sw[", sw_index, "]")],
+    st0 = par_to_use[paste0("st0[", st0_index, "]")]
+  )]
+
+  fit_dt[, p_resp := WienR::WienerCDF(
+    t = Inf,
+    response = response,
+    a = par_to_use[paste0("a[", bound_index, "]")],
+    v = par_to_use[paste0("v[", drift_index, "]")],
+    w = par_to_use[paste0("w[", bound_index, "]")],
+    t0 = par_to_use[paste0("t0[", resid_index, "]")],
+    sv = par_to_use[paste0("sv[", sv_index, "]")],
+    sw = par_to_use[paste0("sw[", sw_index, "]")],
+    st0 = par_to_use[paste0("st0[", st0_index, "]")]
+  )$value]
+
+  # Handle Numeric Response -------------------------------------------------
+
+  if (is.numeric(response)) {
+    fit_dt[, response := as.numeric(factor(response, levels = c("upper", "lower")))]
+  }
+
+  # Combine Observed and Fitted ---------------------------------------------
+
+  obs_combined <- merge(obs_p_resp, obs_rt_quantiles, by = grp_vars, all = TRUE)
+  obs_combined[, source := "Observed"]
+  fit_dt[, source := "Fitted"]
+
+  result <- rbind(obs_combined, fit_dt, fill = TRUE)
+
+  return(result)
 }

@@ -6,7 +6,7 @@
 \alias{pcjtools-package}
 \title{A suite of tools built to make data wrangling and analysis easier}
 \description{
-What the package does (one paragraph).
+A collection of tools developed to make data analysis in R easier.
 }
 \author{
 \strong{Maintainer}: Pierce Johnson \email{johnsonpierce.c@gmail.com} (\href{https://orcid.org/0009-0002-8517-2452}{ORCID})

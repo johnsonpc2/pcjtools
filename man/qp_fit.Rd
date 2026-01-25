@@ -2,7 +2,7 @@
 % Please edit documentation in R/qp_fit.R
 \name{qp_fit}
 \alias{qp_fit}
-\title{Title}
+\title{Quick Q–P (Quantile–Probability) Fit for the Drift–Diffusion Model}
 \usage{
 qp_fit(
   rt,
@@ -18,31 +18,62 @@ qp_fit(
 )
 }
 \arguments{
-\item{rt}{The RTs of decisions}
+\item{rt}{Response-time vector (seconds).}
 
-\item{response}{What the subject chose a trial}
+\item{response}{Choice vector: character ("upper"/"lower") or numeric (1/0).}
 
-\item{par}{Parameters}
+\item{par}{Named numeric vector with DDM parameters (see \emph{Details}). If
+supplied, fitted quantiles/probabilities are appended to the output.}
 
-\item{rt_p}{The percentiles to calculate from the RT distribution.}
+\item{rt_p}{Numeric vector of quantiles to calculate (default =
+c(0.1, 0.3, 0.5, 0.7, 0.9)).}
 
-\item{drift_index}{The index of the drift rate value.}
+\item{drift_index}{Trial-by-trial integer mapping to the drift-rate
+parameter (allows across-condition variability).}
 
-\item{bound_index}{The index of the boundary.}
+\item{bound_index}{Trial-by-trial mapping to boundary-separation parameter.}
 
-\item{resid_index}{The index of residual}
+\item{resid_index}{Trial-by-trial mapping to non-decision-time parameter.}
 
-\item{sv_index}{Trial-level variance of the draft rate}
+\item{sv_index}{Trial-by-trial mapping to drift-rate variability parameter.}
 
-\item{sw_index}{Variance in the starting position (I think)}
+\item{sw_index}{Trial-by-trial mapping to starting-point variability.}
 
-\item{st0_index}{Variance of the non-decision time}
+\item{st0_index}{Trial-by-trial mapping to non-decision-time variability.}
 }
 \value{
-Something
+A \code{data.table} with columns:
+\itemize{
+\item \code{drift_index}, \code{bound_index}, \code{resid_index}, \code{sv_index}, \code{sw_index}, \code{st0_index}: Condition indices
+\item \code{response}: "upper" or "lower"
+\item \code{rt_p}: Quantile probability
+\item \code{rt_q}: Observed RT quantile (seconds)
+\item \code{p_resp}: Observed choice proportion
+\item \code{source}: "Observed" or "Fitted" (when \code{par} supplied)
+}
 }
 \description{
-Title
+Compute observed quantiles and choice probabilities from a data set and,
+optionally, the corresponding predictions from a fitted drift–diffusion model.
+The function is designed for the "quantile–probability" method advocated by
+Ratcliff & Tuerlinckx (2002) and Ratcliff & McKoon (2008): RT quantiles
+(default: 0.1, 0.3, 0.5, 0.7, 0.9) are plotted against the proportion of
+choices for each condition, giving a compact graphical summary of accuracy,
+speed, and distributional shape.
+}
+\details{
+When \code{par} is provided, predicted quantiles are obtained with \code{q_wdm()}
+(quantile function for the Wiener diffusion model) and choice probabilities
+with \code{WienR::WienerCDF()}. Parameters should be named in the style produced
+by \code{WienerDM} or \code{rtdists}: \verb{a[1], v[1], w[1], t0[1], sv[1], sw[1], st0[1]}
+(indices correspond to the mapping vectors above). Any parameter not
+supplied defaults to 0 (or \code{a=1}, \code{w=0.5}).
+
+The function returns a \code{data.table} with one row per combination of
+condition indices, response, and quantile; columns \code{rt_q} and \code{p_resp}
+contain the observed (and, if \code{par} given, fitted) quantiles and choice
+proportions. This object can be piped directly into \code{ggplot2} to produce a
+quantile–probability plot (see examples).
 }
 \examples{
 \dontrun{
@@ -50,4 +81,18 @@ qp_fit(rt = data_sub$rt,
 response = data_sub$correct,
 par = ddm_fit$par)
 }
+
+}
+\references{
+Ratcliff, R. (1978). A theory of memory retrieval. \emph{Psychological Review},
+85(2), 59–108. \doi{10.1037/0033-295X.85.2.59}
+
+Ratcliff, R., & McKoon, G. (2008). The diffusion decision model: Theory
+and data for two-choice decision tasks. \emph{Neural Computation}, 20(4),
+873–922. \doi{10.1162/neco.2008.12-06-420}
+
+Ratcliff, R., & Tuerlinckx, F. (2002). Estimating parameters of the
+diffusion model: Approaches to dealing with contaminant reaction times and
+parameter variability. \emph{Psychonomic Bulletin & Review}, 9(3), 438–481.
+\doi{10.3758/BF03196302}
 }

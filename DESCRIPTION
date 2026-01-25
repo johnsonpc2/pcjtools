@@ -6,18 +6,14 @@ Authors@R:
     email = "johnsonpierce.c@gmail.com",
     role = c("aut", "cre"),
     comment = c(ORCID = "0009-0002-8517-2452"))
-Description: What the package does (one paragraph).
+Description: A collection of tools developed to make data analysis in R easier.
 License: GPL (>= 3)
 Imports: 
     data.table,
-    dplyr,
     ggplot2,
     pbapply,
     purrr,
-    rlang,
-    stats,
     systemfonts,
-    tidyr,
     ucminf,
     WienR
 Encoding: UTF-8
@@ -26,5 +22,6 @@ RoxygenNote: 7.3.3
 Suggests: 
     MASS (>= 7.3),
     spelling,
+    stats (>= 4.5.0),
     testthat (>= 3.0.0)
 Language: en-US

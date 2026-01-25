@@ -80,20 +80,15 @@ calculate_distance <- function(method, matrix) {
 
 matrix_melt <- function(dist_mat, name_key, x_name,
                         dist_method, is_interval = FALSE){
-
   suffix <- if (is_interval) "_interval" else ""
   value_name <- paste0(x_name, "_", dist_method, suffix)
 
   long.temp <- data.table::melt(
-    data = data.table::as.data.table(dist_mat)[, stimulus := names(name_key)],
+    data = data.table::as.data.table(dist_mat, keep.rownames = "stimulus"),
     id.var = 'stimulus',
     variable.name = 'prev_stimulus',
     value.name = value_name
   )
 
-  long.temp[, stimulus := name_key[as.character(stimulus)]]
-  long.temp[, prev_stimulus := name_key[as.character(prev_stimulus)]]
-
   return(long.temp)
-
 }

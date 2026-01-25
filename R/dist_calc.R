@@ -89,15 +89,21 @@ distance <- function(x,
   matrix <- as.matrix(DT)
 
   if (interval_analysis) {
-
     # Interval Analysis
     interval.matrix <- t(as.matrix(apply(matrix, 1, diff)))
-
   }
 
   # 3) Use lapply to calculate all requested distance matrices
   distance_matrices <- lapply(distances, function(method) {
-    calculate_distance(method, matrix)
+    dist_mat <- calculate_distance(method, matrix)
+
+    # Apply names to matrix rows and columns if name_key is provided
+    if (!is.null(name_key)) {
+      rownames(dist_mat) <- name_key[rownames(dist_mat)]
+      colnames(dist_mat) <- name_key[colnames(dist_mat)]
+    }
+
+    return(dist_mat)
   })
 
   # Name the list elements
@@ -106,12 +112,19 @@ distance <- function(x,
   # 3b) If interval_analysis is TRUE, calculate distances on interval matrix
   if (interval_analysis) {
     interval_distance_matrices <- lapply(distances, function(method) {
-      calculate_distance(method, interval.matrix)
+      dist_mat <- calculate_distance(method, interval.matrix)
+
+      # Apply names to interval matrix rows and columns if name_key is provided
+      if (!is.null(name_key)) {
+        rownames(dist_mat) <- name_key[rownames(dist_mat)]
+        colnames(dist_mat) <- name_key[colnames(dist_mat)]
+      }
+
+      return(dist_mat)
     })
 
     # Name the list elements
     names(interval_distance_matrices) <- distances
-
   }
 
   # 4) If name_key is supplied, melt each matrix to long format

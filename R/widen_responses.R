@@ -47,27 +47,21 @@
 #' result2 <- widen_responses(survey_data2, id_col = "participant_id")
 
 widen_responses <- function(DT, id_col = "sona_id") {
-
   # Convert to data.table if not already
   if (!inherits(x = DT, what = "data.table")) {
     DT <- data.table::as.data.table(DT)
   }
-
   # Make a copy to avoid modifying by reference
   DT <- data.table::copy(DT)
-
   # Extract all key-value pairs from all rows for each subject
   result_list <- lapply(unique(DT[[id_col]]), function(subj_id) {
-
     # Get all responses for this subject
     subj_responses <- DT[get(id_col) == subj_id, response]
-
     # Combine all responses into one list
     all_values <- list()
-
     for (response_str in subj_responses) {
-      # Extract all "key":"value" pairs
-      matches <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*\\""?([^"",}]+)\\""?')[[1]]
+      # First try to match regular "key":"value" pairs
+      matches <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*\\""([^""]+)\\""')[[1]]
 
       if (nrow(matches) > 0) {
         for (j in 1:nrow(matches)) {
@@ -87,8 +81,29 @@ widen_responses <- function(DT, id_col = "sona_id") {
           }
         }
       }
-    }
 
+      # Also try to match "key":["value"] patterns (arrays)
+      array_matches <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*\\[\\""([^""]+)\\""\\]')[[1]]
+
+      if (nrow(array_matches) > 0) {
+        for (j in 1:nrow(array_matches)) {
+          key <- array_matches[j, 2]
+          value <- array_matches[j, 3]
+          # If key already exists, append a number to make it unique
+          if (key %in% names(all_values)) {
+            counter <- 2
+            new_key <- paste0(key, "_", counter)
+            while (new_key %in% names(all_values)) {
+              counter <- counter + 1
+              new_key <- paste0(key, "_", counter)
+            }
+            all_values[[new_key]] <- value
+          } else {
+            all_values[[key]] <- value
+          }
+        }
+      }
+    }
     # Convert to data.table with one row
     if (length(all_values) > 0) {
       dt_row <- data.table::as.data.table(all_values)
@@ -98,7 +113,6 @@ widen_responses <- function(DT, id_col = "sona_id") {
       return(NULL)
     }
   })
-
   # Combine all rows
   result_dt <- data.table::rbindlist(result_list, fill = TRUE)
 

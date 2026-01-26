@@ -18,4 +18,5 @@ NULL
 utils::globalVariables(c("sim_index", "x", "choice",
                          "p_resp", "N", "rt", "rt_q",
                          ".", "n_resp", "rt_p",
-                         "stimulus", "prev_stimulus"))
+                         "stimulus", "prev_stimulus",
+                         "response"))

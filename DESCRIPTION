@@ -13,6 +13,7 @@ Imports:
     ggplot2,
     pbapply,
     purrr,
+    stringr,
     systemfonts,
     ucminf,
     WienR

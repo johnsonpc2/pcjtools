@@ -4,13 +4,17 @@
 \alias{recode_cols}
 \title{An efficient variable recoder to change column types in a datatable}
 \usage{
-recode_cols(dt, col_types, .verbose = FALSE)
+recode_cols(dt, cols, class = NULL, .verbose = FALSE)
 }
 \arguments{
 \item{dt}{A datatable with columns you wish to recode.}
 
-\item{col_types}{A named list of columns to recode with how they should be
-recoded in the style of col_name = "col_type".}
+\item{cols}{Either a named list of columns to recode (col_name = "col_type"),
+a numeric vector of column indices to recode, or a character vector of column names.}
+
+\item{class}{Optional. When cols is a numeric/character vector, this specifies
+the target type for all columns. Can be a single type (applied to all) or a vector
+matching the length of cols. Ignored when cols is a named list.}
 
 \item{.verbose}{Logical. Should results of recoding be reported?}
 }
@@ -24,11 +28,25 @@ An efficient variable recoder to change column types in a datatable
 data <- data.table::data.table(
   name = rep(c("Alice", "Bob", "Charlie"), length.out = 10),
   age = as.character(rep(25:30, length.out = 10)),
-  score = as.character(runif(10, 70, 100))
-  )
+  score = as.character(runif(10, 70, 100)),
+  height = as.character(runif(10, 150, 190))
+)
 
+# Method 1: Named list (original functionality)
 recode_cols(data, list(
   age = "integer",
   score = "numeric"
-  ))
+))
+
+# Method 2: Column indices with single type
+recode_cols(data, cols = 2:4, class = "numeric")
+
+# Method 3: Column indices with vector of types
+recode_cols(data, cols = 2:4, class = c("integer", "numeric", "numeric"))
+
+# Method 4: Column names with single type
+recode_cols(data, cols = c("age", "score"), class = "numeric")
+
+# Method 5: Column names with vector of types
+recode_cols(data, cols = c("age", "score"), class = c("integer", "numeric"))
 }

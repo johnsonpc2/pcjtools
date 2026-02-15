@@ -23,6 +23,6 @@ RoxygenNote: 7.3.3
 Suggests: 
     MASS (>= 7.3),
     spelling,
-    stats (>= 4.5.0),
+    stats,
     testthat (>= 3.0.0)
 Language: en-US

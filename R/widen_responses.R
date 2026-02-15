@@ -78,17 +78,13 @@ widen_responses <- function(DT, id_col = "sona_id") {
 
     for (response_str in subj_responses) {
 
-      # Match "key":value where value can be:
-      # - a number (unquoted)
-      # - a quoted string
-      # - an empty string ""
-      # Pattern matches everything after the colon until comma, closing brace, or bracket
-      matches <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*([^,""}\\]]+)')[[1]]
+      # Pattern 1: Match "key":"value" (quoted strings)
+      matches_quoted <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*\\""([^""]+)\\""')[[1]]
 
-      if (nrow(matches) > 0) {
-        for (j in 1:nrow(matches)) {
-          key <- matches[j, 2]
-          value <- trimws(matches[j, 3])
+      if (nrow(matches_quoted) > 0) {
+        for (j in 1:nrow(matches_quoted)) {
+          key <- matches_quoted[j, 2]
+          value <- matches_quoted[j, 3]
 
           # If key already exists, append a number to make it unique
           if (key %in% names(all_values)) {
@@ -100,6 +96,45 @@ widen_responses <- function(DT, id_col = "sona_id") {
             }
             all_values[[new_key]] <- value
           } else {
+            all_values[[key]] <- value
+          }
+        }
+      }
+
+      # Pattern 2: Match "key":["value"] (arrays with quoted values)
+      array_matches <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*\\[\\""([^""]+)\\""\\]')[[1]]
+
+      if (nrow(array_matches) > 0) {
+        for (j in 1:nrow(array_matches)) {
+          key <- array_matches[j, 2]
+          value <- array_matches[j, 3]
+
+          # If key already exists, append a number to make it unique
+          if (key %in% names(all_values)) {
+            counter <- 2
+            new_key <- paste0(key, "_", counter)
+            while (new_key %in% names(all_values)) {
+              counter <- counter + 1
+              new_key <- paste0(key, "_", counter)
+            }
+            all_values[[new_key]] <- value
+          } else {
+            all_values[[key]] <- value
+          }
+        }
+      }
+
+      # Pattern 3: Match "key":number (unquoted numeric values or empty strings)
+      # This pattern should NOT match if the value starts with a quote
+      matches_numeric <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*([^""\\[,}]+)(?=[,}])')[[1]]
+
+      if (nrow(matches_numeric) > 0) {
+        for (j in 1:nrow(matches_numeric)) {
+          key <- matches_numeric[j, 2]
+          value <- trimws(matches_numeric[j, 3])
+
+          # Only add if this key hasn't been added by previous patterns
+          if (!(key %in% names(all_values))) {
             all_values[[key]] <- value
           }
         }

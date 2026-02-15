@@ -10,7 +10,8 @@ widen_responses(DT, id_col = "sona_id")
 \item{DT}{A data frame or data.table containing survey response data. Must
 include a column with subject identifiers and a column named "response"
 containing JSON-style strings with question-answer pairs in the format:
-\code{'{"question1":"answer1","question2":"answer2"}'}.}
+\code{'{"question1":"answer1","question2":"answer2"}'} or
+\code{'{"question1":1,"question2":2}'} (with unquoted numeric values).}
 
 \item{id_col}{Character string specifying the name of the column containing
 subject identifiers. Default is "sona_id".}
@@ -30,7 +31,7 @@ response rows, all responses are combined into a single row. Duplicate
 question keys are handled by appending numeric suffixes (_2, _3, etc.).
 }
 \examples{
-# Create sample survey data with JSON-style responses
+# Create sample survey data with JSON-style responses (quoted values)
 survey_data <- data.table::data.table(
   sona_id = c(101, 101, 102, 103),
   response = c(
@@ -44,13 +45,23 @@ survey_data <- data.table::data.table(
 # Parse responses to wide format
 result <- widen_responses(survey_data, id_col = "sona_id")
 
-# With custom ID column name
+# Create sample survey data with numeric values (unquoted)
 survey_data2 <- data.table::data.table(
+  sona_id = c(201, 202),
+  response = c(
+    '{"Automatic":4,"Names":4,"Driving":5}',
+    '{"Automatic":3,"Names":2,"Driving":4}'
+  )
+)
+result2 <- widen_responses(survey_data2, id_col = "sona_id")
+
+# With custom ID column name
+survey_data3 <- data.table::data.table(
   participant_id = c(1, 2),
   response = c(
     '{"question1":"answer1","question2":"answer2"}',
     '{"question1":"answer3","question3":"answer4"}'
   )
 )
-result2 <- widen_responses(survey_data2, id_col = "participant_id")
+result3 <- widen_responses(survey_data3, id_col = "participant_id")
 }

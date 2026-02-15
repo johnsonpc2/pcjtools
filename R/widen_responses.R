@@ -8,7 +8,8 @@
 #' @param DT A data frame or data.table containing survey response data. Must
 #'   include a column with subject identifiers and a column named "response"
 #'   containing JSON-style strings with question-answer pairs in the format:
-#'   \code{'{"question1":"answer1","question2":"answer2"}'}.
+#'   \code{'{"question1":"answer1","question2":"answer2"}'} or
+#'   \code{'{"question1":1,"question2":2}'} (with unquoted numeric values).
 #' @param id_col Character string specifying the name of the column containing
 #'   subject identifiers. Default is "sona_id".
 #'
@@ -22,7 +23,7 @@
 #' @export
 #'
 #' @examples
-#' # Create sample survey data with JSON-style responses
+#' # Create sample survey data with JSON-style responses (quoted values)
 #' survey_data <- data.table::data.table(
 #'   sona_id = c(101, 101, 102, 103),
 #'   response = c(
@@ -36,59 +37,59 @@
 #' # Parse responses to wide format
 #' result <- widen_responses(survey_data, id_col = "sona_id")
 #'
-#' # With custom ID column name
+#' # Create sample survey data with numeric values (unquoted)
 #' survey_data2 <- data.table::data.table(
+#'   sona_id = c(201, 202),
+#'   response = c(
+#'     '{"Automatic":4,"Names":4,"Driving":5}',
+#'     '{"Automatic":3,"Names":2,"Driving":4}'
+#'   )
+#' )
+#' result2 <- widen_responses(survey_data2, id_col = "sona_id")
+#'
+#' # With custom ID column name
+#' survey_data3 <- data.table::data.table(
 #'   participant_id = c(1, 2),
 #'   response = c(
 #'     '{"question1":"answer1","question2":"answer2"}',
 #'     '{"question1":"answer3","question3":"answer4"}'
 #'   )
 #' )
-#' result2 <- widen_responses(survey_data2, id_col = "participant_id")
+#' result3 <- widen_responses(survey_data3, id_col = "participant_id")
 
 widen_responses <- function(DT, id_col = "sona_id") {
+
   # Convert to data.table if not already
   if (!inherits(x = DT, what = "data.table")) {
     DT <- data.table::as.data.table(DT)
   }
+
   # Make a copy to avoid modifying by reference
   DT <- data.table::copy(DT)
+
   # Extract all key-value pairs from all rows for each subject
   result_list <- lapply(unique(DT[[id_col]]), function(subj_id) {
+
     # Get all responses for this subject
     subj_responses <- DT[get(id_col) == subj_id, response]
+
     # Combine all responses into one list
     all_values <- list()
+
     for (response_str in subj_responses) {
-      # First try to match regular "key":"value" pairs
-      matches <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*\\""([^""]+)\\""')[[1]]
+
+      # Match "key":value where value can be:
+      # - a number (unquoted)
+      # - a quoted string
+      # - an empty string ""
+      # Pattern matches everything after the colon until comma, closing brace, or bracket
+      matches <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*([^,""}\\]]+)')[[1]]
 
       if (nrow(matches) > 0) {
         for (j in 1:nrow(matches)) {
           key <- matches[j, 2]
-          value <- matches[j, 3]
-          # If key already exists, append a number to make it unique
-          if (key %in% names(all_values)) {
-            counter <- 2
-            new_key <- paste0(key, "_", counter)
-            while (new_key %in% names(all_values)) {
-              counter <- counter + 1
-              new_key <- paste0(key, "_", counter)
-            }
-            all_values[[new_key]] <- value
-          } else {
-            all_values[[key]] <- value
-          }
-        }
-      }
+          value <- trimws(matches[j, 3])
 
-      # Also try to match "key":["value"] patterns (arrays)
-      array_matches <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*\\[\\""([^""]+)\\""\\]')[[1]]
-
-      if (nrow(array_matches) > 0) {
-        for (j in 1:nrow(array_matches)) {
-          key <- array_matches[j, 2]
-          value <- array_matches[j, 3]
           # If key already exists, append a number to make it unique
           if (key %in% names(all_values)) {
             counter <- 2
@@ -104,6 +105,7 @@ widen_responses <- function(DT, id_col = "sona_id") {
         }
       }
     }
+
     # Convert to data.table with one row
     if (length(all_values) > 0) {
       dt_row <- data.table::as.data.table(all_values)
@@ -113,6 +115,7 @@ widen_responses <- function(DT, id_col = "sona_id") {
       return(NULL)
     }
   })
+
   # Combine all rows
   result_dt <- data.table::rbindlist(result_list, fill = TRUE)
 

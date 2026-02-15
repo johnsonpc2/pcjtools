@@ -4,7 +4,7 @@
 \alias{widen_responses}
 \title{Parse and Reshape JSON-Style Survey Responses to Wide Format}
 \usage{
-widen_responses(DT, id_col = "sona_id")
+widen_responses(DT, id_col = "sona_id", prefix = NULL)
 }
 \arguments{
 \item{DT}{A data frame or data.table containing survey response data. Must
@@ -15,6 +15,11 @@ containing JSON-style strings with question-answer pairs in the format:
 
 \item{id_col}{Character string specifying the name of the column containing
 subject identifiers. Default is "sona_id".}
+
+\item{prefix}{Optional character string specifying the name of a column
+to use as a prefix for question names. If provided, each question key will
+be prefixed with the value from this column (e.g., "phase_questionkey").
+Default is NULL (no prefix).}
 }
 \value{
 A data.table in wide format with one row per unique subject. The
@@ -55,13 +60,26 @@ survey_data2 <- data.table::data.table(
 )
 result2 <- widen_responses(survey_data2, id_col = "sona_id")
 
-# With custom ID column name
+# With prefix column (e.g., survey phase)
 survey_data3 <- data.table::data.table(
+  sona_id = c(301, 301, 302),
+  phase = c("mindfulness_survey", "satisfaction_survey", "mindfulness_survey"),
+  response = c(
+    '{"Automatic":4,"Names":4}',
+    '{"Important":2,"Ideal":1}',
+    '{"Automatic":3,"Names":2}'
+  )
+)
+result3 <- widen_responses(survey_data3, id_col = "sona_id", prefix = "phase")
+# Result will have columns like: mindfulness_survey_Automatic, satisfaction_survey_Important
+
+# With custom ID column name
+survey_data4 <- data.table::data.table(
   participant_id = c(1, 2),
   response = c(
     '{"question1":"answer1","question2":"answer2"}',
     '{"question1":"answer3","question3":"answer4"}'
   )
 )
-result3 <- widen_responses(survey_data3, id_col = "participant_id")
+result4 <- widen_responses(survey_data4, id_col = "participant_id")
 }

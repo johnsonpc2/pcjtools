@@ -12,6 +12,10 @@
 #'   \code{'{"question1":1,"question2":2}'} (with unquoted numeric values).
 #' @param id_col Character string specifying the name of the column containing
 #'   subject identifiers. Default is "sona_id".
+#' @param prefix Optional character string specifying the name of a column
+#'   to use as a prefix for question names. If provided, each question key will
+#'   be prefixed with the value from this column (e.g., "phase_questionkey").
+#'   Default is NULL (no prefix).
 #'
 #' @return A data.table in wide format with one row per unique subject. The
 #'   first column is the subject identifier, followed by one column for each
@@ -47,17 +51,30 @@
 #' )
 #' result2 <- widen_responses(survey_data2, id_col = "sona_id")
 #'
-#' # With custom ID column name
+#' # With prefix column (e.g., survey phase)
 #' survey_data3 <- data.table::data.table(
+#'   sona_id = c(301, 301, 302),
+#'   phase = c("mindfulness_survey", "satisfaction_survey", "mindfulness_survey"),
+#'   response = c(
+#'     '{"Automatic":4,"Names":4}',
+#'     '{"Important":2,"Ideal":1}',
+#'     '{"Automatic":3,"Names":2}'
+#'   )
+#' )
+#' result3 <- widen_responses(survey_data3, id_col = "sona_id", prefix = "phase")
+#' # Result will have columns like: mindfulness_survey_Automatic, satisfaction_survey_Important
+#'
+#' # With custom ID column name
+#' survey_data4 <- data.table::data.table(
 #'   participant_id = c(1, 2),
 #'   response = c(
 #'     '{"question1":"answer1","question2":"answer2"}',
 #'     '{"question1":"answer3","question3":"answer4"}'
 #'   )
 #' )
-#' result3 <- widen_responses(survey_data3, id_col = "participant_id")
+#' result4 <- widen_responses(survey_data4, id_col = "participant_id")
 
-widen_responses <- function(DT, id_col = "sona_id") {
+widen_responses <- function(DT, id_col = "sona_id", prefix = NULL) {
 
   # Convert to data.table if not already
   if (!inherits(x = DT, what = "data.table")) {
@@ -73,17 +90,30 @@ widen_responses <- function(DT, id_col = "sona_id") {
     # Get all responses for this subject
     subj_responses <- DT[get(id_col) == subj_id, response]
 
+    # Get prefix values if prefix is specified
+    if (!is.null(prefix)) {
+      subj_prefixes <- DT[get(id_col) == subj_id, get(prefix)]
+    }
+
     # Combine all responses into one list
     all_values <- list()
 
-    for (response_str in subj_responses) {
+    for (i in seq_along(subj_responses)) {
+      response_str <- subj_responses[i]
+
+      # Get the prefix for this response if prefix is specified
+      current_prefix <- if (!is.null(prefix)) {
+        paste0(subj_prefixes[i], "_")
+      } else {
+        ""
+      }
 
       # Pattern 1: Match "key":"value" (quoted strings)
       matches_quoted <- stringr::str_match_all(response_str, '\\""([^""]+)"":\\s*\\""([^""]+)\\""')[[1]]
 
       if (nrow(matches_quoted) > 0) {
         for (j in 1:nrow(matches_quoted)) {
-          key <- matches_quoted[j, 2]
+          key <- paste0(current_prefix, matches_quoted[j, 2])
           value <- matches_quoted[j, 3]
 
           # If key already exists, append a number to make it unique
@@ -106,7 +136,7 @@ widen_responses <- function(DT, id_col = "sona_id") {
 
       if (nrow(array_matches) > 0) {
         for (j in 1:nrow(array_matches)) {
-          key <- array_matches[j, 2]
+          key <- paste0(current_prefix, array_matches[j, 2])
           value <- array_matches[j, 3]
 
           # If key already exists, append a number to make it unique
@@ -130,7 +160,7 @@ widen_responses <- function(DT, id_col = "sona_id") {
 
       if (nrow(matches_numeric) > 0) {
         for (j in 1:nrow(matches_numeric)) {
-          key <- matches_numeric[j, 2]
+          key <- paste0(current_prefix, matches_numeric[j, 2])
           value <- trimws(matches_numeric[j, 3])
 
           # Only add if this key hasn't been added by previous patterns

@@ -5,11 +5,19 @@
 #'
 #' @param gridlines Logical, defaults to TRUE. Should gridlines be generated
 #'  behind plotted data?
-#' @inheritParams theme_pcj_palettes
+#' @param palette A string specifying which color palette to use. Options include:
+#'  "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
+#'  "mono_yellow", or "ualbany". Set to NULL to skip palette application.
+#' @param continuous Logical. Is the variable being colored continuous (TRUE) or
+#'  discrete (FALSE)? Defaults to FALSE. Only used when palette is not NULL.
 #' @param font The font to be used in a plot. Defaults to Atkinson Hyperlegible.
+#' @param default_caption Logical or character. If TRUE (default), adds a caption
+#'  with "Revised: `current timestamp`". If FALSE, no caption is added. If a
+#'  character string is provided, uses that string as the caption text.
 #' @inheritDotParams ggplot2::theme
 #'
-#' @returns A plot object with the specified aesthetics.
+#' @returns A list containing the theme and optionally a color scale that can be
+#'  added to a ggplot object.
 #' @export
 #'
 #' @examples
@@ -22,12 +30,29 @@
 #'   ggplot2::geom_point() +
 #'   ggplot2::facet_wrap(~factor(cyl))
 #'
-#' # Apply custom theme
+#' # Apply custom theme with default palette and caption
 #' g1 + theme_pcj(font = "sans")
+#'
+#' # Apply custom theme with UAlbany palette
+#' g1 + theme_pcj(palette = "ualbany", continuous = FALSE, font = "sans")
+#'
+#' # Apply custom theme without caption
+#' g1 + theme_pcj(font = "sans", default_caption = FALSE)
+#'
+#' # Apply custom theme with custom caption and no palette
+#' g1 + theme_pcj(
+#'   font = "sans",
+#'   palette = NULL,
+#'   default_caption = "Figure 1: Motor Trends Data"
+#' )
 #' }
 
-theme_pcj <- function(gridlines = TRUE, palette = "default",
-                      font = "Atkinson Hyperlegible", ...) {
+theme_pcj <- function(gridlines = TRUE,
+                      palette = "default",
+                      continuous = FALSE,
+                      font = "Atkinson Hyperlegible",
+                      default_caption = TRUE,
+                      ...) {
 
   `%+replace%` <- ggplot2::`%+replace%`
 
@@ -472,6 +497,31 @@ theme_pcj <- function(gridlines = TRUE, palette = "default",
   }
 
   # Apply the theme with all defaults and user overrides
-  ggplot2::theme_void() %+replace%
+  theme_output <- ggplot2::theme_void() %+replace%
     do.call(ggplot2::theme, dots)
+
+  # Handle caption based on default_caption argument
+  if (is.character(default_caption)) {
+    # If it's a character string, use it as the caption
+    caption_text <- default_caption
+    theme_output <- theme_output +
+      ggplot2::labs(caption = caption_text)
+  } else if (isTRUE(default_caption)) {
+    # If TRUE, use the default timestamp caption
+    caption_text <- paste("Revised:", Sys.time())
+    theme_output <- theme_output +
+      ggplot2::labs(caption = caption_text)
+  }
+  # If FALSE or any other value, don't add a caption
+
+  # Return as a list if palette is specified, otherwise just the theme
+  if (!is.null(palette)) {
+    # Return a list that can be added to a plot
+    return(list(
+      theme_output,
+      theme_pcj_palettes(palette = palette, continuous = continuous)
+    ))
+  } else {
+    return(theme_output)
+  }
 }

@@ -35,7 +35,7 @@
 #' @examples
 #' \donttest{
 #' # Run simulation with default parameters
-#' results <- drift_mod()
+#' results <- drift_mod(font = "sans")
 #'
 #' # Access simulation data
 #' results$sim_results
@@ -44,7 +44,7 @@
 #' results <- drift_mod(nsims = 100, plots = FALSE)
 #'
 #' # Show legend on evidence plot
-#' results <- drift_mod(nsims = 100, show_legend = TRUE)
+#' results <- drift_mod(nsims = 100, show_legend = TRUE, font = "sans")
 #' }
 
 drift_mod <- function(nsims = 1000, v = 0.5, sv = 0, a = 2, w = 0.5, sw = 0.9,

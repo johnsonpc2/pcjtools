@@ -7,7 +7,9 @@
 theme_pcj(
   gridlines = TRUE,
   palette = "default",
+  continuous = FALSE,
   font = "Atkinson Hyperlegible",
+  default_caption = TRUE,
   ...
 )
 }
@@ -15,11 +17,18 @@ theme_pcj(
 \item{gridlines}{Logical, defaults to TRUE. Should gridlines be generated
 behind plotted data?}
 
-\item{palette}{A string. The name of the palette to be mapped to a variable,
-including: "default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
-"mono_yellow", or "ualbany".}
+\item{palette}{A string specifying which color palette to use. Options include:
+"default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
+"mono_yellow", or "ualbany". Set to NULL to skip palette application.}
+
+\item{continuous}{Logical. Is the variable being colored continuous (TRUE) or
+discrete (FALSE)? Defaults to FALSE. Only used when palette is not NULL.}
 
 \item{font}{The font to be used in a plot. Defaults to Atkinson Hyperlegible.}
+
+\item{default_caption}{Logical or character. If TRUE (default), adds a caption
+with "Revised: \verb{current timestamp}". If FALSE, no caption is added. If a
+character string is provided, uses that string as the caption text.}
 
 \item{...}{
   Arguments passed on to \code{\link[ggplot2:theme]{ggplot2::theme}}
@@ -204,7 +213,8 @@ elements.}
   }}
 }
 \value{
-A plot object with the specified aesthetics.
+A list containing the theme and optionally a color scale that can be
+added to a ggplot object.
 }
 \description{
 A function to create and save consistent plots with aesthetics chosen to
@@ -220,7 +230,20 @@ g1 <- ggplot2::ggplot(
   ggplot2::geom_point() +
   ggplot2::facet_wrap(~factor(cyl))
 
-# Apply custom theme
+# Apply custom theme with default palette and caption
 g1 + theme_pcj(font = "sans")
+
+# Apply custom theme with UAlbany palette
+g1 + theme_pcj(palette = "ualbany", continuous = FALSE, font = "sans")
+
+# Apply custom theme without caption
+g1 + theme_pcj(font = "sans", default_caption = FALSE)
+
+# Apply custom theme with custom caption and no palette
+g1 + theme_pcj(
+  font = "sans",
+  palette = NULL,
+  default_caption = "Figure 1: Motor Trends Data"
+)
 }
 }

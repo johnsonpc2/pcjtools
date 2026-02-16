@@ -8,7 +8,7 @@ theme_pcj(
   gridlines = TRUE,
   palette = "default",
   continuous = FALSE,
-  font = "sans",
+  font = "Atkinson Hyperlegible",
   default_caption = TRUE,
   ...
 )

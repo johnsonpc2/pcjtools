@@ -50,7 +50,7 @@
 theme_pcj <- function(gridlines = TRUE,
                       palette = "default",
                       continuous = FALSE,
-                      font = "sans",
+                      font = "Atkinson Hyperlegible",
                       default_caption = TRUE,
                       ...) {
 
@@ -515,7 +515,7 @@ theme_pcj <- function(gridlines = TRUE,
   if (is.character(default_caption)) {
     output_list <- c(output_list, list(ggplot2::labs(caption = default_caption)))
   } else if (isTRUE(default_caption)) {
-    caption_text <- paste("Revised:", Sys.time())
+    caption_text <- paste("Revised:", format(Sys.time(), "%H:%M, %Y%m%d"))
     output_list <- c(output_list, list(ggplot2::labs(caption = caption_text)))
   }
 

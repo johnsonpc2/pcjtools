@@ -54,7 +54,7 @@ theme_pcj <- function(gridlines = TRUE, palette = "default",
     ggplot2::element_blank()
   }
 
-  ggplot2::theme_void(...) %+replace%
+  ggplot2::theme_void() %+replace%
     ggplot2::theme(
       line = ggplot2::element_line(
         color = colors[1],

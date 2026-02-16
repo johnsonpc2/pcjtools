@@ -8,7 +8,7 @@ theme_pcj(
   gridlines = TRUE,
   palette = "default",
   continuous = FALSE,
-  font = "Atkinson Hyperlegible",
+  font = "sans",
   default_caption = TRUE,
   ...
 )
@@ -24,7 +24,7 @@ behind plotted data?}
 \item{continuous}{Logical. Is the variable being colored continuous (TRUE) or
 discrete (FALSE)? Defaults to FALSE. Only used when palette is not NULL.}
 
-\item{font}{The font to be used in a plot. Defaults to Atkinson Hyperlegible.}
+\item{font}{The font to be used in a plot. Defaults to sans.}
 
 \item{default_caption}{Logical or character. If TRUE (default), adds a caption
 with "Revised: \verb{current timestamp}". If FALSE, no caption is added. If a
@@ -213,8 +213,8 @@ elements.}
   }}
 }
 \value{
-A list containing the theme and optionally a color scale that can be
-added to a ggplot object.
+A list containing the theme and optionally a color scale and caption
+that can be added to a ggplot object.
 }
 \description{
 A function to create and save consistent plots with aesthetics chosen to
@@ -234,7 +234,7 @@ g1 <- ggplot2::ggplot(
 g1 + theme_pcj(font = "sans")
 
 # Apply custom theme with UAlbany palette
-g1 + theme_pcj(palette = "ualbany", continuous = FALSE, font = "sans")
+g1 + theme_pcj(font = "sans", palette = "ualbany", continuous = FALSE)
 
 # Apply custom theme without caption
 g1 + theme_pcj(font = "sans", default_caption = FALSE)

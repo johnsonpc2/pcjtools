@@ -67,7 +67,7 @@ behind plotted data?}
 "mono_yellow", or "ualbany". Set to NULL to skip palette application.}
     \item{\code{continuous}}{Logical. Is the variable being colored continuous (TRUE) or
 discrete (FALSE)? Defaults to FALSE. Only used when palette is not NULL.}
-    \item{\code{font}}{The font to be used in a plot. Defaults to Atkinson Hyperlegible.}
+    \item{\code{font}}{The font to be used in a plot. Defaults to sans.}
     \item{\code{default_caption}}{Logical or character. If TRUE (default), adds a caption
 with "Revised: \verb{current timestamp}". If FALSE, no caption is added. If a
 character string is provided, uses that string as the caption text.}

@@ -10,14 +10,14 @@
 #'  "mono_yellow", or "ualbany". Set to NULL to skip palette application.
 #' @param continuous Logical. Is the variable being colored continuous (TRUE) or
 #'  discrete (FALSE)? Defaults to FALSE. Only used when palette is not NULL.
-#' @param font The font to be used in a plot. Defaults to Atkinson Hyperlegible.
+#' @param font The font to be used in a plot. Defaults to sans.
 #' @param default_caption Logical or character. If TRUE (default), adds a caption
 #'  with "Revised: `current timestamp`". If FALSE, no caption is added. If a
 #'  character string is provided, uses that string as the caption text.
 #' @inheritDotParams ggplot2::theme
 #'
-#' @returns A list containing the theme and optionally a color scale that can be
-#'  added to a ggplot object.
+#' @returns A list containing the theme and optionally a color scale and caption
+#'  that can be added to a ggplot object.
 #' @export
 #'
 #' @examples
@@ -34,7 +34,7 @@
 #' g1 + theme_pcj(font = "sans")
 #'
 #' # Apply custom theme with UAlbany palette
-#' g1 + theme_pcj(palette = "ualbany", continuous = FALSE, font = "sans")
+#' g1 + theme_pcj(font = "sans", palette = "ualbany", continuous = FALSE)
 #'
 #' # Apply custom theme without caption
 #' g1 + theme_pcj(font = "sans", default_caption = FALSE)
@@ -50,7 +50,7 @@
 theme_pcj <- function(gridlines = TRUE,
                       palette = "default",
                       continuous = FALSE,
-                      font = "Atkinson Hyperlegible",
+                      font = "sans",
                       default_caption = TRUE,
                       ...) {
 
@@ -269,6 +269,14 @@ theme_pcj <- function(gridlines = TRUE,
 
   if (!"legend.key.width" %in% names(dots)) {
     dots$legend.key.width <- NULL  # Inherits from legend.key.size
+  }
+
+  if (!"legend.key.spacing.x" %in% names(dots)) {
+    dots$legend.key.spacing.x <- NULL  # Inherits from legend.spacing
+  }
+
+  if (!"legend.key.spacing.y" %in% names(dots)) {
+    dots$legend.key.spacing.y <- NULL  # Inherits from legend.spacing
   }
 
   if (!"legend.text" %in% names(dots)) {
@@ -500,28 +508,21 @@ theme_pcj <- function(gridlines = TRUE,
   theme_output <- ggplot2::theme_void() %+replace%
     do.call(ggplot2::theme, dots)
 
-  # Handle caption based on default_caption argument
-  if (is.character(default_caption)) {
-    # If it's a character string, use it as the caption
-    caption_text <- default_caption
-    theme_output <- theme_output +
-      ggplot2::labs(caption = caption_text)
-  } else if (isTRUE(default_caption)) {
-    # If TRUE, use the default timestamp caption
-    caption_text <- paste("Revised:", Sys.time())
-    theme_output <- theme_output +
-      ggplot2::labs(caption = caption_text)
-  }
-  # If FALSE or any other value, don't add a caption
+  # Build the output list
+  output_list <- list(theme_output)
 
-  # Return as a list if palette is specified, otherwise just the theme
-  if (!is.null(palette)) {
-    # Return a list that can be added to a plot
-    return(list(
-      theme_output,
-      theme_pcj_palettes(palette = palette, continuous = continuous)
-    ))
-  } else {
-    return(theme_output)
+  # Add caption as a separate labs() layer if requested
+  if (is.character(default_caption)) {
+    output_list <- c(output_list, list(ggplot2::labs(caption = default_caption)))
+  } else if (isTRUE(default_caption)) {
+    caption_text <- paste("Revised:", Sys.time())
+    output_list <- c(output_list, list(ggplot2::labs(caption = caption_text)))
   }
+
+  # Add color palette if specified
+  if (!is.null(palette)) {
+    output_list <- c(output_list, list(theme_pcj_palettes(palette = palette, continuous = continuous)))
+  }
+
+  return(output_list)
 }

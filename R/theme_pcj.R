@@ -290,7 +290,7 @@ theme_pcj <- function(gridlines = TRUE, palette = "default",
   }
 
   if (!"legend.box.margin" %in% names(dots)) {
-    dots$legend.box.margin <- ggplot2::margin(t = 5, r = 25, b = 0, l = 25)
+    dots$legend.box.margin <- ggplot2::margin(t = 5, r = 15, b = 5, l = 15)
   }
 
   if (!"legend.box.background" %in% names(dots)) {

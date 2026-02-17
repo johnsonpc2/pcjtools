@@ -14,6 +14,7 @@ Imports:
     grDevices,
     pbapply,
     purrr,
+    rstudioapi,
     stringr,
     systemfonts,
     ucminf,

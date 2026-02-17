@@ -8,14 +8,16 @@ plot_saver(
   plots,
   dir = ".",
   names = NULL,
+  use_device_size = TRUE,
+  preview = TRUE,
   device = NULL,
   path = NULL,
   scale = 1,
   width = NA,
   height = NA,
-  units = c("in", "cm", "mm", "px"),
+  units = "in",
   dpi = 900,
-  limitsize = TRUE,
+  limitsize = FALSE,
   bg = "transparent",
   create.dir = FALSE,
   ...
@@ -31,6 +33,14 @@ where plot(s) will be saved.}
 the \code{plots} list, or \code{NULL} (the default). Names to give to the plot
 files. If a single name string and > 1 plot is provided, each plot will
 be given that name followed by a numeric counter.}
+
+\item{use_device_size}{Logical. If TRUE (default), uses the current graphics
+device dimensions (e.g., the zoom window size). If FALSE, uses specified
+width and height.}
+
+\item{preview}{Logical. If TRUE (default), opens each plot in a new window
+before saving so you can verify the layout. Only works in interactive
+sessions. If FALSE, saves directly without preview.}
 
 \item{device}{Device to use. Can either be a device function
 (e.g. \link{png}), or one of "eps", "ps", "tex" (pictex),
@@ -85,6 +95,6 @@ g1 <- ggplot(
 ) +
   geom_point()
 
-plot_saver(plots = g1, dir = tempdir())
+plot_saver(plots = g1, dir = tempdir(), preview = FALSE)
 }
 }

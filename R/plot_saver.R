@@ -7,6 +7,12 @@
 #'   the `plots` list, or `NULL` (the default). Names to give to the plot
 #'   files. If a single name string and > 1 plot is provided, each plot will
 #'   be given that name followed by a numeric counter.
+#' @param use_device_size Logical. If TRUE (default), uses the current graphics
+#'   device dimensions (e.g., the zoom window size). If FALSE, uses specified
+#'   width and height.
+#' @param preview Logical. If TRUE (default), opens each plot in a new window
+#'   before saving so you can verify the layout. Only works in interactive
+#'   sessions. If FALSE, saves directly without preview.
 #' @inheritParams ggplot2::ggsave
 #'
 #' @returns (Invisibly) returns a list of the plots saved to file in the
@@ -24,19 +30,21 @@
 #' ) +
 #'   geom_point()
 #'
-#' plot_saver(plots = g1, dir = tempdir())
+#' plot_saver(plots = g1, dir = tempdir(), preview = FALSE)
 #' }
 plot_saver <- function(plots,
                        dir = ".",
                        names = NULL,
+                       use_device_size = TRUE,
+                       preview = TRUE,
                        device = NULL,
                        path = NULL,
                        scale = 1,
                        width = NA,
                        height = NA,
-                       units = c("in", "cm", "mm", "px"),
+                       units = "in",
                        dpi = 900,
-                       limitsize = TRUE,
+                       limitsize = FALSE,
                        bg = "transparent",
                        create.dir = FALSE,
                        ...) {
@@ -57,16 +65,8 @@ plot_saver <- function(plots,
     dots$scale <- scale
   }
 
-  if (!"width" %in% names(dots)) {
-    dots$width <- width
-  }
-
-  if (!"height" %in% names(dots)) {
-    dots$height <- height
-  }
-
   if (!"units" %in% names(dots)) {
-    dots$units <- match.arg(units)
+    dots$units <- units
   }
 
   if (!"dpi" %in% names(dots)) {
@@ -117,6 +117,61 @@ plot_saver <- function(plots,
 
   # Save plots
   for (i in seq_along(plots)) {
+
+    # Open preview window if requested AND in interactive session
+    if (preview && interactive()) {
+      # Open a new device window
+      if (.Platform$OS.type == "windows") {
+        grDevices::windows()
+      } else if (Sys.info()["sysname"] == "Darwin") {
+        grDevices::quartz()
+      } else {
+        grDevices::x11()
+      }
+
+      # Print the plot to the new window
+      print(plots[[i]])
+
+      # Prompt user to resize if needed
+      if (length(plots) > 1) {
+        readline(prompt = sprintf("Plot %d of %d displayed. Resize window if needed, then press [Enter] to save and continue: ", i, length(plots)))
+      } else {
+        readline(prompt = "Resize window if needed, then press [Enter] to save: ")
+      }
+    }
+
+    # Handle width and height
+    if (use_device_size && !"width" %in% names(dots) && !"height" %in% names(dots)) {
+      # Use current device size if available
+      if (length(grDevices::dev.list()) > 0) {
+        dev_size <- grDevices::dev.size("in")
+        dots$width <- dev_size[1]
+        dots$height <- dev_size[2]
+        message(sprintf("Using device dimensions: %g x %g inches",
+                        dev_size[1], dev_size[2]))
+      } else {
+        # No device open, use defaults
+        if (!"width" %in% names(dots)) {
+          dots$width <- if (!is.na(width)) width else 10
+        }
+        if (!"height" %in% names(dots)) {
+          dots$height <- if (!is.na(height)) height else 8
+        }
+        if (interactive()) {
+          message("No graphics device open. Using default dimensions: 10 x 8 inches")
+        }
+      }
+    } else {
+      # Use specified dimensions or defaults
+      if (!"width" %in% names(dots)) {
+        dots$width <- if (!is.na(width)) width else 10
+      }
+      if (!"height" %in% names(dots)) {
+        dots$height <- if (!is.na(height)) height else 8
+      }
+    }
+
+    # Save the plot
     do.call(ggplot2::ggsave, c(
       list(
         filename = filename[i],
@@ -124,6 +179,15 @@ plot_saver <- function(plots,
       ),
       dots
     ))
+
+    if (interactive()) {
+      message(sprintf("Saved: %s", filename[i]))
+    }
+
+    # Close the preview device if it was opened
+    if (preview && interactive() && length(grDevices::dev.list()) > 0) {
+      grDevices::dev.off()
+    }
   }
 
   invisible(plots)

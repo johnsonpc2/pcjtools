@@ -11,6 +11,7 @@ License: GPL (>= 3)
 Imports: 
     data.table,
     ggplot2,
+    grDevices,
     pbapply,
     purrr,
     stringr,

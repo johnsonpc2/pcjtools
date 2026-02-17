@@ -85,14 +85,21 @@ plot_saver <- function(plots,
     dots$create.dir <- create.dir
   }
 
-  # Input validation
+  # Validate width and height - must be NA or a single numeric value
   stopifnot(
     (ggplot2::is_ggplot(plots) || is.list(plots)),
     (dir.exists(dir) && is.character(dir) && length(dir) == 1L),
     (is.null(names) ||
        ((length(names) == 1L || length(names) == length(plots)) &&
-          is.character(names)))
+          is.character(names))),
+    (is.na(width)  || (is.numeric(width)  && length(width)  == 1L)),
+    (is.na(height) || (is.numeric(height) && length(height) == 1L))
   )
+
+  # Resolve width and height once before the loop since they are the
+  # same for all plots
+  user_width  <- if (!is.na(width))  width  else NULL
+  user_height <- if (!is.na(height)) height else NULL
 
   # Convert single plot to list
   if (ggplot2::is_ggplot(plots)) plots <- list(plots)
@@ -120,7 +127,6 @@ plot_saver <- function(plots,
 
     # Open preview window if requested AND in interactive session
     if (preview && interactive()) {
-      # Open a new device window
       if (.Platform$OS.type == "windows") {
         grDevices::windows()
       } else if (Sys.info()["sysname"] == "Darwin") {
@@ -129,46 +135,44 @@ plot_saver <- function(plots,
         grDevices::x11()
       }
 
-      # Print the plot to the new window
       print(plots[[i]])
 
-      # Prompt user to resize if needed
       if (length(plots) > 1) {
-        readline(prompt = sprintf("Plot %d of %d displayed. Resize window if needed, then press [Enter] to save and continue: ", i, length(plots)))
+        readline(prompt = sprintf(
+          "Plot %d of %d displayed. Resize window if needed, then press [Enter] to save and continue: ",
+          i, length(plots)
+        ))
       } else {
         readline(prompt = "Resize window if needed, then press [Enter] to save: ")
       }
     }
 
-    # Handle width and height
-    if (use_device_size && !"width" %in% names(dots) && !"height" %in% names(dots)) {
-      # Use current device size if available
-      if (length(grDevices::dev.list()) > 0) {
-        dev_size <- grDevices::dev.size("in")
-        dots$width <- dev_size[1]
-        dots$height <- dev_size[2]
-        message(sprintf("Using device dimensions: %g x %g inches",
-                        dev_size[1], dev_size[2]))
-      } else {
-        # No device open, use defaults
-        if (!"width" %in% names(dots)) {
-          dots$width <- if (!is.na(width)) width else 10
-        }
-        if (!"height" %in% names(dots)) {
-          dots$height <- if (!is.na(height)) height else 8
-        }
-        if (interactive()) {
-          message("No graphics device open. Using default dimensions: 10 x 8 inches")
-        }
-      }
+    # Resolve dimensions for this plot
+    iter_dots <- dots
+
+    if (!is.null(user_width)) {
+      iter_dots$width <- user_width
+    } else if (use_device_size && preview && interactive() &&
+               length(grDevices::dev.list()) > 0) {
+      iter_dots$width <- grDevices::dev.size("in")[1]
     } else {
-      # Use specified dimensions or defaults
-      if (!"width" %in% names(dots)) {
-        dots$width <- if (!is.na(width)) width else 10
-      }
-      if (!"height" %in% names(dots)) {
-        dots$height <- if (!is.na(height)) height else 8
-      }
+      iter_dots$width <- 10
+    }
+
+    if (!is.null(user_height)) {
+      iter_dots$height <- user_height
+    } else if (use_device_size && preview && interactive() &&
+               length(grDevices::dev.list()) > 0) {
+      iter_dots$height <- grDevices::dev.size("in")[2]
+    } else {
+      iter_dots$height <- 8
+    }
+
+    if (interactive()) {
+      message(sprintf("Saving plot %d of %d at %g x %g inches: %s",
+                      i, length(plots),
+                      iter_dots$width, iter_dots$height,
+                      filename[i]))
     }
 
     # Save the plot
@@ -177,12 +181,8 @@ plot_saver <- function(plots,
         filename = filename[i],
         plot = plots[[i]]
       ),
-      dots
+      iter_dots
     ))
-
-    if (interactive()) {
-      message(sprintf("Saved: %s", filename[i]))
-    }
 
     # Close the preview device if it was opened
     if (preview && interactive() && length(grDevices::dev.list()) > 0) {

@@ -24,10 +24,10 @@
 #' git_commit(message = "Updated analysis script", push = TRUE,
 #'            remote = "origin dev")
 #' }
-git_commit <- function(message,
-                       add = TRUE,
-                       push = FALSE,
-                       remote = "origin main") {
+git_push <- function(message,
+                     add = TRUE,
+                     push = FALSE,
+                     remote = "origin main") {
 
   stopifnot(
     is.character(message) && length(message) == 1L && nchar(message) > 0L,

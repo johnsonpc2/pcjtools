@@ -1,7 +1,9 @@
 AnalysisScript
+CMD
 DDM
 Der
 EZ
+GitLab
 Grasman
 Hyperlegible
 IMM
@@ -12,6 +14,7 @@ Modelling
 Nelder
 Nondecision
 ORCID
+Pavlovia
 Psychonomic
 RStudio
 Ratcliff
@@ -34,6 +37,7 @@ eps
 et
 geoms
 ggplot
+gitlab
 gridlines
 jpeg
 jsPsych

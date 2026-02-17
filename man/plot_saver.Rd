@@ -4,24 +4,73 @@
 \alias{plot_saver}
 \title{Efficiently Save Plot(s) to File with Consistent Settings}
 \usage{
-plot_saver(plots, dir = ".", names = NULL, ...)
+plot_saver(
+  plots,
+  dir = ".",
+  names = NULL,
+  device = NULL,
+  path = NULL,
+  scale = 1,
+  width = NA,
+  height = NA,
+  units = c("in", "cm", "mm", "px"),
+  dpi = 900,
+  limitsize = TRUE,
+  bg = "transparent",
+  create.dir = FALSE,
+  ...
+)
 }
 \arguments{
-\item{plots}{A ggplot object or list of gglot objects to save to file}
+\item{plots}{A ggplot object or list of ggplot objects to save to file}
 
 \item{dir}{A string or character vector containing the path to the directory
 where plot(s) will be saved.}
 
 \item{names}{A name string, list of name strings that matches the length of
-the \code{'plot'} list, or \code{NULL} (the default). Names to give to the plot files.
-If a single name string and > 1 plot is provided, each plot will be
-given that name followed by a numeric counter.}
+the \code{plots} list, or \code{NULL} (the default). Names to give to the plot
+files. If a single name string and > 1 plot is provided, each plot will
+be given that name followed by a numeric counter.}
 
-\item{...}{Optional arguments to be passed to \code{'ggsave()'}.}
+\item{device}{Device to use. Can either be a device function
+(e.g. \link{png}), or one of "eps", "ps", "tex" (pictex),
+"pdf", "jpeg", "tiff", "png", "bmp", "svg" or "wmf" (windows only). If
+\code{NULL} (default), the device is guessed based on the \code{filename} extension.}
+
+\item{path}{Path of the directory to save plot to: \code{path} and \code{filename}
+are combined to create the fully qualified file name. Defaults to the
+working directory.}
+
+\item{scale}{Multiplicative scaling factor.}
+
+\item{width, height}{Plot size in units expressed by the \code{units} argument.
+If not supplied, uses the size of the current graphics device.}
+
+\item{units}{One of the following units in which the \code{width} and \code{height}
+arguments are expressed: \code{"in"}, \code{"cm"}, \code{"mm"} or \code{"px"}.}
+
+\item{dpi}{Plot resolution. Also accepts a string input: "retina" (320),
+"print" (300), or "screen" (72). Only applies when converting pixel units,
+as is typical for raster output types.}
+
+\item{limitsize}{When \code{TRUE} (the default), \code{ggsave()} will not
+save images larger than 50x50 inches, to prevent the common error of
+specifying dimensions in pixels.}
+
+\item{bg}{Background colour. If \code{NULL}, uses the \code{plot.background} fill value
+from the plot theme.}
+
+\item{create.dir}{Whether to create new directories if a non-existing
+directory is specified in the \code{filename} or \code{path} (\code{TRUE}) or return an
+error (\code{FALSE}, default). If \code{FALSE} and run in an interactive session,
+a prompt will appear asking to create a new directory when necessary.}
+
+\item{...}{Other arguments passed on to the graphics device function,
+as specified by \code{device}.}
 }
 \value{
 (Invisibly) returns a list of the plots saved to file in the
-location given in \code{'dir'}.
+location given in \code{dir}.
 }
 \description{
 Efficiently Save Plot(s) to File with Consistent Settings

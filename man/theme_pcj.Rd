@@ -17,18 +17,21 @@ theme_pcj(
 \item{gridlines}{Logical, defaults to TRUE. Should gridlines be generated
 behind plotted data?}
 
-\item{palette}{A string specifying which color palette to use. Options include:
-"default", "neg_to_pos", "mono_printing", "mono_blue", "mono_red",
-"mono_yellow", or "ualbany". Set to NULL to skip palette application.}
+\item{palette}{A string specifying which color palette to use. Options
+include: "default", "neg_to_pos", "mono_printing", "mono_blue",
+"mono_red", "mono_yellow", or "ualbany". Set to NULL to skip palette
+application.}
 
-\item{continuous}{Logical. Is the variable being colored continuous (TRUE) or
-discrete (FALSE)? Defaults to FALSE. Only used when palette is not NULL.}
+\item{continuous}{Logical. Is the variable being colored continuous (TRUE)
+or discrete (FALSE)? Defaults to FALSE. Only used when palette is not
+NULL.}
 
-\item{font}{The font to be used in a plot. Defaults to sans.}
+\item{font}{The font to be used in a plot. Defaults to Atkinson
+Hyperlegible.}
 
-\item{default_caption}{Logical or character. If TRUE (default), adds a caption
-with "Revised: \verb{current timestamp}". If FALSE, no caption is added. If a
-character string is provided, uses that string as the caption text.}
+\item{default_caption}{Logical or character. If TRUE (default), adds a
+caption with "Revised: current timestamp". If FALSE, no caption is added.
+If a character string is provided, uses that string as the caption text.}
 
 \item{...}{
   Arguments passed on to \code{\link[ggplot2:theme]{ggplot2::theme}}
@@ -213,8 +216,8 @@ elements.}
   }}
 }
 \value{
-A list containing the theme and optionally a color scale and caption
-that can be added to a ggplot object.
+A list containing the theme and optionally a color scale and
+caption that can be added to a ggplot object.
 }
 \description{
 A function to create and save consistent plots with aesthetics chosen to

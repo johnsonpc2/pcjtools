@@ -3,7 +3,8 @@
 #' Stages, commits, and optionally pushes changes to a git repository
 #' directly from R using the RStudio terminal.
 #'
-#' @param message A string. The commit message.
+#' @param message A string. The commit message. Defaults to a timestamp backup
+#'  message (e.g., "20260217 14:35 Backup).
 #' @param add Logical. If TRUE (default), stages all changes with
 #'   "git add ." before committing.
 #' @param push Logical. If TRUE, pushes changes to the remote repository
@@ -24,17 +25,24 @@
 #' git_commit(message = "Updated analysis script", push = TRUE,
 #'            remote = "origin dev")
 #' }
-git_push <- function(message,
-                     add = TRUE,
-                     push = FALSE,
-                     remote = "origin main") {
+git_push <- function(message = paste(format(Sys.time(), "%Y%m%d %H:%M"), "Backup"),
+                       add = TRUE,
+                       push = FALSE,
+                       remote = "origin main") {
 
-  stopifnot(
-    is.character(message) && length(message) == 1L && nchar(message) > 0L,
-    is.logical(add) && length(add) == 1L,
-    is.logical(push) && length(push) == 1L,
-    is.character(remote) && length(remote) == 1L && nchar(remote) > 0L
-  )
+  # Input validation
+  if (!inherits(message, "character") || length(message) != 1L || nchar(message) == 0L) {
+    stop("'message' must be a non-empty character string.")
+  }
+  if (!inherits(add, "logical") || length(add) != 1L) {
+    stop("'add' must be a single logical value.")
+  }
+  if (!inherits(push, "logical") || length(push) != 1L) {
+    stop("'push' must be a single logical value.")
+  }
+  if (!inherits(remote, "character") || length(remote) != 1L || nchar(remote) == 0L) {
+    stop("'remote' must be a non-empty character string.")
+  }
 
   # Hard stop if not in an interactive RStudio session
   if (!interactive()) {

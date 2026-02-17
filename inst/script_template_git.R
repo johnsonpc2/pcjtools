@@ -28,6 +28,8 @@ devtools::install_github(
 pcjtools::load_packages(c("bcdstats", "data.table", "ggplot2",
                           "gtsummary", "pcjtools", "psych"))
 
+pcjtools::pavlovia_pull()
+
 clean_workspace(confirm = FALSE)
 
 
@@ -42,4 +44,6 @@ clean_workspace(confirm = FALSE)
 # Visualize -------------------------------------------------------------------
 
 
+# Push to GitHub --------------------------------------------------------------
 
+pcjtools::git_commit(push = TRUE)

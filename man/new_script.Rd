@@ -6,6 +6,7 @@
 \usage{
 new_script(
   script_name = "AnalysisScript",
+  template = "default",
   author = "Pierce C. Johnson",
   dir = ".",
   open = TRUE
@@ -16,11 +17,16 @@ new_script(
 the .R extension. Defaults to "AnalysisScript", which produces a file
 named YYYYMMDD_AnalysisScript.R.}
 
+\item{template}{A string. The template to use. Options are "default" for
+a standard analysis script, or "git" for a git-integrated analysis
+script that pulls from Pavlovia at the start and pushes to GitHub at
+the end. Defaults to "default".}
+
 \item{author}{A string. The name of the script author. Defaults to
 "Pierce C. Johnson".}
 
-\item{dir}{A string. The path to the directory where the new script will be
-saved. Defaults to the current working directory.}
+\item{dir}{A string. The path to the directory where the new script will
+be saved. Defaults to the current working directory.}
 
 \item{open}{Logical. If TRUE (default), opens the new script in RStudio
 after creation. Only works in interactive sessions.}
@@ -30,13 +36,13 @@ Invisibly returns the path to the newly created script file.
 }
 \description{
 Creates a new R script based on a template file, with placeholder text
-replaced by the provided script name and current date. The template file
-should be named "script_template.R" and stored in the inst folder of your
-package.
+replaced by the provided script name and current date. Template files
+should be stored in the inst folder of your package.
 }
 \examples{
-\donttest{
+\dontrun{
 new_script(dir = tempdir(), open = FALSE)
 new_script(script_name = "my_analysis", dir = tempdir(), open = FALSE)
+new_script(template = "git", dir = tempdir(), open = FALSE)
 }
 }

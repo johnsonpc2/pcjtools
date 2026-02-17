@@ -4,10 +4,16 @@
 \alias{git_push}
 \title{Send Git Commands to RStudio Terminal}
 \usage{
-git_push(message, add = TRUE, push = FALSE, remote = "origin main")
+git_push(
+  message = paste(format(Sys.time(), "\%Y\%m\%d \%H:\%M"), "Backup"),
+  add = TRUE,
+  push = FALSE,
+  remote = "origin main"
+)
 }
 \arguments{
-\item{message}{A string. The commit message.}
+\item{message}{A string. The commit message. Defaults to a timestamp backup
+message (e.g., "20260217 14:35 Backup).}
 
 \item{add}{Logical. If TRUE (default), stages all changes with
 "git add ." before committing.}

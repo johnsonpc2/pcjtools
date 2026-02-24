@@ -25,22 +25,22 @@
 #' # never be run during R CMD check.
 #'
 #' # Pull using defaults: GitHub first, then GitLab, 5 second pause between
-#' pull()
+#' git_pull()
 #'
 #' # Pull from GitHub only
-#' pull(remotes = list(c("origin", "main")))
+#' git_pull(remotes = list(c("origin", "main")))
 #'
 #' # Pull from GitLab only
-#' pull(remotes = list(c("gitlab", "master")))
+#' git_pull(remotes = list(c("gitlab", "master")))
 #'
 #' # Pull from GitHub first, then GitLab with a longer pause
-#' pull(remotes = list(c("origin", "main"), c("gitlab", "master")),
+#' git_pull(remotes = list(c("origin", "main"), c("gitlab", "master")),
 #'      sleep = 30)
 #'
 #' # Pull from a custom remote and branch
-#' pull(remotes = list(c("upstream", "dev")))
+#' git_pull(remotes = list(c("upstream", "dev")))
 #' }
-pull <- function(remotes = list(c("origin", "main"),
+git_pull <- function(remotes = list(c("origin", "main"),
                                 c("gitlab", "master")),
                  sleep = 5) {
   # Validate remotes argument

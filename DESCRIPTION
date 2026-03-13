@@ -12,10 +12,12 @@ Imports:
     data.table,
     devtools,
     ggplot2,
+    graphics,
     grDevices,
     pbapply,
     purrr,
     rstudioapi,
+    stats,
     stringr,
     systemfonts,
     ucminf,
@@ -24,8 +26,11 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Suggests: 
+    car,
+    dgof,
+    lmtest,
     MASS (>= 7.3),
+    nortest,
     spelling,
-    stats,
     testthat (>= 3.0.0)
 Language: en-US

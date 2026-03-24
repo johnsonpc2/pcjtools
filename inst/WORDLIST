@@ -1,7 +1,9 @@
 AnalysisScript
+Breusch
 CMD
 DDM
 Der
+Durbin
 EZ
 GitLab
 Github
@@ -23,8 +25,10 @@ Rothermund
 Rouder
 Tuerlinckx
 UCMINF
+VIF
 Voss
 Wagenmakers
+Wilk
 YYYYMMDD
 al
 bmp
@@ -33,6 +37,7 @@ bottomright
 centre
 colour
 coord
+data's
 datatable
 devtools
 eps
@@ -42,9 +47,11 @@ ggplot
 github
 gitlab
 gridlines
+homoscedasticity
 johnsonpc
 jpeg
 jsPsych
+multicollinearity
 nondecision
 param
 pcj

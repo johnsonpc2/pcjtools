@@ -75,9 +75,6 @@
 #'  and any relevant notes are printed to the console as a side effect.
 #' @export
 #'
-#' @importFrom stats shapiro.test bartlett.test ks.test sd na.omit residuals
-#'   fitted model.frame terms nobs
-#'
 #' @examples
 #' # Linear regression with a fitted model object
 #' fit <- lm(mpg ~ wt + hp, data = mtcars)

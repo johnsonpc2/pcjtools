@@ -35,7 +35,7 @@
 #'
 #' # Pull from GitHub first, then GitLab with a longer pause
 #' git_pull(remotes = list(c("origin", "main"), c("gitlab", "master")),
-#'      sleep = 30)
+#'      sleep = 15)
 #'
 #' # Pull from a custom remote and branch
 #' git_pull(remotes = list(c("upstream", "dev")))
@@ -43,6 +43,9 @@
 git_pull <- function(remotes = list(c("origin", "main"),
                                 c("gitlab", "master")),
                  sleep = 5) {
+
+# Function Body -----------------------------------------------------------
+
   # Validate remotes argument
   stopifnot(is.list(remotes), length(remotes) >= 1L)
   for (r in remotes) {
@@ -61,11 +64,22 @@ git_pull <- function(remotes = list(c("origin", "main"),
   )
 
   # Hard stop if not in an interactive RStudio session
-  if (!interactive()) {
-    stop("pull() can only be used in an interactive R session.")
+  if (!interactive() || nchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_")) > 0L) {
+    stop("git_pull() can only be used in an interactive R session.")
   }
+
   if (!rstudioapi::isAvailable()) {
     stop("pull() requires RStudio to be running.")
+  }
+
+  # Check network connectivity before attempting any pulls
+  if (!.git_reachable()) {
+    warning(
+      "git_pull() skipped: GitHub could not be reached. ",
+      "Check your network connection.",
+      call. = FALSE
+    )
+    return(invisible(NULL))
   }
 
   # Get or create a terminal

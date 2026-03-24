@@ -24,7 +24,7 @@ A thin wrapper for install_github() from the devtools package. Used to update
 packages from Github repositories.
 }
 \examples{
-\donttest{
+\dontrun{
 update_git_package(repo = 'johnsonpc2/pcjtools')
 }
 }

@@ -1,33 +1,33 @@
-#' Update Packages from Github
+#' Update Packages from GitHub
 #'
-#' A thin wrapper for install_github() from the devtools package. Used to update
-#'  packages from Github repositories.
+#' A thin wrapper for \code{\link[pak]{pak}}. Installs or updates one or more
+#' packages from GitHub repositories. If a list or vector of repositories is
+#' provided, each is installed in order.
 #'
-#' @param repo A repository address in the form 'username/repo'
-#'  (e.g., 'johnsonpc2/pcjtools').
-#' @param upgrade Should the package's dependencies be upgraded? One of
-#'  "default", "ask", "always", or "never"
-#' @param force Force installation, even if the remote state has not changed
-#'  since the previous install.
+#' @param repo A character string or character vector of repository addresses
+#'   in the form \code{"username/repo"} (e.g., \code{"johnsonpc2/pcjtools"}).
 #'
-#' @returns Invisibly updates packages from Github.
+#' @returns Invisibly returns \code{NULL}. Called for its side effects.
 #' @export
 #'
 #' @examples
 #' \dontrun{
-#' update_git_package(repo = 'johnsonpc2/pcjtools')
+#' # Install a single package
+#' update_git_package("johnsonpc2/pcjtools")
+#'
+#' # Install multiple packages in order
+#' update_git_package(c("johnsonpc2/pcjtools", "tidyverse/dplyr"))
 #' }
-update_git_package <- function(repo = NULL, upgrade = "always", force = FALSE) {
+update_git_package <- function(repo = NULL) {
 
-  # Hard stop if not in an interactive RStudio session
   if (!interactive() || nchar(Sys.getenv("_R_CHECK_PACKAGE_NAME_")) > 0L) {
     stop("update_git_package() can only be used in an interactive R session.")
   }
+  stopifnot(is.character(repo), length(repo) >= 1L, all(nchar(repo) > 0L))
 
-  devtools::install_github(
-    repo = repo,
-    upgrade = upgrade,
-    force = force
-  )
+  for (r in repo) {
+    pak::pak(r)
+  }
+  invisible(NULL)
 
 }

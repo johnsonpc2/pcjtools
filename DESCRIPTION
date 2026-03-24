@@ -10,10 +10,10 @@ Description: A collection of tools developed to make data analysis in R easier.
 License: GPL (>= 3)
 Imports: 
     data.table,
-    devtools,
     ggplot2,
     graphics,
     grDevices,
+    pak,
     pbapply,
     purrr,
     rstudioapi,

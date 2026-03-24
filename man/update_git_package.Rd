@@ -2,29 +2,28 @@
 % Please edit documentation in R/update_git_package.R
 \name{update_git_package}
 \alias{update_git_package}
-\title{Update Packages from Github}
+\title{Update Packages from GitHub}
 \usage{
-update_git_package(repo = NULL, upgrade = "always", force = FALSE)
+update_git_package(repo = NULL)
 }
 \arguments{
-\item{repo}{A repository address in the form 'username/repo'
-(e.g., 'johnsonpc2/pcjtools').}
-
-\item{upgrade}{Should the package's dependencies be upgraded? One of
-"default", "ask", "always", or "never"}
-
-\item{force}{Force installation, even if the remote state has not changed
-since the previous install.}
+\item{repo}{A character string or character vector of repository addresses
+in the form \code{"username/repo"} (e.g., \code{"johnsonpc2/pcjtools"}).}
 }
 \value{
-Invisibly updates packages from Github.
+Invisibly returns \code{NULL}. Called for its side effects.
 }
 \description{
-A thin wrapper for install_github() from the devtools package. Used to update
-packages from Github repositories.
+A thin wrapper for \code{\link[pak]{pak}}. Installs or updates one or more
+packages from GitHub repositories. If a list or vector of repositories is
+provided, each is installed in order.
 }
 \examples{
 \dontrun{
-update_git_package(repo = 'johnsonpc2/pcjtools')
+# Install a single package
+update_git_package("johnsonpc2/pcjtools")
+
+# Install multiple packages in order
+update_git_package(c("johnsonpc2/pcjtools", "tidyverse/dplyr"))
 }
 }

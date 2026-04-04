@@ -29,6 +29,7 @@
 #'
 #'   Possible list elements include:
 #'   \itemize{
+  #'   \item \code{Interval Matrix}, \code{The raw matrix of consecutive differences}
 #'     \item \code{Manhattan Matrix}, \code{Euclidean Matrix}, \code{Cosine Matrix}
 #'     \item \code{Manhattan Interval Matrix}, \code{Euclidean Interval Matrix}, \code{Cosine Interval Matrix}
 #'     \item \code{Manhattan Long}, \code{Euclidean Long}, \code{Cosine Long}
@@ -182,6 +183,8 @@ distance <- function(x,
 
   # Add interval matrix results if interval_analysis is TRUE
   if (interval_analysis) {
+    distance.list[["Interval Matrix"]] <- interval.matrix
+
     if ("manhattan" %in% distances) {
       distance.list[["Manhattan Interval Matrix"]] <-
         interval_distance_matrices[["manhattan"]]

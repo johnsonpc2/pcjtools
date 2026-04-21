@@ -29,7 +29,7 @@
 #'
 #'   Possible list elements include:
 #'   \itemize{
-  #'   \item \code{Interval Matrix}, \code{The raw matrix of consecutive differences}
+#'     \item \code{Interval Matrix}: The raw matrix of consecutive differences
 #'     \item \code{Manhattan Matrix}, \code{Euclidean Matrix}, \code{Cosine Matrix}
 #'     \item \code{Manhattan Interval Matrix}, \code{Euclidean Interval Matrix}, \code{Cosine Interval Matrix}
 #'     \item \code{Manhattan Long}, \code{Euclidean Long}, \code{Cosine Long}

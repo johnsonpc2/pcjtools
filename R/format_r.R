@@ -4,7 +4,7 @@
 #' and suppresses a negative sign when rounding produces "-0.00" so the
 #' result reads "= .00" rather than "= -.00". Fully vectorised via ifelse().
 #'
-#' @param r Numeric vector of correlation coefficients in `[`-1, 1`]`.
+#' @param r Numeric vector of correlation coefficients in \[-1, 1\].
 #' @returns A character vector of formatted strings, each beginning with "= ".
 #' @export
 format_r <- function(r) {

@@ -10,8 +10,9 @@
 #' @export
 format_p <- function(p) {
   rounded <- sprintf("%.3f", p)
-  ifelse(p < .001,                "< .001",
-         ifelse(rounded == "1.000",      "= .999",
-                ifelse(rounded == "0.000",      "< .001",
-                       paste0("= ", rounded))))
+  rounded_apa <- sub("0\\.", ".", rounded)
+  ifelse(p < .001,           "< .001",
+         ifelse(rounded == "1.000", "= .999",
+                ifelse(rounded == "0.000", "< .001",
+                       paste0("= ", rounded_apa))))
 }
